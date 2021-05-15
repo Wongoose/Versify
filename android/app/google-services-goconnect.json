@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "34040089977",
+    "firebase_url": "https://goconnect-745e7.firebaseio.com",
+    "project_id": "goconnect-745e7",
+    "storage_bucket": "goconnect-745e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34040089977:android:5cf252fc3f8caca57e33a8",
+        "android_client_info": {
+          "package_name": "com.wongoose.goconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34040089977-msiai3qegtb9jpjms5tik9j2squl1am3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wongoose.goconnect",
+            "certificate_hash": "406177a8572fc3621090fc313ce3f974bfc7b654"
+          }
+        },
+        {
+          "client_id": "34040089977-7blvtsrnjjnf15sv748q2vujpd078ds4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZxgrkwtBctvtYw9Hl4-lVWfy9Xrqw4d8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34040089977-7blvtsrnjjnf15sv748q2vujpd078ds4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
