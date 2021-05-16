@@ -96,12 +96,12 @@ class ProfileFeedWidget extends StatelessWidget {
         Provider.of<ProfileAllPostsView>(context, listen: false);
 
     print('New feed widget built!');
-    int _colorIndex = 1;
-    if (index > 4) {
-      _colorIndex = index % 5;
-    } else {
-      _colorIndex = index;
-    }
+    int _colorIndex = 2;
+    // if (index > 4) {
+    //   _colorIndex = index % 5;
+    // } else {
+    //   _colorIndex = index;
+    // }
 
     contentFromMap();
 

@@ -14,6 +14,8 @@ class _TabBarSliverState extends State<TabBarSliver> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
+
     return SliverPersistentHeader(
       delegate: _SliverAppBarDelegate(
         TabBar(
@@ -26,7 +28,7 @@ class _TabBarSliverState extends State<TabBarSliver> {
             });
             widget.changeTab(_tabIndex);
           },
-          indicatorColor: Color(0xffff548e),
+          indicatorColor: _theme.primaryColor,
           labelPadding: EdgeInsets.symmetric(horizontal: 0),
           labelColor: Colors.black,
           unselectedLabelColor: Colors.black54,
@@ -46,8 +48,9 @@ class _TabBarSliverState extends State<TabBarSliver> {
                 Text(
                   '78',
                   style: TextStyle(
-                      color:
-                          _tabIndex == 0 ? Color(0xffff548e) : Colors.black54),
+                      color: _tabIndex == 0
+                          ? _theme.primaryColor
+                          : Colors.black54),
                 ),
                 Text(
                   'Blogs',
@@ -65,8 +68,9 @@ class _TabBarSliverState extends State<TabBarSliver> {
                 Text(
                   '15',
                   style: TextStyle(
-                      color:
-                          _tabIndex == 1 ? Color(0xffff548e) : Colors.black54),
+                      color: _tabIndex == 1
+                          ? _theme.primaryColor
+                          : Colors.black54),
                 ),
                 Text(
                   'Saved',
@@ -85,7 +89,7 @@ class _TabBarSliverState extends State<TabBarSliver> {
                     '8',
                     style: TextStyle(
                         color: _tabIndex == 2
-                            ? Color(0xffff548e)
+                            ? _theme.primaryColor
                             : Colors.black54),
                   ),
                   Text(

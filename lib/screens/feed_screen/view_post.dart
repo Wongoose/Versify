@@ -469,7 +469,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                 children: [
                                   Icon(
                                     Icons.timer,
-                                    color: Color(0xffff548e).withOpacity(0.7),
+                                    color: _theme.primaryColor.withOpacity(0.7),
                                     size: 15,
                                   ),
                                   SizedBox(width: 2),
@@ -683,7 +683,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                         Icon(
                           Icons.swipe,
                           size: 70,
-                          color: Color(0xffff548e),
+                          color: _theme.primaryColor,
                         ),
                         SizedBox(height: 30),
                         Text(

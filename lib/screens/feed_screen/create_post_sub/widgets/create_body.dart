@@ -25,7 +25,7 @@ class ContentBody extends StatelessWidget {
               userProfile: _authService.myUser,
               primary: Color(0xffff548e),
               secondary: Color(0xffff548e),
-              size: 0.9,
+              size: 1,
             ),
             SizedBox(width: 8),
             Expanded(

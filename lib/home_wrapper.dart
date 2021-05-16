@@ -74,18 +74,11 @@ class _HomeWrapperState extends State<HomeWrapper> {
     final ProfileAllPostsView _profileAllPostsView =
         ProfileAllPostsView(pageController: _profilePageViewController);
 
-    // final ProfileAllPostsView _profileAllPostsViews =
-    //     Provider.of<ProfileAllPostsView>(context, listen: false);
-
     final ProfileBlogsProvider _profileBlogsProvider =
         ProfileBlogsProvider(viewsProvider: _profileAllPostsView);
 
     final AuthService _authService =
         Provider.of<AuthService>(context, listen: false);
-
-    // _profileDBService = Provider.of<ProfileDBService>(context);
-
-    // _refresh = Provider.of<RefreshFunc>(context);
 
     print('HomeWidget Built!!! WOIII');
 
@@ -208,7 +201,8 @@ class _HomeWrapperState extends State<HomeWrapper> {
             ),
           );
         }
-        return Loading();
+        return Scaffold(
+            appBar: null, backgroundColor: Colors.white, body: Loading());
       },
     );
   }

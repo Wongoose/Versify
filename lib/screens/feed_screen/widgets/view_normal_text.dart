@@ -8,14 +8,16 @@ class ViewPostText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
+
     return Container(
-      padding: EdgeInsets.fromLTRB(8, isFirst? 2 : 8, 0, 8),
+      padding: EdgeInsets.fromLTRB(8, isFirst ? 2 : 8, 0, 8),
       margin: EdgeInsets.fromLTRB(0, 0, 26, 0),
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
             width: 2,
-            color: Color(0xffff548e),
+            color: _theme.primaryColor,
           ),
         ),
       ),

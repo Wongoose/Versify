@@ -22,10 +22,11 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
 
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Color(0xffff548e),
+          backgroundColor: _theme.primaryColor,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -108,7 +109,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                         //       offset: Offset(0.5, 0.5))
                         // ],
                         fontFamily: 'Nunito',
-                        color: Color(0xffff548e),
+                        color: _theme.primaryColor,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
                       ),
@@ -194,7 +195,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
 //   width: 175,
 //   child: ElevatedButton(
 //       style: ElevatedButton.styleFrom(
-//         primary: Color(0xffff548e),
+//         primary: _theme.primaryColor,
 //         shape: RoundedRectangleBorder(
 //           borderRadius:
 //               BorderRadius.all(Radius.circular(10)),

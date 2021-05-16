@@ -155,6 +155,8 @@ class _EditProfileState extends State<EditProfile> {
               ),
               onPressed: () {
                 if (_editProfileProvider.hasChanges) {
+                  DateTime _tempLastUpdated = _authService.myUser.lastUpdated;
+                  _editProfileProvider.user.lastUpdated = _tempLastUpdated;
                   _authService.myUser = _editProfileProvider.user;
                   // MyUser(
                   //   userUID: _editProfileProvider.user.userUID,

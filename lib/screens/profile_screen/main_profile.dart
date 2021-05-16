@@ -84,6 +84,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
       //visit my own profile
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _visitProfileProvider.setUserProfile(_userProfile);
+        _editProfileProvider.initProfileUser(_userProfile);
         if (widget.profileBlogsProvider.initialOpen) {
           _futureBlogs = _loadFirstData();
           widget.profileBlogsProvider.initialOpen = false;

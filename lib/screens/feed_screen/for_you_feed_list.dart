@@ -163,6 +163,8 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
+
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
     // _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _feedListProvider = Provider.of<FeedListProvider>(context, listen: true);
@@ -204,11 +206,11 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
                 enablePullUp: true,
                 header: MaterialClassicHeader(
                   height: 40,
-                  color: Colors.pink[300],
+                  color: _theme.primaryColor,
                   backgroundColor: Colors.white,
                   distance: 50,
                 ),
-                physics: BouncingScrollPhysics(),
+                physics: AlwaysScrollableScrollPhysics(),
                 reverse: false,
                 footer: CustomFooter(
                   builder: (BuildContext context, LoadStatus mode) {
@@ -222,7 +224,7 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
                       );
                     } else if (mode == LoadStatus.loading) {
                       body = SpinKitThreeBounce(
-                        color: Colors.pink[300],
+                        color: _theme.primaryColor,
                         size: 30,
                       );
                     } else if (mode == LoadStatus.failed) {
@@ -249,14 +251,29 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
                 scrollController: widget.feedListController,
                 onRefresh: _onRefresh,
                 onLoading: _onLoading,
-                child: ListView.builder(
+                child: ListView.separated(
                   cacheExtent: 1000,
                   primary: false,
                   addAutomaticKeepAlives: true,
                   itemCount: _feedListProvider.forYouData.length,
                   scrollDirection: Axis.vertical,
                   // controller: widget.feedListController,
-                  physics: BouncingScrollPhysics(),
+                  // physics: BouncingScrollPhysics(),
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(5.5, 0, 0, 0),
+                        alignment: Alignment.centerLeft,
+                        height: 8,
+                        width: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _theme.primaryColor,
+                        ),
+                      ),
+                    );
+                  },
                   itemBuilder: (context, index) {
                     return SizeProviderWidget(
                       //when change between following and forYou may not render hence size is null

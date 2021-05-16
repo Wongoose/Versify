@@ -26,6 +26,8 @@ class ViewPostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +36,7 @@ class ViewPostContent extends StatelessWidget {
           'Read',
           softWrap: true,
           style: TextStyle(
-            color: Color(0xffff548e),
+            color: _theme.primaryColor,
             letterSpacing: 0,
             fontSize: 22,
             fontWeight: FontWeight.w700,

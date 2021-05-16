@@ -15,8 +15,6 @@ import 'package:versify/services/database.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/services/users_following_json_storage.dart';
 import 'package:versify/shared/loading.dart';
-import 'package:versify/storage/bible_test.dart';
-import 'package:versify/storage/login_screen.dart';
 import 'package:versify/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +25,10 @@ import 'models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(ConnectApp());
+  runApp(VersifyApp());
 }
 
-class ConnectApp extends StatelessWidget {
+class VersifyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   // This widget is the root of your application.
@@ -183,8 +181,8 @@ class ConnectApp extends StatelessWidget {
                     title: 'Versify',
                     theme: ThemeData(
                       canvasColor: Colors.white,
-                      primaryColor: Color(0xffff548e),
-                      accentColor: Colors.pink[200],
+                      primaryColor: Color(0xFF36a89d),
+                      accentColor: Colors.teal[300],
                       fontFamily: 'Nunito',
                       backgroundColor: Colors.white,
                     ),
@@ -195,7 +193,7 @@ class ConnectApp extends StatelessWidget {
                             .copyWith(textScaleFactor: 1.0),
                       );
                     },
-                    home: ConnectHome(authService: _authService),
+                    home: VersifyHome(authService: _authService),
                     routes: {
                       '/accountSettings': (context) => AccountSettings(),
                     },
@@ -215,14 +213,14 @@ class ConnectApp extends StatelessWidget {
   }
 }
 
-class ConnectHome extends StatefulWidget {
+class VersifyHome extends StatefulWidget {
   final AuthService authService;
-  ConnectHome({this.authService});
+  VersifyHome({this.authService});
   @override
-  _ConnectHomeState createState() => _ConnectHomeState();
+  _VersifyHomeState createState() => _VersifyHomeState();
 }
 
-class _ConnectHomeState extends State<ConnectHome> {
+class _VersifyHomeState extends State<VersifyHome> {
   bool _completedBoarding = false;
 
   void initState() {

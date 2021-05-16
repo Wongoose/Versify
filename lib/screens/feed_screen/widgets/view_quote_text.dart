@@ -8,16 +8,18 @@ class ViewPostQuote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
+
     return Container(
       padding: EdgeInsets.fromLTRB(2, 0, 26, 0),
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
             width: 2,
-            color: Colors.deepPurpleAccent,
+            color: Colors.blueAccent,
           ),
         ),
-        color: Colors.deepPurpleAccent.withOpacity(0.07),
+        color: Colors.blueAccent.withOpacity(0.07),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -52,7 +54,7 @@ class ViewPostQuote extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Colors.deepPurpleAccent,
+                        color: Colors.blueAccent,
                       ),
                       child: Text(
                         topic ?? 'Quote',
@@ -71,7 +73,7 @@ class ViewPostQuote extends StatelessWidget {
           ),
           Icon(
             Icons.format_quote,
-            color: Colors.deepPurpleAccent.withOpacity(0.7),
+            color: Colors.blueAccent.withOpacity(0.7),
           ),
         ],
       ),

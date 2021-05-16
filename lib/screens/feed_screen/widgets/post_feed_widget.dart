@@ -29,8 +29,8 @@ class PostFeedWidget extends StatelessWidget {
     },
     {
       //green
-      'primary': Colors.teal[300],
-      'secondary': Colors.teal[300],
+      'primary': Colors.teal[400],
+      'secondary': Colors.teal[400],
     },
     {
       //blue
@@ -219,6 +219,8 @@ class PostFeedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData _theme = Theme.of(context);
+
     FeedTypeProvider _feedTypeProvider =
         Provider.of<FeedTypeProvider>(context, listen: false);
     FollowingPageView followingPageView =
@@ -231,92 +233,17 @@ class PostFeedWidget extends StatelessWidget {
     contentFromMap();
 
     print('New feed widget built!');
-    int _colorIndex = 1;
-    if (index > 4) {
-      _colorIndex = index % 5;
-    } else {
-      _colorIndex = index;
-    }
+    int _colorIndex = 2;
+    // if (index > 4) {
+    //   _colorIndex = index % 5;
+    // } else {
+    //   _colorIndex = index;
+    // }
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(5, 8, 8, 5),
+      padding: EdgeInsets.fromLTRB(5, 0, 10, 0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(1.5),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          _colorScheme[_colorIndex]['primary'],
-                          _colorScheme[_colorIndex]['secondary'],
-                        ],
-                        stops: [0, 0.6],
-                      ),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      height: 32,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImage(
-                          height: 32,
-                          fit: BoxFit.cover,
-                          useOldImageOnUrlChange: false,
-                          // cacheKey: userProfile.userUID,
-                          imageUrl: feed.profileImageUrl ??
-                              'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) {
-                            return SizedBox(
-                              height: 5,
-                              width: 5,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 0.5,
-                                value: downloadProgress.progress,
-                              ),
-                            );
-                          },
-                          errorWidget: (context, url, error) =>
-                              Icon(FontAwesomeIcons.userAltSlash, size: 10),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Container(
-                    child: Text(
-                      feed.username,
-                      style: TextStyle(
-                        color: _colorScheme[_colorIndex]['primary'],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Nunito',
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Container(
-                child: Icon(
-                  Icons.verified_user,
-                  color: _colorScheme[_colorIndex]['primary'],
-                  size: 15,
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 5),
           SizedBox(
             child: GestureDetector(
               onTap: () {
@@ -338,7 +265,7 @@ class PostFeedWidget extends StatelessWidget {
               },
               child: Container(
                 alignment: Alignment.centerLeft,
-                margin: EdgeInsets.fromLTRB(3, 2, 0, 0),
+                margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
                 decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(
@@ -346,157 +273,255 @@ class PostFeedWidget extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(height: 5),
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (feed.featuredTopic != null) {
-                                showVerseDialog(
-                                    context: context, colorIndex: _colorIndex);
-                              }
-                            },
-                            child: Hero(
-                              tag: 'featuredVerse$index',
-                              child: FittedBox(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: _colorScheme[_colorIndex]
-                                        ['secondary'],
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(1.5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      _colorScheme[_colorIndex]['primary'],
+                                      _colorScheme[_colorIndex]['secondary'],
+                                    ],
+                                    stops: [0, 0.6],
                                   ),
-                                  child: Text(
-                                    feed.featuredTopic ?? 'Blog singles',
-                                    style: TextStyle(
-                                      fontFamily: 'Nunito',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xfffffcfe),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(1),
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: CachedNetworkImage(
+                                      height: 32,
+                                      fit: BoxFit.cover,
+                                      useOldImageOnUrlChange: false,
+                                      // cacheKey: userProfile.userUID,
+                                      imageUrl: feed.profileImageUrl ??
+                                          'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) {
+                                        return SizedBox(
+                                          height: 5,
+                                          width: 5,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 0.5,
+                                            value: downloadProgress.progress,
+                                          ),
+                                        );
+                                      },
+                                      errorWidget: (context, url, error) =>
+                                          Icon(FontAwesomeIcons.userAltSlash,
+                                              size: 10),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: SizedBox(
-                              child: Text(
-                                feed.featuredValue ?? '. . .',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black26,
-                                  fontStyle: FontStyle.italic,
+                              SizedBox(width: 10),
+                              Container(
+                                child: Text(
+                                  feed.username,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Nunito',
+                                    letterSpacing: 0,
+                                  ),
                                 ),
-                              ),
+                              )
+                            ],
+                          ),
+                          Container(
+                            child: Icon(
+                              Icons.verified_user,
+                              color: _colorScheme[_colorIndex]['primary'],
+                              size: 15,
                             ),
                           )
                         ],
                       ),
-                      SizedBox(height: 10),
+                      // SizedBox(height: 5),
+                      SizedBox(height: 15),
                       Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: Text(
-                          feed.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Nunito',
-                            fontSize: 17.5,
-                            letterSpacing: -0.3,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 0),
-                      Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: Text(
-                          _content.replaceAll('\n', ' . '),
-                          style: TextStyle(
-                            fontFamily: 'Nunito',
-                            fontSize: 13,
-                            height: 1.4,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.fade,
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: Text(
-                          'Read more...',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 12,
-                            color: _colorScheme[_colorIndex]['secondary'],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: feed.tags.isEmpty ? 0 : 10),
-                      Wrap(
-                          runSpacing: 5,
-                          children: feed.tags
-                              .map(
-                                (individualTag) => Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                  child: FittedBox(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+                        padding: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (feed.featuredTopic != null) {
+                                      showVerseDialog(
+                                          context: context,
+                                          colorIndex: _colorIndex);
+                                    }
+                                  },
+                                  child: Hero(
+                                    tag: 'featuredVerse$index',
+                                    child: FittedBox(
                                       alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        border: Border.fromBorderSide(
-                                            BorderSide(
-                                                color: _colorScheme[_colorIndex]
-                                                        ['secondary']
-                                                    .withOpacity(0.7))),
-                                        borderRadius: BorderRadius.circular(5),
-                                        // color: _colorScheme[_colorIndex]['secondary']
-                                        //     .withOpacity(0.3),
-                                      ),
-                                      child: Text(
-                                        individualTag.toString().contains('#')
-                                            ? individualTag
-                                                .toString()
-                                                .replaceRange(
-                                                    individualTag
-                                                            .toString()
-                                                            .length -
-                                                        2,
-                                                    individualTag
-                                                        .toString()
-                                                        .length,
-                                                    '')
-                                            : '#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, '')}',
-                                        style: TextStyle(
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(8, 5, 8, 5),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: _theme.primaryColor)
+                                            // color: _colorScheme[_colorIndex]
+                                            //     ['secondary'],
+                                            ),
+                                        child: Text(
+                                          feed.featuredTopic ?? 'Blog singles',
+                                          style: TextStyle(
                                             fontFamily: 'Nunito',
-                                            fontSize: 11,
-                                            // color: Colors.white,
-                                            color: _colorScheme[_colorIndex]
-                                                    ['secondary']
-                                                .withOpacity(0.7)),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: _theme.primaryColor,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
-                              .toList()),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: SizedBox(
+                                    child: Text(
+                                      feed.featuredValue ?? '. . .',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black26,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: Text(
+                                feed.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Nunito',
+                                  fontSize: 17.5,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 0),
+                            Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: Text(
+                                _content.replaceAll('\n', ' . '),
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 13,
+                                  height: 1.4,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.fade,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: Text(
+                                'Read more...',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w200,
+                                  fontSize: 12,
+                                  color: _colorScheme[_colorIndex]['secondary'],
+                                ),
+                              ),
+                            ),
+                            // SizedBox(height: feed.tags.isEmpty ? 0 : 10),
+                            // Wrap(
+                            //     runSpacing: 5,
+                            //     children: feed.tags
+                            //         .map(
+                            //           (individualTag) => Padding(
+                            //             padding:
+                            //                 EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            //             child: FittedBox(
+                            //               alignment: Alignment.center,
+                            //               child: Container(
+                            //                 padding:
+                            //                     EdgeInsets.fromLTRB(6, 3, 6, 3),
+                            //                 alignment: Alignment.center,
+                            //                 decoration: BoxDecoration(
+                            //                   border: Border.fromBorderSide(
+                            //                       BorderSide(
+                            //                           color: _colorScheme[
+                            //                                       _colorIndex]
+                            //                                   ['secondary']
+                            //                               .withOpacity(0.7))),
+                            //                   borderRadius:
+                            //                       BorderRadius.circular(5),
+                            //                   // color: _colorScheme[_colorIndex]['secondary']
+                            //                   //     .withOpacity(0.3),
+                            //                 ),
+                            //                 child: Text(
+                            //                   individualTag
+                            //                           .toString()
+                            //                           .contains('#')
+                            //                       ? individualTag
+                            //                           .toString()
+                            //                           .replaceRange(
+                            //                               individualTag
+                            //                                       .toString()
+                            //                                       .length -
+                            //                                   2,
+                            //                               individualTag
+                            //                                   .toString()
+                            //                                   .length,
+                            //                               '')
+                            //                       : '#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, '')}',
+                            //                   style: TextStyle(
+                            //                       fontFamily: 'Nunito',
+                            //                       fontSize: 11,
+                            //                       // color: Colors.white,
+                            //                       color:
+                            //                           _colorScheme[_colorIndex]
+                            //                                   ['secondary']
+                            //                               .withOpacity(0.7)),
+                            //                 ),
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         )
+                            //         .toList()),
+                          ],
+                        ),
+                      ),
+
                       SizedBox(height: 1),
                     ],
                   ),
