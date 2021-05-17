@@ -50,6 +50,10 @@ dependencies:
   cached_network_image: ^2.5.1
   flutter_icons: ^1.1.0
   flutter_cache_manager:
+  firebase_dynamic_links: ^0.7.0+1
+  esys_flutter_share: ^1.0.2
+  google_fonts: ^1.1.2
+
     
 
   

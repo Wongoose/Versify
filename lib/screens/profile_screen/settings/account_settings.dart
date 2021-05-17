@@ -534,9 +534,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                 onTap: () async {
                   await _authService.logout().then((value) async {
                     deletePrefs();
-                    Navigator.popUntil(context,
-                        ModalRoute.withName(Navigator.defaultRouteName));
+                    // Navigator.popUntil(context,
+                    //     ModalRoute.withName(Navigator.defaultRouteName));
                     await DefaultCacheManager().emptyCache();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/', (Route<dynamic> route) => false);
                   });
                 },
                 child: Padding(

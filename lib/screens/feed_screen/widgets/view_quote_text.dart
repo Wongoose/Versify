@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ViewPostQuote extends StatelessWidget {
   final String value;
@@ -37,9 +38,10 @@ class ViewPostQuote extends StatelessWidget {
                     value,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.7),
-                      fontSize: 14,
-                      fontFamily: 'Libre',
-                      fontStyle: FontStyle.italic,
+                      fontSize: 15.5,
+                      fontFamily: GoogleFonts.getFont('Philosopher').fontFamily,
+                      fontWeight: FontWeight.w300,
+                      // fontStyle: FontStyle.italic,
                       height: 1.35,
                     ),
                   ),

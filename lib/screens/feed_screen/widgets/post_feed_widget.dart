@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/all_posts_provider.dart';
 import 'package:versify/providers/feed_type_provider.dart';
@@ -19,7 +20,7 @@ class PostFeedWidget extends StatelessWidget {
   final List<Map<String, Color>> _colorScheme = [
     {
       //red
-      'primary': Color(0xffff548e),
+      'primary': Color(0xFFFF699F),
       'secondary': Color(0xffff548e),
     },
     {
@@ -29,8 +30,8 @@ class PostFeedWidget extends StatelessWidget {
     },
     {
       //green
-      'primary': Colors.teal[400],
-      'secondary': Colors.teal[400],
+      'primary': Color(0xFFFF696A),
+      'secondary': Color(0xFFFF696A),
     },
     {
       //blue
@@ -100,7 +101,8 @@ class PostFeedWidget extends StatelessWidget {
                         child: Text(
                           feed.featuredTopic ?? 'Featured',
                           style: TextStyle(
-                            fontFamily: 'Nunito',
+                            fontFamily:
+                                GoogleFonts.getFont('Nunito Sans').fontFamily,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: Color(0xfffffcfe),
@@ -135,7 +137,8 @@ class PostFeedWidget extends StatelessWidget {
                               overflow: TextOverflow.fade,
                               maxLines: null,
                               style: TextStyle(
-                                fontFamily: 'Nunito',
+                                fontFamily: GoogleFonts.getFont('Nunito Sans')
+                                    .fontFamily,
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black87,
@@ -339,7 +342,7 @@ class PostFeedWidget extends StatelessWidget {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     fontFamily: 'Nunito',
-                                    letterSpacing: 0,
+                                    // letterSpacing: 0.5,
                                   ),
                                 ),
                               )
@@ -392,7 +395,9 @@ class PostFeedWidget extends StatelessWidget {
                                         child: Text(
                                           feed.featuredTopic ?? 'Blog singles',
                                           style: TextStyle(
-                                            fontFamily: 'Nunito',
+                                            fontFamily: GoogleFonts.getFont(
+                                                    'Nunito Sans')
+                                                .fontFamily,
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: _theme.primaryColor,
@@ -409,7 +414,9 @@ class PostFeedWidget extends StatelessWidget {
                                       feed.featuredValue ?? '. . .',
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontFamily: 'Nunito',
+                                        fontFamily:
+                                            GoogleFonts.getFont('Nunito Sans')
+                                                .fontFamily,
                                         fontSize: 12,
                                         fontWeight: FontWeight.normal,
                                         color: Colors.black26,
@@ -441,7 +448,8 @@ class PostFeedWidget extends StatelessWidget {
                               child: Text(
                                 _content.replaceAll('\n', ' . '),
                                 style: TextStyle(
-                                  fontFamily: 'Nunito',
+                                  fontFamily: GoogleFonts.getFont('Nunito Sans')
+                                      .fontFamily,
                                   fontSize: 13,
                                   height: 1.4,
                                   fontWeight: FontWeight.w400,
@@ -505,7 +513,7 @@ class PostFeedWidget extends StatelessWidget {
                             //                               '')
                             //                       : '#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, '')}',
                             //                   style: TextStyle(
-                            //                       fontFamily: 'Nunito',
+                            //                       fontFamily: GoogleFonts.getFont('Nunito Sans').fontFamily,
                             //                       fontSize: 11,
                             //                       // color: Colors.white,
                             //                       color:

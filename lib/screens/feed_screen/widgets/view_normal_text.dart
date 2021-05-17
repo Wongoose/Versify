@@ -24,9 +24,9 @@ class ViewPostText extends StatelessWidget {
       child: Text(
         value,
         style: TextStyle(
-            fontSize: 15.5,
+            fontSize: 16,
             color: Colors.black,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
             height: 1.5),
       ),
     );

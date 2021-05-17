@@ -1,7 +1,9 @@
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/view_post_gift_provider.dart';
 import 'package:versify/providers/view_post_like_provider.dart';
 import 'package:versify/screens/feed_screen/widgets/gift_widget.dart';
+import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:versify/services/dynamic_links.dart';
 import 'package:vibration/vibration.dart';
 
 class InteractionBar extends StatelessWidget {
@@ -41,13 +44,16 @@ class InteractionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // final GiftProvider _giftProvider =
     //     Provider.of<GiftProvider>(context, listen: true);
-    //
+    final AuthService _authService = Provider.of<AuthService>(context);
+
     final ViewPostLikeProvider _likeProvider =
         Provider.of<ViewPostLikeProvider>(context, listen: false);
 
-    getSavePostLocal(feed.documentID).then((res) {
-      _likeProvider.initialSave(res);
-    });
+    // getSavePostLocal(feed.documentID).then((res) {
+    //   _likeProvider.initialSave(res);
+    // });
+
+    final bool _isVisitProfile = _authService.myUser.userUID != feed.userID;
 
     return BottomAppBar(
       elevation: 5,
@@ -160,7 +166,41 @@ class InteractionBar extends StatelessWidget {
             ),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () {},
+              onTap: () {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            height: 15,
+                            width: 15,
+                            child: CircularProgressIndicator(strokeWidth: 0.5)),
+                        SizedBox(width: 15),
+                        Text(
+                          'Preparing shareable link...',
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  behavior: SnackBarBehavior.fixed,
+                ));
+                DynamicLinkService()
+                    .createPostDynamicLink(feed.documentID)
+                    .then((res) async {
+                  Scaffold.of(context).hideCurrentSnackBar();
+                  Share.text(
+                      'Versify Blogs',
+                      _isVisitProfile
+                          ? 'Check out this amazing blog on the Versify app!\n$res'
+                          : 'Check out the blog that I wrote on the Versify app!\n$res',
+                      'text/txt');
+                });
+              },
               child: SizedBox(
                 height: 40,
                 width: 80,

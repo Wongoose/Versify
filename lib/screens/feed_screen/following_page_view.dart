@@ -1,3 +1,4 @@
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feed_list_provider.dart';
 import 'package:versify/providers/all_posts_provider.dart';
@@ -8,6 +9,7 @@ import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widgets/input_comment.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
+import 'package:versify/services/dynamic_links.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:versify/shared/report_post_dialog.dart';
@@ -349,6 +351,7 @@ class BottomSheetActions extends StatefulWidget {
 
 class _BottomSheetActionsState extends State<BottomSheetActions> {
   bool _followLoading = false;
+  bool _shareLoading = false;
   bool _isVisitProfile;
   AllPostsView allPostsViewProvider;
   AuthService _authService;
@@ -423,15 +426,39 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     height: 60,
                     child: FlatButton(
                       materialTapTargetSize: MaterialTapTargetSize.padded,
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() => _shareLoading = true);
+                        DynamicLinkService()
+                            .createPostDynamicLink(allPostsViewProvider
+                                .followingCurrentFeed.documentID)
+                            .then((res) async {
+                          setState(() => _shareLoading = false);
+                          Share.text(
+                              'Versify Blogs',
+                              _isVisitProfile
+                                  ? 'Check out this amazing blog on the Versify app!\n$res'
+                                  : 'Check out the blog that I wrote on the Versify app!\n$res',
+                              'text/txt');
+                        });
+                      },
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Share to...',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                        child: Visibility(
+                          visible: !_shareLoading,
+                          child: Text(
+                            'Share post',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          replacement: SizedBox(
+                            height: 15,
+                            width: 15,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 0.5,
+                            ),
                           ),
                         ),
                       ),

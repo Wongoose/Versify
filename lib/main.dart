@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
 import 'package:versify/providers/content_body_provider.dart';
 import 'package:versify/providers/edit_profile_provider.dart';
@@ -12,6 +13,7 @@ import 'package:versify/screens/profile_screen/settings/account_settings.dart';
 import 'package:versify/services/all_badges_json_storage.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
+import 'package:versify/services/dynamic_links.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/services/users_following_json_storage.dart';
 import 'package:versify/shared/loading.dart';
@@ -21,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:versify/z-wrappers/post_dynamic_link.dart';
+import 'package:versify/z-wrappers/wrapper_dynamic_links.dart';
 import 'models/user_model.dart';
 
 void main() async {
@@ -180,10 +184,12 @@ class VersifyApp extends StatelessWidget {
                     debugShowCheckedModeBanner: false,
                     title: 'Versify',
                     theme: ThemeData(
+                      // colorScheme: ColorScheme.fromSwatch(),
                       canvasColor: Colors.white,
-                      primaryColor: Color(0xFF36a89d),
-                      accentColor: Colors.teal[300],
-                      fontFamily: 'Nunito',
+                      primaryColor: Color(0xFFFF696A),
+
+                      accentColor: Color(0xFFffae3d9),
+                      fontFamily: GoogleFonts.getFont('Nunito Sans').fontFamily,
                       backgroundColor: Colors.white,
                     ),
                     builder: (context, child) {
@@ -216,16 +222,33 @@ class VersifyApp extends StatelessWidget {
 class VersifyHome extends StatefulWidget {
   final AuthService authService;
   VersifyHome({this.authService});
+
   @override
   _VersifyHomeState createState() => _VersifyHomeState();
 }
 
 class _VersifyHomeState extends State<VersifyHome> {
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   bool _completedBoarding = false;
+  bool _hasDynamicLink;
+
+  void navigateDynamicLink(String postId) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DynamicLinksWrapper(
+                  postId: postId,
+                )));
+  }
 
   void initState() {
     super.initState();
     print('Main App initState RAN!');
+    _dynamicLinkService.addContext(context);
+
+    _dynamicLinkService.handleDynamicLink().then((value) {
+      setState(() => _hasDynamicLink = value);
+    });
 
     sharedPreferencesInit().then((result) {
       _completedBoarding = result;
@@ -235,11 +258,18 @@ class _VersifyHomeState extends State<VersifyHome> {
 
   @override
   Widget build(BuildContext context) {
-    if (_completedBoarding) {
-      return Wrapper();
+    if (_hasDynamicLink != null) {
+      if (_completedBoarding) {
+        return Wrapper();
+        // return DynamicLinkPost(
+        //   postId: 'aQtV58oqPh2ZfuGL4CrZ',
+        // );
+      } else {
+        return Wrapper();
+        //return boarding
+      }
     } else {
-      return Wrapper();
-      //return boarding
+      return Loading();
     }
   }
   // return ReviewPost();
