@@ -74,7 +74,10 @@ class _ForYouPageViewState extends State<ForYouPageView> {
 
     return _allPostsViewProvider != null
         ? WillPopScope(
-            onWillPop: () => popScopeUpdateFeed(),
+            onWillPop: () async {
+              await popScopeUpdateFeed();
+              return null;
+            },
             child: Scaffold(
               backgroundColor: Colors.white,
               extendBodyBehindAppBar: false,
@@ -390,8 +393,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   Container(
                     margin: EdgeInsets.all(0),
                     height: 60,
-                    child: FlatButton(
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          padding: EdgeInsets.all(15), primary: Colors.white),
                       onPressed: () {
                         if (_isVisitProfile) {
                           //report
@@ -416,6 +420,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                           style: TextStyle(
                             color: Colors.red,
                             fontSize: 16,
+                            fontFamily: 'Nunito',
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -426,8 +431,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   Container(
                     margin: EdgeInsets.all(0),
                     height: 60,
-                    child: FlatButton(
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          padding: EdgeInsets.all(15), primary: Colors.white),
                       onPressed: () {
                         setState(() => _shareLoading = true);
                         DynamicLinkService()
@@ -452,6 +458,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
+                              fontFamily: 'Nunito',
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -472,8 +479,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     child: Container(
                       margin: EdgeInsets.all(0),
                       height: 60,
-                      child: FlatButton(
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(15), primary: Colors.white),
                         onPressed: () {
                           setState(() => _followLoading = true);
 
@@ -510,6 +518,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
+                                fontFamily: 'Nunito',
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -527,8 +536,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     replacement: Container(
                       margin: EdgeInsets.all(0),
                       height: 60,
-                      child: FlatButton(
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(15), primary: Colors.white),
                         onPressed: () {},
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -537,6 +547,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
+                              fontFamily: 'Nunito',
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -548,8 +559,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   // Container(
                   //   margin: EdgeInsets.all(0),
                   //   height: 60,
-                  //   child: FlatButton(
-                  //     materialTapTargetSize: MaterialTapTargetSize.padded,
+                  //   child: TextButton(
                   //     onPressed: () {},
                   //     child: Align(
                   //       alignment: Alignment.centerLeft,
@@ -558,7 +568,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   //         style: TextStyle(
                   //           color: Colors.black,
                   //           fontSize: 16,
-                  //           fontWeight: FontWeight.w600,
+                  //           fontWeight: FontWeight.w00,
                   //         ),
                   //       ),
                   //     ),
@@ -569,8 +579,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   // Container(
                   //   margin: EdgeInsets.all(0),
                   //   height: 60,
-                  //   child: FlatButton(
-                  //     materialTapTargetSize: MaterialTapTargetSize.padded,
+                  //   child: TextButton(
                   //     onPressed: () {
                   //       allPostsViewProvider.viewPostLikeProvider.likeTrigger();
                   //       Navigator.pop(context);
@@ -592,8 +601,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   // Container(
                   //   margin: EdgeInsets.all(0),
                   //   height: 60,
-                  //   child: FlatButton(
-                  //     materialTapTargetSize: MaterialTapTargetSize.padded,
+                  //   child: TextButton(
                   //     onPressed: () {},
                   //     child: Align(
                   //       alignment: Alignment.centerLeft,
@@ -602,7 +610,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   //         style: TextStyle(
                   //           color: Colors.black,
                   //           fontSize: 16,
-                  //           fontWeight: FontWeight.w600,
+                  //           fontWeight: FontWeight.w00,
                   //         ),
                   //       ),
                   //     ),

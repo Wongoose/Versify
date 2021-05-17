@@ -17,10 +17,10 @@ class ViewPostQuote extends StatelessWidget {
         border: Border(
           left: BorderSide(
             width: 2,
-            color: Colors.blueAccent,
+            color: Color(0xFFa15ce2),
           ),
         ),
-        color: Colors.blueAccent.withOpacity(0.07),
+        color: Color(0xFFa15ce2).withOpacity(0.07),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -56,7 +56,7 @@ class ViewPostQuote extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Colors.blueAccent,
+                        color: Color(0xFFa15ce2),
                       ),
                       child: Text(
                         topic ?? 'Quote',
@@ -75,7 +75,7 @@ class ViewPostQuote extends StatelessWidget {
           ),
           Icon(
             Icons.format_quote,
-            color: Colors.blueAccent.withOpacity(0.7),
+            color: Color(0xFFa15ce2).withOpacity(0.7),
           ),
         ],
       ),

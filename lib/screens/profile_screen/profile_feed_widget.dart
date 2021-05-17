@@ -26,8 +26,8 @@ class ProfileFeedWidget extends StatelessWidget {
     },
     {
       //green
-      'primary': Colors.teal[300],
-      'secondary': Colors.teal[300],
+      'primary': Color(0xFFFF696A),
+      'secondary': Color(0xFFFF696A),
     },
     {
       //blue

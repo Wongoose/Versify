@@ -96,7 +96,10 @@ class _ProfilePageViewState extends State<ProfilePageView> {
     widget.profileAllPostsView.updatePageViewPostFrame(false);
 
     return WillPopScope(
-      onWillPop: () => popScopeUpdateFeed(),
+      onWillPop: () async {
+        await popScopeUpdateFeed();
+        return null;
+      },
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<ProfileAllPostsView>.value(
@@ -343,8 +346,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
                 if (_isVisitProfile) {
                   //report
@@ -368,6 +372,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -378,43 +383,46 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
-                  setState(() => _shareLoading = true);
-                        DynamicLinkService()
-                            .createPostDynamicLink(widget.profileAllPostsView.currentFeed.documentID)
-                            .then((res) async {
-                          setState(() => _shareLoading = false);
-                          Share.text(
-                              'Versify Blogs',
-                              _isVisitProfile
-                                  ? 'Check out this amazing blog on the Versify app!\n$res'
-                                  : 'Check out the blog that I wrote on the Versify app!\n$res',
-                              'text/txt');
-                        });
-                      },
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Visibility(
-                          visible: !_shareLoading,
-                          child: Text(
-                            'Share post',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          replacement: SizedBox(
-                            height: 15,
-                            width: 15,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 0.5,
-                            ),
-                          ),
-                        ),
-                      ),
+                setState(() => _shareLoading = true);
+                DynamicLinkService()
+                    .createPostDynamicLink(
+                        widget.profileAllPostsView.currentFeed.documentID)
+                    .then((res) async {
+                  setState(() => _shareLoading = false);
+                  Share.text(
+                      'Versify Blogs',
+                      _isVisitProfile
+                          ? 'Check out this amazing blog on the Versify app!\n$res'
+                          : 'Check out the blog that I wrote on the Versify app!\n$res',
+                      'text/txt');
+                });
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Visibility(
+                  visible: !_shareLoading,
+                  child: Text(
+                    'Share post',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  replacement: SizedBox(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 0.5,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           Divider(thickness: 0.5, height: 0),
@@ -423,8 +431,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             child: Container(
               margin: EdgeInsets.all(0),
               height: 60,
-              child: FlatButton(
-                materialTapTargetSize: MaterialTapTargetSize.padded,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    padding: EdgeInsets.all(15), primary: Colors.white),
                 onPressed: () {
                   setState(() => _followLoading = true);
 
@@ -462,6 +471,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
+                        fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -479,8 +489,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             replacement: Container(
               margin: EdgeInsets.all(0),
               height: 60,
-              child: FlatButton(
-                materialTapTargetSize: MaterialTapTargetSize.padded,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    padding: EdgeInsets.all(15), primary: Colors.white),
                 onPressed: () {},
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -489,6 +500,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
+                      fontFamily: 'Nunito',
                       fontWeight: FontWeight.w600,
                     ),
                   ),
