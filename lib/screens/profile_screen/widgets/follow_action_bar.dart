@@ -52,7 +52,7 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
         Provider.of<VisitProfileProvider>(context, listen: true);
 
     if (widget.visitProfile) {
-      // _isFollowing = _visitProfileProvider.userProfile.isFollowing;
+      // _isFollowing = widget.userProfile.isFollowing;
     }
 
     return Row(
@@ -60,15 +60,13 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Visibility(
-          visible: widget.visitProfile
-              ? _visitProfileProvider.userProfile.isFollowing
-              : true,
+          visible: widget.visitProfile ? widget.userProfile.isFollowing : true,
           child: Row(
             children: [
               GestureDetector(
                 onTap: () {
                   if (widget.visitProfile) {
-                    DynamicLinkService()
+                    DynamicLinkService(context)
                         .createProfileDynamicLink(widget.userProfile.userUID)
                         .then((res) async {
                       Share.text(
@@ -129,14 +127,13 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                       setState(() => _followLoading = true);
                       await widget.profileDBService
                           .updateFollowing(
-                        profileUID: _visitProfileProvider.userProfile.userUID,
+                        profileUID: widget.userProfile.userUID,
                         isFollowing: false,
-                        usersPublicFollowID: _visitProfileProvider
-                            .userProfile.usersPublicFollowID,
+                        usersPublicFollowID:
+                            widget.userProfile.usersPublicFollowID,
                       )
                           .then((publicFollowID) {
-                        _visitProfileProvider.userProfile.usersPublicFollowID =
-                            publicFollowID;
+                        widget.userProfile.usersPublicFollowID = publicFollowID;
                         // _isFollowing = false;
                         _followLoading = false;
                         _visitProfileProvider.updateFollowing(false);
@@ -177,27 +174,32 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
           ),
           replacement: GestureDetector(
             onTap: () async {
-              if (!_followLoading) {
-                print('Follow onTap() with hash provider: ' +
-                    _visitProfileProvider.hashCode.toString());
-                setState(() => _followLoading = true);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Padding(
+                padding: EdgeInsets.all(8),
+                child: Text('Sign up to follow'),
+              )));
+              // if (!_followLoading) {
+              //   print('Follow onTap() with hash provider: ' +
+              //       widget.hashCode.toString());
+              //   setState(() => _followLoading = true);
 
-                await widget.profileDBService
-                    .updateFollowing(
-                  profileUID: _visitProfileProvider.userProfile.userUID,
-                  isFollowing: true,
-                  usersPublicFollowID:
-                      _visitProfileProvider.userProfile.usersPublicFollowID,
-                )
-                    .then((publicFollowID) {
-                  _visitProfileProvider.userProfile.usersPublicFollowID =
-                      publicFollowID;
-                  _followLoading = false;
-                  _visitProfileProvider.updateFollowing(true);
+              //   await widget.profileDBService
+              //       .updateFollowing(
+              //     profileUID: widget.userProfile.userUID,
+              //     isFollowing: true,
+              //     usersPublicFollowID:
+              //         widget.userProfile.usersPublicFollowID,
+              //   )
+              //       .then((publicFollowID) {
+              //     widget.userProfile.usersPublicFollowID =
+              //         publicFollowID;
+              //     _followLoading = false;
+              //     _visitProfileProvider.updateFollowing(true);
 
-                  // _isFollowing = true;
-                });
-              }
+              //     // _isFollowing = true;
+              //   });
+              // }
             },
             child: Container(
               height: 40,

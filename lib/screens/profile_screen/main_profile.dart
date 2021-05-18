@@ -274,6 +274,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
+                                              fontFamily: 'Nunito',
                                               color: Colors.black),
                                         );
                                       },

@@ -29,11 +29,13 @@ class _DynamicLinkProfileState extends State<DynamicLinkProfile> {
   void initState() {
     print('Dynamic Profile Init State');
     super.initState();
-    ProfileDBService()
-        .getProfileData(profileUID: widget.userId)
-        .then((profileData) {
-      _visitProfileProvider.setUserProfile(_userProfile);
-      setState(() => _userProfile = profileData);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ProfileDBService()
+          .getProfileData(profileUID: widget.userId)
+          .then((profileData) {
+        _visitProfileProvider.setUserProfile(_userProfile);
+        setState(() => _userProfile = profileData);
+      });
     });
   }
 
@@ -46,6 +48,23 @@ class _DynamicLinkProfileState extends State<DynamicLinkProfile> {
         ),
       ],
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.5,
+          title: Text(
+            _userProfile.username,
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.black,
+            ),
+          ),
+        ),
         backgroundColor: Colors.white,
         body: _userProfile != null
             ? Container(
@@ -95,15 +114,11 @@ class _DynamicLinkProfileState extends State<DynamicLinkProfile> {
                                     color: Colors.black),
                               ),
                               SizedBox(height: 25),
-                              ChangeNotifierProvider<
-                                  VisitProfileProvider>.value(
-                                value: _visitProfileProvider,
-                                child: ProfileActionBar(
-                                    editProfileProvider: EditProfileProvider(),
-                                    userProfile: _userProfile,
-                                    visitProfile: true,
-                                    profileDBService: ProfileDBService()),
-                              ),
+                              ProfileActionBar(
+                                  editProfileProvider: EditProfileProvider(),
+                                  userProfile: _userProfile,
+                                  visitProfile: true,
+                                  profileDBService: ProfileDBService()),
 
                               SizedBox(height: 25),
                               SizedBox(
@@ -129,7 +144,16 @@ class _DynamicLinkProfileState extends State<DynamicLinkProfile> {
                         ),
                       ),
                       TabBarSliver(changeTab: changeTab),
-                      SliverToBoxAdapter(child: Text('No data')),
+                      SliverFillRemaining(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Quick sign up to see content'),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      // SliverToBoxAdapter(child: Text('No data')),
                       // SliverToBoxAdapter(
                       //   child: Builder(builder: (context) {
                       //     if (tabIndex == 0) {

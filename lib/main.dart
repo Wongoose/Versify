@@ -228,7 +228,7 @@ class VersifyHome extends StatefulWidget {
 }
 
 class _VersifyHomeState extends State<VersifyHome> {
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+  DynamicLinkService _dynamicLinkService;
   bool _completedBoarding = false;
   bool _hasDynamicLink;
 
@@ -243,21 +243,27 @@ class _VersifyHomeState extends State<VersifyHome> {
 
   void initState() {
     super.initState();
-    print('Main App initState RAN!');
-    _dynamicLinkService.addContext(context);
-
-    _dynamicLinkService.handleDynamicLink().then((value) {
-      setState(() => _hasDynamicLink = value);
-    });
-
+    _dynamicLinkService = DynamicLinkService(context);
     sharedPreferencesInit().then((result) {
       _completedBoarding = result;
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print('Main App initState RAN!');
+
+      _dynamicLinkService.handleDynamicLink().then((value) {
+        setState(() => _hasDynamicLink = value);
+      });
+    });
+
     // widget.authService.logout();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    // _dynamicLinkService.addContext(context);
+
     if (_hasDynamicLink != null) {
       if (_completedBoarding) {
         return Wrapper();

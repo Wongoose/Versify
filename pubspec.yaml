@@ -53,6 +53,7 @@ dependencies:
   firebase_dynamic_links: ^0.7.0+1
   esys_flutter_share: ^1.0.2
   google_fonts: ^1.1.2
+  flutter_launcher_icons: ^0.8.1
 
     
 
@@ -65,13 +66,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.8.0"
   
 
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logoFigma.png"
+  image_path: "assets/images/versify_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

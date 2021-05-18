@@ -6,11 +6,13 @@ import 'package:versify/z-wrappers/profile_dynamic_link.dart';
 import 'package:versify/z-wrappers/wrapper_dynamic_links.dart';
 
 class DynamicLinkService {
-  BuildContext context;
+  final BuildContext context2;
 
-  void addContext(BuildContext context) {
-    context = context;
-  }
+  DynamicLinkService(this.context2);
+
+  // void addContext(BuildContext context) {
+  //   context = context;
+  // }
 
   Future<bool> handleDynamicLink() async {
 //Get initial dynamic link if app started with link
@@ -39,6 +41,7 @@ class DynamicLinkService {
       bool isProfile = deepLink.pathSegments.contains('profile');
       bool isPost = deepLink.pathSegments.contains('post');
       print('isProfile | is: ${isProfile.toString()}');
+      print('isPost | is: ${isPost.toString()}');
 
       // AuthService().signInAnon();
 
@@ -46,7 +49,7 @@ class DynamicLinkService {
         String postId = deepLink.queryParameters['post-id'];
         if (postId != null) {
           //Navigate to post screen EXAMPLE
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context2).push(MaterialPageRoute(
               builder: (context) => DynamicLinkPost(postId: postId)));
 
           print('isPost | Post ID is: $postId');
@@ -55,7 +58,7 @@ class DynamicLinkService {
         String userId = deepLink.queryParameters['user-id'];
         if (userId != null) {
           //Navigate to user screen EXAMPLE
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context2).push(MaterialPageRoute(
               builder: (context) => DynamicLinkProfile(userId: userId)));
 
           print('isProfile | Profile ID is: $userId');

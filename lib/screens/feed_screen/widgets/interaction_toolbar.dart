@@ -189,10 +189,10 @@ class InteractionBar extends StatelessWidget {
                   ),
                   behavior: SnackBarBehavior.fixed,
                 ));
-                DynamicLinkService()
+                DynamicLinkService(context)
                     .createPostDynamicLink(feed.documentID)
                     .then((res) async {
-                  Scaffold.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   Share.text(
                       'Versify Blogs',
                       _isVisitProfile

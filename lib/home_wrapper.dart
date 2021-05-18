@@ -428,8 +428,9 @@ class HomeProfileBottomSheet extends StatelessWidget {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {},
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -448,8 +449,9 @@ class HomeProfileBottomSheet extends StatelessWidget {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
                 _editProfileProvider.initProfileUser(_authService.myUser);
                 Navigator.pop(context);
@@ -476,8 +478,9 @@ class HomeProfileBottomSheet extends StatelessWidget {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(
