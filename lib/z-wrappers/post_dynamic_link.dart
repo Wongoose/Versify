@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/services/database.dart';
@@ -6,7 +8,9 @@ import 'package:versify/shared/loading.dart';
 
 class DynamicLinkPost extends StatefulWidget {
   final String postId;
-  DynamicLinkPost({this.postId});
+  final bool onPopExitApp;
+
+  DynamicLinkPost({this.postId, this.onPopExitApp});
 
   @override
   _DynamicLinkPostState createState() => _DynamicLinkPostState();
@@ -54,129 +58,170 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
     });
   }
 
+  Future<void> _onWillPop() async {
+    if (widget.onPopExitApp) {
+      await showDialog<bool>(
+          context: context,
+          builder: (c) => AlertDialog(
+                title: Text(
+                  'Exit app',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                content: Text('Do you really want to exit the app'),
+                actions: [
+                  TextButton(
+                    child: Text('Yes'),
+                    onPressed: () => SystemNavigator.pop(),
+                  ),
+                  TextButton(
+                    child: Text('No'),
+                    onPressed: () => Navigator.pop(c, false),
+                  ),
+                ],
+              ));
+    } else {
+      Navigator.popUntil(
+          context, ModalRoute.withName(Navigator.defaultRouteName));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: _theme.accentColor,
-      appBar: AppBar(
-        elevation: 0.5,
-        backgroundColor: Colors.white,
-        centerTitle: false,
-        title: Text(
-          'View Post',
-          style: TextStyle(color: Colors.black),
+    return WillPopScope(
+      onWillPop: () {
+        _onWillPop();
+        return null;
+      },
+      child: Scaffold(
+        backgroundColor: _theme.accentColor,
+        appBar: AppBar(
+          elevation: 0.5,
+          backgroundColor: Colors.white,
+          centerTitle: false,
+          title: Text(
+            'View Post',
+            style: TextStyle(color: Colors.black),
+          ),
+          leading: GestureDetector(
+            onTap: () async {
+              if (FirebaseAuth.instance.currentUser.isAnonymous) {
+                await FirebaseAuth.instance.currentUser.delete();
+              }
+              await _onWillPop();
+            },
+            child: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.black,
+            ),
+          ),
         ),
-        leading: Icon(
-          Icons.arrow_back_rounded,
-          color: Colors.black,
-        ),
-      ),
-      body: _feed != null
-          ? NestedScrollView(
-              headerSliverBuilder: (context, s) {
-                return [
-                  // SliverToBoxAdapter(
-                  //   child: Expanded(
-                  //     child: Container(
-                  //       height: MediaQuery.of(context).size.height,
-                  //       width: MediaQuery.of(context).size.width,
-                  //       color: _theme.accentColor,
-                  //     ),
-                  //   ),
-                  // ),
-                  SliverAppBar(
-                    elevation: 0,
-                    pinned: true,
-                    floating: false,
-                    expandedHeight: 200,
-                    collapsedHeight: 100,
-                    backgroundColor: Colors.transparent,
-                    flexibleSpace: FlexibleSpaceBar(
-                      titlePadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                      centerTitle: false,
-                      collapseMode: CollapseMode.pin,
-                      title: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          _feed.title,
-                          textAlign: TextAlign.left,
-                          maxLines: null,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Libre',
-                              fontStyle: FontStyle.normal,
-                              color: Colors.black,
-                              fontSize: 22,
-                              height: 1.4,
-                              letterSpacing: -0.3),
+        body: _feed != null
+            ? NestedScrollView(
+                headerSliverBuilder: (context, s) {
+                  return [
+                    // SliverToBoxAdapter(
+                    //   child: Expanded(
+                    //     child: Container(
+                    //       height: MediaQuery.of(context).size.height,
+                    //       width: MediaQuery.of(context).size.width,
+                    //       color: _theme.accentColor,
+                    //     ),
+                    //   ),
+                    // ),
+                    SliverAppBar(
+                      elevation: 0,
+                      pinned: true,
+                      floating: false,
+                      expandedHeight: 200,
+                      collapsedHeight: 100,
+                      backgroundColor: Colors.transparent,
+                      flexibleSpace: FlexibleSpaceBar(
+                        titlePadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                        centerTitle: false,
+                        collapseMode: CollapseMode.pin,
+                        title: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            _feed.title,
+                            textAlign: TextAlign.left,
+                            maxLines: null,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontFamily: 'Libre',
+                                fontStyle: FontStyle.normal,
+                                color: Colors.black,
+                                fontSize: 22,
+                                height: 1.4,
+                                letterSpacing: -0.3),
+                          ),
                         ),
                       ),
+                      // title: Text(
+                      //   'Love endures through every circumstance.',
+                      //   textAlign: TextAlign.left,
+                      //   maxLines: null,
+                      //   style: TextStyle(
+                      //       fontWeight: FontWeight.normal,
+                      //       fontFamily: 'Libre',
+                      //       fontStyle: FontStyle.normal,
+                      //       color: Colors.black,
+                      //       fontSize: 27,
+                      //       height: 1.4,
+                      //       letterSpacing: -0.3),
+                      // ),
                     ),
-                    // title: Text(
-                    //   'Love endures through every circumstance.',
-                    //   textAlign: TextAlign.left,
-                    //   maxLines: null,
-                    //   style: TextStyle(
-                    //       fontWeight: FontWeight.normal,
-                    //       fontFamily: 'Libre',
-                    //       fontStyle: FontStyle.normal,
-                    //       color: Colors.black,
-                    //       fontSize: 27,
-                    //       height: 1.4,
-                    //       letterSpacing: -0.3),
+                    // SliverToBoxAdapter(
+                    //   child: Container(
+                    //     padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    //     child: Column(
+                    //       children: [
+                    //         Padding(
+                    //           padding: EdgeInsets.fromLTRB(2, 4, 26, 0),
+                    //           child: Text(
+                    //             'Love endures through every circumstance.',
+                    //             textAlign: TextAlign.left,
+                    //             style: TextStyle(
+                    //                 fontWeight: FontWeight.normal,
+                    //                 fontFamily: 'Libre',
+                    //                 fontStyle: FontStyle.normal,
+                    //                 color: Colors.black,
+                    //                 fontSize: 27,
+                    //                 height: 1.4,
+                    //                 letterSpacing: -0.3),
+                    //           ),
+                    //         ),
+                    //         SizedBox(height: 10),
+                    //       ],
+                    //     ),
+                    //   ),
                     // ),
+                  ];
+                },
+                body: Container(
+                  padding: EdgeInsets.fromLTRB(20, 30, 8, 10),
+                  width: MediaQuery.of(context).size.width,
+                  // height: MediaQuery.of(context).size.height,
+                  constraints: BoxConstraints(
+                    maxHeight: 500,
+                    minHeight: 10,
                   ),
-                  // SliverToBoxAdapter(
-                  //   child: Container(
-                  //     padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  //     child: Column(
-                  //       children: [
-                  //         Padding(
-                  //           padding: EdgeInsets.fromLTRB(2, 4, 26, 0),
-                  //           child: Text(
-                  //             'Love endures through every circumstance.',
-                  //             textAlign: TextAlign.left,
-                  //             style: TextStyle(
-                  //                 fontWeight: FontWeight.normal,
-                  //                 fontFamily: 'Libre',
-                  //                 fontStyle: FontStyle.normal,
-                  //                 color: Colors.black,
-                  //                 fontSize: 27,
-                  //                 height: 1.4,
-                  //                 letterSpacing: -0.3),
-                  //           ),
-                  //         ),
-                  //         SizedBox(height: 10),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                ];
-              },
-              body: Container(
-                padding: EdgeInsets.fromLTRB(20, 30, 8, 10),
-                width: MediaQuery.of(context).size.width,
-                // height: MediaQuery.of(context).size.height,
-                constraints: BoxConstraints(
-                  maxHeight: 500,
-                  minHeight: 10,
-                ),
-                decoration: BoxDecoration(
-                  boxShadow: [BoxShadow(color: Colors.black38)],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(color: Colors.black38)],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                    ),
                   ),
+                  child: SingleChildScrollView(
+                      child: Column(
+                    children: [Text(_feed.username)],
+                  )),
                 ),
-                child: SingleChildScrollView(
-                    child: Column(
-                  children: [Text(_feed.username)],
-                )),
-              ),
-            )
-          : Loading(),
+              )
+            : Loading(),
+      ),
     );
   }
 }

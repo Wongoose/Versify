@@ -10,16 +10,26 @@ class AuthService {
   MyUser myUser;
   String userUID;
 
-  Future signInAnon() async {
+  bool get isUserSignedIn => _auth.currentUser != null;
+
+  Future<bool> signInAnon() async {
     //method setup
+    print('SignInAnon() | RAN');
+
     try {
-      UserCredential result = await _auth.signInAnonymously();
+      return await _auth.signInAnonymously().then((UserCredential result) {
+        if (result.user.uid != null) {
+          print('User signed In Anon!');
+          return true;
+        } else {
+          print('No User ID');
+          return false;
+        }
+      });
       // FirebaseUser user = result.user;
-      print('User signed In Anon!');
-      return null;
     } catch (e) {
-      print(e.toString());
-      return null;
+      print('SignInAnon() | Error: ${e.toString()}');
+      return false;
     }
   }
 

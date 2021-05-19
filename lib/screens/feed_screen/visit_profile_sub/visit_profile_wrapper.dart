@@ -141,8 +141,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
                 if (widget.visitProfile) {
                   MyUser _reportUser = widget.profileProvider.userProfile;
@@ -166,6 +167,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -176,8 +178,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {},
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -186,6 +189,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -198,8 +202,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             child: Container(
               margin: EdgeInsets.all(0),
               height: 60,
-              child: FlatButton(
-                materialTapTargetSize: MaterialTapTargetSize.padded,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    padding: EdgeInsets.all(15), primary: Colors.white),
                 onPressed: () async {
                   setState(() => _followLoading = true);
 
@@ -232,6 +237,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
+                        fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -251,8 +257,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
           Container(
             margin: EdgeInsets.all(0),
             height: 60,
-            child: FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {},
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -261,6 +268,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),

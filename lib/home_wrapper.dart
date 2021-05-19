@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/z-wrappers/splash_loading.dart';
 
 class HomeWrapper extends StatefulWidget {
   // RefreshFunc _refresh;
@@ -201,8 +202,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
             ),
           );
         }
-        return Scaffold(
-            appBar: null, backgroundColor: Colors.white, body: Loading());
+        return SplashLoading();
       },
     );
   }
@@ -439,6 +439,7 @@ class HomeProfileBottomSheet extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -468,6 +469,7 @@ class HomeProfileBottomSheet extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -496,6 +498,7 @@ class HomeProfileBottomSheet extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
+                    fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
                 ),

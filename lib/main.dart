@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
 import 'package:versify/providers/content_body_provider.dart';
@@ -24,6 +26,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/z-wrappers/post_dynamic_link.dart';
+import 'package:versify/z-wrappers/splash_loading.dart';
 import 'package:versify/z-wrappers/wrapper_dynamic_links.dart';
 import 'models/user_model.dart';
 
@@ -42,9 +45,9 @@ class VersifyApp extends StatelessWidget {
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Colors.black.withOpacity(0.8),
-        systemNavigationBarDividerColor: Colors.black,
-        systemNavigationBarColor: Colors.black,
+        statusBarColor: Colors.white,
+        systemNavigationBarDividerColor: Colors.white,
+        systemNavigationBarColor: Colors.white,
       ),
     );
 
@@ -110,6 +113,8 @@ class VersifyApp extends StatelessWidget {
               // setState(() => _getFeedDataMain = DatabaseService().getFeedData);
             }
             AuthService _authService = AuthService();
+            DynamicLinkService _dynamicLinkService =
+                DynamicLinkService(authService: _authService);
 
             return StreamProvider<MyUser>.value(
               value: _authService.user,
@@ -186,9 +191,8 @@ class VersifyApp extends StatelessWidget {
                     theme: ThemeData(
                       // colorScheme: ColorScheme.fromSwatch(),
                       canvasColor: Colors.white,
-                      primaryColor: Color(0xFFFF696A),
-
-                      accentColor: Color(0xFFffae3d9),
+                      primaryColor: Color(0xFFff699F),
+                      accentColor: Color(0xFFff89B2),
                       fontFamily: GoogleFonts.getFont('Nunito Sans').fontFamily,
                       backgroundColor: Colors.white,
                     ),
@@ -199,7 +203,9 @@ class VersifyApp extends StatelessWidget {
                             .copyWith(textScaleFactor: 1.0),
                       );
                     },
-                    home: VersifyHome(authService: _authService),
+                    home: VersifyHome(
+                        authService: _authService,
+                        dynamicLinkService: _dynamicLinkService),
                     routes: {
                       '/accountSettings': (context) => AccountSettings(),
                     },
@@ -209,74 +215,98 @@ class VersifyApp extends StatelessWidget {
             );
           }
           return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: Scaffold(
-                backgroundColor: Colors.white,
-                appBar: null,
-                body: Loading(),
-              ));
+            debugShowCheckedModeBanner: false,
+            home: SplashLoading(),
+          );
         });
   }
 }
 
 class VersifyHome extends StatefulWidget {
   final AuthService authService;
-  VersifyHome({this.authService});
+  final DynamicLinkService dynamicLinkService;
+  VersifyHome({this.authService, this.dynamicLinkService});
 
   @override
   _VersifyHomeState createState() => _VersifyHomeState();
 }
 
 class _VersifyHomeState extends State<VersifyHome> {
-  DynamicLinkService _dynamicLinkService;
   bool _completedBoarding = false;
-  bool _hasDynamicLink;
 
-  void navigateDynamicLink(String postId) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => DynamicLinksWrapper(
-                  postId: postId,
-                )));
-  }
-
+  @override
   void initState() {
     super.initState();
-    _dynamicLinkService = DynamicLinkService(context);
+    print('Main App initState RAN!');
+
+    widget.dynamicLinkService.handleDynamicLink(context);
     sharedPreferencesInit().then((result) {
-      _completedBoarding = result;
+      setState(() => _completedBoarding = result);
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      print('Main App initState RAN!');
-
-      _dynamicLinkService.handleDynamicLink().then((value) {
-        setState(() => _hasDynamicLink = value);
-      });
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   _dynamicLinkService.handleDynamicLink(context).then((value) {
+    //     setState(() => _hasDynamicLink = value);
+    //   });
+    // });
 
     // widget.authService.logout();
   }
 
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   print('didChangeAppLifecycleState | ${state.toString()}');
+  //   if (state == AppLifecycleState.resumed) {
+  //     _timerLink = new Timer(
+  //       const Duration(milliseconds: 1000),
+  //       () {
+  //         _dynamicLinkService.handleDynamicLink(context);
+  //       },
+  //     );
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance.removeObserver(this);
+  //   if (_timerLink != null) {
+  //     _timerLink.cancel();
+  //   }
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
-
     // _dynamicLinkService.addContext(context);
 
-    if (_hasDynamicLink != null) {
-      if (_completedBoarding) {
-        return Wrapper();
-        // return DynamicLinkPost(
-        //   postId: 'aQtV58oqPh2ZfuGL4CrZ',
-        // );
-      } else {
-        return Wrapper();
-        //return boarding
-      }
+    // if (_hasDynamicLink != null) {
+    if (_completedBoarding != null && _completedBoarding == true) {
+      return Wrapper();
+      // return DynamicLinkPost(
+      //   postId: 'aQtV58oqPh2ZfuGL4CrZ',
+      // );
     } else {
-      return Loading();
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          appBar: null,
+          backgroundColor: Colors.white,
+          body: Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Text(
+              'not complete boarding',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ),
+      );
+      //return boarding
     }
+    // } else {
+    //   return SplashLoading();
+    // }
   }
   // return ReviewPost();
 

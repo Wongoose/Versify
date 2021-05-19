@@ -27,7 +27,7 @@ class Loading extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 child: Image(
                   height: 80,
-                  image: AssetImage('assets/images/logoFigma.png'),
+                  image: AssetImage('assets/images/versify_logo_circle.png'),
                 ),
               ),
             ),

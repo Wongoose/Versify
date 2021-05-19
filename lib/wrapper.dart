@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:versify/home_wrapper.dart';
 import 'package:versify/screens/onboarding/new_user_options.dart';
 import 'package:versify/screens/onboarding/sign_up_user_details.dart';
@@ -12,6 +13,7 @@ import 'package:versify/services/users_following_json_storage.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/z-wrappers/splash_loading.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {
@@ -37,39 +39,50 @@ class Wrapper extends StatelessWidget {
 
     // futurebuilder maybe??
     if (user != null) {
+      print('Wrapper stream user' + user.userUID.toString());
       return FutureBuilder<MyUser>(
           future: _profileDBService.whetherHasAccount(user.userUID),
           //change whetherHasAcc function to return MyUser
-          // ignore: missing_return
           builder: (context, myUserSnap) {
             if (myUserSnap.connectionState == ConnectionState.done) {
-              if (myUserSnap.data != null &&
-                  myUserSnap.data.completeLogin == true) {
-                _authService.myUser = myUserSnap.data;
+              if (myUserSnap.data != null) {
+                //has user document in firestore
+                if (myUserSnap.data.completeLogin == true) {
+                  //oldUser compelte login
+                  _authService.myUser = myUserSnap.data;
 
-                // CachedNetworkImage(
-                //   cacheKey: myUserSnap.data.userUID,
-                //   imageUrl: myUserSnap.data.profileImageUrl,
-                //   progressIndicatorBuilder: (context, url, downloadProgress) =>
-                //       CircularProgressIndicator(
-                //           value: downloadProgress.progress),
-                //   errorWidget: (context, url, error) => Icon(Icons.error),
-                // );
+                  initSharedPrefs(logInUserID: myUserSnap.data.userUID);
+                  _profileDBService.profileDBInit();
+                  _jsonFollowingStorage.jsonInit(); //diff accounts
+                  _jsonAllBadgesStorage.jsonInit();
 
-                initSharedPrefs(logInUserID: myUserSnap.data.userUID);
-                _profileDBService.profileDBInit();
-                _jsonFollowingStorage.jsonInit(); //diff accounts
-                _jsonAllBadgesStorage.jsonInit();
-                return new HomeWrapper();
+                  return new HomeWrapper();
+                } else {
+                  //not complete login
+                  return SignUpDetails();
+                }
               } else {
-                return SignUpDetails();
+                // no user document but authenticated
+                if (_authService.isUserSignedIn) {
+                  //dynamic linking with new user
+                  print('Anonymous User | DynamicLink');
+                  return GestureDetector(
+                      onTap: () async {
+                        await _authService.logout();
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                      ));
+                } else {
+                  //user authenticated not-anonymous but no firestore document
+                  //back to signUp
+                  return SignUpDetails();
+                }
               }
             } else {
-              return Scaffold(
-                backgroundColor: Colors.white,
-                appBar: null,
-                body: Loading(),
-              );
+              return SplashLoading();
             }
           });
     } else {

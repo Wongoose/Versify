@@ -66,7 +66,7 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
               GestureDetector(
                 onTap: () {
                   if (widget.visitProfile) {
-                    DynamicLinkService(context)
+                   DynamicLinkService()
                         .createProfileDynamicLink(widget.userProfile.userUID)
                         .then((res) async {
                       Share.text(

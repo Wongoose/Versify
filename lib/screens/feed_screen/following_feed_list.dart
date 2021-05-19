@@ -40,6 +40,24 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
   DatabaseService _databaseService;
   FeedListProvider _feedListProvider;
   BottomNavProvider _bottomNavProvider;
+
+  final List<Map<String, Color>> _colorScheme = [
+    {
+      //red
+      'primary': Color(0xFFff699F),
+      'secondary': Color(0xFFff89B2),
+    },
+    {
+      //blue
+      'primary': Color(0xFFa15ce2),
+      'secondary': Color(0xFFa15ce2),
+    },
+    {
+      //green
+      'primary': Color(0xFF61C0BF),
+      'secondary': Color(0xFF61C0BF),
+    }
+  ];
   // FeedTypeProvider _feedTypeProvider;
   // double _localExtent = 0;
 
@@ -265,6 +283,20 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
                   // controller: widget.feedListController,
                   // physics: BouncingScrollPhysics(),
                   separatorBuilder: (BuildContext context, int index) {
+                    int _colorIndex = 0;
+                    int _nextIndex = index + 1;
+                    int _nextColorIndex;
+
+                    if (index > 2) {
+                      _colorIndex = index % 3;
+                    } else {
+                      _colorIndex = index;
+                    }
+                    if (_nextIndex > 2) {
+                      _nextColorIndex = _nextIndex % 3;
+                    } else {
+                      _nextColorIndex = _nextIndex;
+                    }
                     return Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
@@ -274,7 +306,15 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
                         width: 8,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: _theme.primaryColor,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              _colorScheme[_colorIndex]['primary'],
+                              _colorScheme[_nextColorIndex]['primary']
+                            ],
+                          ),
+                          color: _colorScheme[_colorIndex]['primary'],
                         ),
                       ),
                     );

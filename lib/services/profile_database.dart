@@ -291,29 +291,34 @@ class ProfileDBService {
 
   Future<MyUser> whetherHasAccount(String userID) async {
     try {
-      print('whetherHasAccount ran');
+      print('WhetherhasAccount RAN | $userID');
+
       return await usersPrivateCollection.doc(userID).get().then((doc) {
         print(doc.exists);
-        return MyUser(
-          userUID: doc.id,
-          username: doc.data()['username'],
-          description: doc.data()['description'],
-          profileImageUrl: doc.data()['profileImageUrl'] ??
-              'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-          phoneNumber: doc.data()['phone'],
-          email: doc.data()['email'],
-          socialLinks: doc.data()['socialLinks'] ??
-              {
-                'instagram': null,
-                'tiktok': null,
-                'youtube': null,
-                'website': null,
-              },
-          totalFollowers: doc.data()['totalFollowers'],
-          totalFollowing: doc.data()['totalFollowing'],
-          isFollowing: false,
-          completeLogin: doc.data()['completeLogin'] ?? false,
-        );
+        if (doc.exists) {
+          return MyUser(
+            userUID: doc.id,
+            username: doc.data()['username'],
+            description: doc.data()['description'],
+            profileImageUrl: doc.data()['profileImageUrl'] ??
+                'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
+            phoneNumber: doc.data()['phone'],
+            email: doc.data()['email'],
+            socialLinks: doc.data()['socialLinks'] ??
+                {
+                  'instagram': null,
+                  'tiktok': null,
+                  'youtube': null,
+                  'website': null,
+                },
+            totalFollowers: doc.data()['totalFollowers'],
+            totalFollowing: doc.data()['totalFollowing'],
+            isFollowing: false,
+            completeLogin: doc.data()['completeLogin'] ?? false,
+          );
+        } else {
+          return null;
+        }
       });
     } catch (e) {
       print('error while signInUser: ' + e.toString());

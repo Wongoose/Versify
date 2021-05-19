@@ -388,7 +388,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
                 setState(() => _shareLoading = true);
-                DynamicLinkService(context)
+               DynamicLinkService()
                     .createPostDynamicLink(
                         widget.profileAllPostsView.currentFeed.documentID)
                     .then((res) async {

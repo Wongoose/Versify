@@ -167,7 +167,7 @@ class InteractionBar extends StatelessWidget {
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                Scaffold.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Padding(
                     padding: EdgeInsets.all(8),
                     child: Row(
@@ -189,7 +189,7 @@ class InteractionBar extends StatelessWidget {
                   ),
                   behavior: SnackBarBehavior.fixed,
                 ));
-                DynamicLinkService(context)
+               DynamicLinkService()
                     .createPostDynamicLink(feed.documentID)
                     .then((res) async {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();

@@ -20,23 +20,23 @@ class PostFeedWidget extends StatelessWidget {
   final List<Map<String, Color>> _colorScheme = [
     {
       //red
-      'primary': Color(0xFFFF699F),
-      'secondary': Color(0xffff548e),
-    },
-    {
-      //orange
-      'primary': Colors.amber[700],
-      'secondary': Colors.amber[700],
-    },
-    {
-      //green
-      'primary': Color(0xFFFF696A),
-      'secondary': Color(0xFFFF696A),
+      'primary': Color(0xFFff699F),
+      'secondary': Color(0xFFff89B2),
     },
     {
       //blue
-      'primary': Colors.blueAccent,
-      'secondary': Colors.blueAccent,
+      'primary': Color(0xFFa15ce2),
+      'secondary': Color(0xFFa15ce2),
+    },
+    {
+      //green
+      'primary': Color(0xFF61C0BF),
+      'secondary': Color(0xFFBBDED6),
+    },
+    {
+      //orange
+      'primary': Color(0xFF61C0BF),
+      'secondary': Colors.amber[700],
     },
     {
       //purple
@@ -96,7 +96,7 @@ class PostFeedWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: _colorScheme[colorIndex]['secondary'],
+                          color: _colorScheme[colorIndex]['primary'],
                         ),
                         child: Text(
                           feed.featuredTopic ?? 'Featured',
@@ -104,7 +104,7 @@ class PostFeedWidget extends StatelessWidget {
                             fontFamily:
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
                             fontSize: 13,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                             color: Color(0xfffffcfe),
                           ),
                         ),
@@ -137,12 +137,13 @@ class PostFeedWidget extends StatelessWidget {
                               overflow: TextOverflow.fade,
                               maxLines: null,
                               style: TextStyle(
-                                fontFamily: GoogleFonts.getFont('Nunito Sans')
+                                fontFamily: GoogleFonts.getFont('Philosopher')
                                     .fontFamily,
                                 fontSize: 14,
-                                fontWeight: FontWeight.normal,
+                                height: 1.5,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.black87,
-                                fontStyle: FontStyle.italic,
+                                // fontStyle: FontStyle.italic,
                               ),
                             ),
                           ),
@@ -236,12 +237,12 @@ class PostFeedWidget extends StatelessWidget {
     contentFromMap();
 
     print('New feed widget built!');
-    int _colorIndex = 2;
-    // if (index > 4) {
-    //   _colorIndex = index % 5;
-    // } else {
-    //   _colorIndex = index;
-    // }
+    int _colorIndex = 0;
+    if (index > 2) {
+      _colorIndex = index % 3;
+    } else {
+      _colorIndex = index;
+    }
 
     return Padding(
       padding: EdgeInsets.fromLTRB(5, 0, 10, 0),
@@ -315,20 +316,20 @@ class PostFeedWidget extends StatelessWidget {
                                       // cacheKey: userProfile.userUID,
                                       imageUrl: feed.profileImageUrl ??
                                           'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-                                      progressIndicatorBuilder:
-                                          (context, url, downloadProgress) {
-                                        return SizedBox(
-                                          height: 5,
-                                          width: 5,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 0.5,
-                                            value: downloadProgress.progress,
-                                          ),
-                                        );
-                                      },
+                                      // progressIndicatorBuilder:
+                                      //     (context, url, downloadProgress) {
+                                      //   return SizedBox(
+                                      //     height: 5,
+                                      //     width: 5,
+                                      //     child: CircularProgressIndicator(
+                                      //       strokeWidth: 0.5,
+                                      //       value: downloadProgress.progress,
+                                      //     ),
+                                      //   );
+                                      // },
                                       errorWidget: (context, url, error) =>
                                           Icon(FontAwesomeIcons.userAltSlash,
-                                              size: 10),
+                                              size: 5, color: Colors.black54),
                                     ),
                                   ),
                                 ),
@@ -385,13 +386,14 @@ class PostFeedWidget extends StatelessWidget {
                                             EdgeInsets.fromLTRB(8, 5, 8, 5),
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border: Border.all(
-                                                color: _theme.primaryColor)
-                                            // color: _colorScheme[_colorIndex]
-                                            //     ['secondary'],
-                                            ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border: Border.all(
+                                            // color: _theme.primaryColor,
+                                            color: _colorScheme[_colorIndex]
+                                                ['primary'],
+                                          ),
+                                        ),
                                         child: Text(
                                           feed.featuredTopic ?? 'Blog singles',
                                           style: TextStyle(
@@ -399,8 +401,9 @@ class PostFeedWidget extends StatelessWidget {
                                                     'Nunito Sans')
                                                 .fontFamily,
                                             fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: _theme.primaryColor,
+                                            fontWeight: FontWeight.w400,
+                                            color: _colorScheme[_colorIndex]
+                                                ['primary'],
                                           ),
                                         ),
                                       ),

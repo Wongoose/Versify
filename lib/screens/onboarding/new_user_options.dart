@@ -42,7 +42,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                     borderRadius: BorderRadius.all(Radius.circular(100000)),
                     child: Image(
                       height: 250,
-                      image: AssetImage('assets/images/logo_circle.png'),
+                      image: AssetImage('assets/images/versify_logo_circle.png'),
                     ),
                   ),
                 ),
