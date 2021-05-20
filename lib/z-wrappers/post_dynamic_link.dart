@@ -32,27 +32,27 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
         .then((doc) {
       _feed = Feed(
         documentID: doc.id,
-        userID: doc.data()['userID'],
-        username: doc.data()['username'],
-        profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+        userID: doc['userID'],
+        username: doc['username'],
+        profileImageUrl: doc['profileImageUrl'] ?? null,
         hasViewed: false,
 
-        // content: doc.data()['content'] ?? 'No Content',
-        contentLength: doc.data()['contentLength'] ?? 0,
+        // content: doc['content'] ?? 'No Content',
+        contentLength: doc['contentLength'] ?? 0,
 
-        featuredTopic: doc.data()['featuredTopic'] ?? null,
-        featuredValue: doc.data()['featuredValue'] ?? ". . .",
+        featuredTopic: doc['featuredTopic'] ?? null,
+        featuredValue: doc['featuredValue'] ?? ". . .",
 
-        giftLove: doc.data()['giftLove'] ?? 0,
-        giftBird: doc.data()['giftBird'] ?? 0,
+        giftLove: doc['giftLove'] ?? 0,
+        giftBird: doc['giftBird'] ?? 0,
 
-        title: doc.data()['title'] ?? 'Just Me',
-        tags: doc.data()['tags'] ?? [],
+        title: doc['title'] ?? 'Just Me',
+        tags: doc['tags'] ?? [],
         initLike: false,
-        numberOfLikes: doc.data()['likes'],
-        numberOfViews: doc.data()['views'],
-        listMapContent: doc.data()['listMapContent'] ?? [],
-        postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+        numberOfLikes: doc['likes'],
+        numberOfViews: doc['views'],
+        listMapContent: doc['listMapContent'] ?? [],
+        postedTimestamp: doc['postedTimeStamp'].toDate(),
       );
       setState(() {});
     });
@@ -71,7 +71,13 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                 actions: [
                   TextButton(
                     child: Text('Yes'),
-                    onPressed: () => SystemNavigator.pop(),
+                    onPressed: () async {
+                      if (FirebaseAuth.instance.currentUser.isAnonymous) {
+                        await FirebaseAuth.instance.currentUser
+                            .delete()
+                            .then((_) => SystemNavigator.pop());
+                      }
+                    },
                   ),
                   TextButton(
                     child: Text('No'),
@@ -80,8 +86,12 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                 ],
               ));
     } else {
-      Navigator.popUntil(
-          context, ModalRoute.withName(Navigator.defaultRouteName));
+      if (FirebaseAuth.instance.currentUser.isAnonymous) {
+        await FirebaseAuth.instance.currentUser.delete().then((value) =>
+            Navigator.popUntil(
+                context, ModalRoute.withName(Navigator.defaultRouteName)));
+      }
+      ;
     }
   }
 

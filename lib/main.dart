@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
 import 'package:versify/providers/content_body_provider.dart';
@@ -117,6 +120,7 @@ class VersifyApp extends StatelessWidget {
                 DynamicLinkService(authService: _authService);
 
             return StreamProvider<MyUser>.value(
+              initialData: null,
               value: _authService.user,
               child: Consumer<MyUser>(builder: (_, user, __) {
                 //parse anything to database service
@@ -232,12 +236,50 @@ class VersifyHome extends StatefulWidget {
 }
 
 class _VersifyHomeState extends State<VersifyHome> {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   bool _completedBoarding = false;
 
+  Future<void> _saveDeviceToken() async {}
   @override
   void initState() {
     super.initState();
     print('Main App initState RAN!');
+    if (Platform.isAndroid) {
+      _fcm.getToken().then((token) {
+        print('getToken | token is: $token');
+      });
+    }
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('FirebaseMessaging | onMessage GOT');
+      print('Message Data: ${message.data}');
+
+      if (message.notification != null) {
+        print('message also has a notification!');
+        print('Notification Title: ${message.notification.title}');
+
+        final SnackBar snackBar = SnackBar(
+          content: Padding(
+              padding: EdgeInsets.all(8),
+              child: Text(message.notification.title)),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
+
+    // _fcm.configure(onMessage: (Map<String, dynamic> message) async {
+    //   print('onMessage | Message: $message');
+
+    //   final SnackBar snackBar = SnackBar(
+    //     content: Text(message['notification']['title']),
+    //     action: SnackBarAction(
+    //       label: 'Go',
+    //       onPressed: null,
+    //     ),
+    //   );
+    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // });
 
     widget.dynamicLinkService.handleDynamicLink(context);
     sharedPreferencesInit().then((result) {

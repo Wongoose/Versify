@@ -58,14 +58,14 @@ class ProfileDBService {
           //current user is following
           DocumentSnapshot _doc = snaps.docs.last;
           return MyUser(
-            userUID: _doc.data()['userID'],
-            username: _doc.data()['username'],
-            description: _doc.data()['description'],
-            profileImageUrl: _doc.data()['profileImageUrl'] ??
+            userUID: _doc['userID'],
+            username: _doc['username'],
+            description: _doc['description'],
+            profileImageUrl: _doc['profileImageUrl'] ??
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-            phoneNumber: _doc.data()['phone'],
-            email: _doc.data()['email'],
-            socialLinks: _doc.data()['socialLinks'] ??
+            phoneNumber: _doc['phone'],
+            email: _doc['email'],
+            socialLinks: _doc['socialLinks'] ??
                 {
                   'instagram': null,
                   'tiktok': null,
@@ -73,20 +73,20 @@ class ProfileDBService {
                   'website': null,
                 },
             usersPublicFollowID: _doc.id,
-            isFollowing: (_doc.data()['followers'] as List).contains(this.uid),
+            isFollowing: (_doc['followers'] as List).contains(this.uid),
           );
         } else {
           //current user not following
           return await usersPrivateCollection.doc(profileUID).get().then((doc) {
             return MyUser(
               userUID: doc.id,
-              username: doc.data()['username'],
-              description: doc.data()['description'],
-              profileImageUrl: doc.data()['profileImageUrl'] ??
+              username: doc['username'],
+              description: doc['description'],
+              profileImageUrl: doc['profileImageUrl'] ??
                   'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-              phoneNumber: doc.data()['phone'],
-              email: doc.data()['email'],
-              socialLinks: doc.data()['socialLinks'] ??
+              phoneNumber: doc['phone'],
+              email: doc['email'],
+              socialLinks: doc['socialLinks'] ??
                   {
                     'instagram': null,
                     'tiktok': null,
@@ -118,30 +118,30 @@ class ProfileDBService {
       snaps.docs.forEach((doc) async {
         tempList.add(Feed(
           documentID: doc.id,
-          userID: doc.data()['userID'],
+          userID: doc['userID'],
 
-          username: doc.data()['username'],
-          profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+          username: doc['username'],
+          profileImageUrl: doc['profileImageUrl'] ?? null,
           hasViewed: false,
 
-          // content: doc.data()['content'] ?? 'No Content',
-          contentLength: doc.data()['contentLength'] ?? 0,
-          title: doc.data()['title'] ?? 'Just Me',
-          tags: doc.data()['tags'] ?? [],
-          initLike: doc.data()['isLiked'] != null
-              ? doc.data()['isLiked'].contains(this.uid)
+          // content: doc['content'] ?? 'No Content',
+          contentLength: doc['contentLength'] ?? 0,
+          title: doc['title'] ?? 'Just Me',
+          tags: doc['tags'] ?? [],
+          initLike: doc['isLiked'] != null
+              ? doc['isLiked'].contains(this.uid)
               : false,
 
-          featuredTopic: doc.data()['featuredTopic'] ?? null,
-          featuredValue: doc.data()['featuredValue'] ?? ". . .",
+          featuredTopic: doc['featuredTopic'] ?? null,
+          featuredValue: doc['featuredValue'] ?? ". . .",
 
-          giftLove: doc.data()['giftLove'] ?? 0,
-          giftBird: doc.data()['giftBird'] ?? 0,
+          giftLove: doc['giftLove'] ?? 0,
+          giftBird: doc['giftBird'] ?? 0,
 
-          numberOfLikes: doc.data()['likes'],
-          numberOfViews: doc.data()['views'],
-          listMapContent: doc.data()['listMapContent'] ?? [],
-          postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+          numberOfLikes: doc['likes'],
+          numberOfViews: doc['views'],
+          listMapContent: doc['listMapContent'] ?? [],
+          postedTimestamp: doc['postedTimeStamp'].toDate(),
         ));
       });
     }).catchError((e) => print('Failed getNewProfileBlogs: $e'));
@@ -170,30 +170,30 @@ class ProfileDBService {
         print('got doc: ' + doc.id);
         tempList.add(Feed(
           documentID: doc.id,
-          userID: doc.data()['userID'],
+          userID: doc['userID'],
 
-          username: doc.data()['username'],
-          profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+          username: doc['username'],
+          profileImageUrl: doc['profileImageUrl'] ?? null,
           hasViewed: false,
 
-          // content: doc.data()['content'] ?? 'No Content',
-          contentLength: doc.data()['contentLength'] ?? 0,
-          title: doc.data()['title'] ?? 'Just Me',
-          tags: doc.data()['tags'] ?? [],
-          initLike: doc.data()['isLiked'] != null
-              ? doc.data()['isLiked'].contains(this.uid)
+          // content: doc['content'] ?? 'No Content',
+          contentLength: doc['contentLength'] ?? 0,
+          title: doc['title'] ?? 'Just Me',
+          tags: doc['tags'] ?? [],
+          initLike: doc['isLiked'] != null
+              ? doc['isLiked'].contains(this.uid)
               : false,
 
-          featuredTopic: doc.data()['featuredTopic'] ?? null,
-          featuredValue: doc.data()['featuredValue'] ?? ". . .",
+          featuredTopic: doc['featuredTopic'] ?? null,
+          featuredValue: doc['featuredValue'] ?? ". . .",
 
-          giftLove: doc.data()['giftLove'] ?? 0,
-          giftBird: doc.data()['giftBird'] ?? 0,
+          giftLove: doc['giftLove'] ?? 0,
+          giftBird: doc['giftBird'] ?? 0,
 
-          numberOfLikes: doc.data()['likes'],
-          numberOfViews: doc.data()['views'],
-          listMapContent: doc.data()['listMapContent'] ?? [],
-          postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+          numberOfLikes: doc['likes'],
+          numberOfViews: doc['views'],
+          listMapContent: doc['listMapContent'] ?? [],
+          postedTimestamp: doc['postedTimeStamp'].toDate(),
         ));
         //add to seen
       });
@@ -205,7 +205,7 @@ class ProfileDBService {
   }
 
   void storeLastUpdated({DocumentSnapshot doc, MyUser profileUser}) {
-    profileUser.lastUpdated = doc.data()['postedTimeStamp'].toDate();
+    profileUser.lastUpdated = doc['postedTimeStamp'].toDate();
   }
 
   Future<String> updateFollowing(
@@ -298,23 +298,23 @@ class ProfileDBService {
         if (doc.exists) {
           return MyUser(
             userUID: doc.id,
-            username: doc.data()['username'],
-            description: doc.data()['description'],
-            profileImageUrl: doc.data()['profileImageUrl'] ??
+            username: doc['username'],
+            description: doc['description'],
+            profileImageUrl: doc['profileImageUrl'] ??
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-            phoneNumber: doc.data()['phone'],
-            email: doc.data()['email'],
-            socialLinks: doc.data()['socialLinks'] ??
+            phoneNumber: doc['phone'],
+            email: doc['email'],
+            socialLinks: doc['socialLinks'] ??
                 {
                   'instagram': null,
                   'tiktok': null,
                   'youtube': null,
                   'website': null,
                 },
-            totalFollowers: doc.data()['totalFollowers'],
-            totalFollowing: doc.data()['totalFollowing'],
+            totalFollowers: doc['totalFollowers'],
+            totalFollowing: doc['totalFollowing'],
             isFollowing: false,
-            completeLogin: doc.data()['completeLogin'] ?? false,
+            completeLogin: doc['completeLogin'] ?? false,
           );
         } else {
           return null;
@@ -413,16 +413,39 @@ class ProfileDBService {
       'email': email,
     });
   }
+
+  // Future<void> updateAllUserProfileImage() async {
+  //   await usersPrivateCollection
+  //       .where('profileImageUrl', isEqualTo: null)
+  //       .get()
+  //       .then((snap) {
+  //     snap.docs.forEach((doc) async {
+  //       usersPrivateCollection.doc(doc.id).update({
+  //         'profileImageUrl': null,
+  //       });
+  //     });
+  //   });
+  //   await usersPublicCollection
+  //       .where('profileImageUrl', isEqualTo: null)
+  //       .get()
+  //       .then((snap) {
+  //     snap.docs.forEach((doc) async {
+  //       usersPublicCollection.doc(doc.id).update({
+  //         'profileImageUrl': null,
+  //       });
+  //     });
+  //   });
+  // }
   // Future<MyUser> signInGetUserInfo({String uid}) async {
   //   print('ProfileDb SignIN User Info RAN');
   //   return await usersPrivateCollection.doc(uid).get().then((doc) {
   //     return MyUser(
   //       userUID: doc.id,
-  //       username: doc.data()['username'],
-  //       description: doc.data()['description'],
-  //       phoneNumber: doc.data()['phone'],
-  //       totalFollowers: doc.data()['totalFollowers'],
-  //       totalFollowing: doc.data()['totalFollowing'],
+  //       username: doc['username'],
+  //       description: doc['description'],
+  //       phoneNumber: doc['phone'],
+  //       totalFollowers: doc['totalFollowers'],
+  //       totalFollowing: doc['totalFollowing'],
   //     );
   //   });
   // }

@@ -276,7 +276,6 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
                 onLoading: _onLoading,
                 child: ListView.separated(
                   primary: false,
-                  cacheExtent: 1000,
                   addAutomaticKeepAlives: true,
                   itemCount: _feedListProvider.followingData.length,
                   scrollDirection: Axis.vertical,

@@ -64,7 +64,7 @@ class JsonAllBadgesStorage {
 
     await getDeviceLatestBadgeVersion().then((deviceBadgeTs) async {
       await systemSettings.doc('allBadges').get().then((doc) {
-        _systemLatestUpdate = doc.data()['latestUpdate'].toDate();
+        _systemLatestUpdate = doc['latestUpdate'].toDate();
         if (deviceBadgeTs != null && fileContent.isNotEmpty) {
           if (_systemLatestUpdate.isAfter(deviceBadgeTs)) {
             //download all badges with larger timestamp
@@ -78,10 +78,10 @@ class JsonAllBadgesStorage {
                 fileContent.addAll(
                   {
                     doc.id: {
-                      'title': doc.data()['title'],
-                      'imageUrl': doc.data()['imageUrl'],
-                      'description': doc.data()['description'],
-                      'category': doc.data()['category'],
+                      'title': doc['title'],
+                      'imageUrl': doc['imageUrl'],
+                      'description': doc['description'],
+                      'category': doc['category'],
                     }
                   },
                 );
@@ -99,10 +99,10 @@ class JsonAllBadgesStorage {
               fileContent.addAll(
                 {
                   doc.id: {
-                    'title': doc.data()['title'],
-                    'imageUrl': doc.data()['imageUrl'],
-                    'description': doc.data()['description'],
-                    'category': doc.data()['category'],
+                    'title': doc['title'],
+                    'imageUrl': doc['imageUrl'],
+                    'description': doc['description'],
+                    'category': doc['category'],
                   }
                 },
               );
@@ -142,7 +142,7 @@ class JsonAllBadgesStorage {
         .doc('welcomeBadges')
         .get()
         .then((doc) {
-      Map<String, dynamic> _listOfBadges = doc.data()['listOfBadges'];
+      Map<String, dynamic> _listOfBadges = doc['listOfBadges'];
       print(_listOfBadges);
       return _listOfBadges;
     });

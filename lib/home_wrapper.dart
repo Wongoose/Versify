@@ -14,6 +14,7 @@ import 'package:versify/screens/profile_screen/visit_profile_provider.dart';
 import 'package:versify/screens/word_screen/word_screen.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
+import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/bottom_navigation.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:flutter/cupertino.dart';

@@ -1,4 +1,3 @@
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/input_comments_provider.dart';
@@ -16,6 +15,7 @@ import 'package:versify/shared/report_post_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class ProfilePageView extends StatefulWidget {
   final String userUID;
@@ -388,17 +388,17 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   padding: EdgeInsets.all(15), primary: Colors.white),
               onPressed: () {
                 setState(() => _shareLoading = true);
-               DynamicLinkService()
+                DynamicLinkService()
                     .createPostDynamicLink(
                         widget.profileAllPostsView.currentFeed.documentID)
                     .then((res) async {
                   setState(() => _shareLoading = false);
-                  Share.text(
-                      'Versify Blogs',
-                      _isVisitProfile
-                          ? 'Check out this amazing blog on the Versify app!\n$res'
-                          : 'Check out the blog that I wrote on the Versify app!\n$res',
-                      'text/txt');
+                  Share.share(
+                    _isVisitProfile
+                        ? 'Check out this amazing blog on the Versify app!\n$res'
+                        : 'Check out the blog that I wrote on the Versify app!\n$res',
+                    subject: 'Versify Blogs',
+                  );
                 });
               },
               child: Align(

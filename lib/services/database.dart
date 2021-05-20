@@ -104,7 +104,7 @@ class DatabaseService {
   //           .where('followers', arrayContains: _currentID)
   //           .get()
   //           .then((followingSnaps) async {
-  //         print(doc.data()['username']);
+  //         print(doc['username']);
   //         print(followingSnaps.size);
   //         followingSnaps.docs.forEach((followingDoc) async {
   //           print(followingDoc.data()['userID']);
@@ -134,7 +134,7 @@ class DatabaseService {
 
     return await privateAllFollowingCollection.get().then((snaps) {
       snaps.docs.forEach((doc) {
-        (doc.data()['usersFollowing'] as List).forEach((_userID) {
+        (doc['usersFollowing'] as List).forEach((_userID) {
           _tempListUID.add(_userID.toString());
         });
       });
@@ -210,29 +210,29 @@ class DatabaseService {
 
                   Feed _feed = Feed(
                     documentID: doc.id,
-                    userID: doc.data()['userID'],
-                    username: doc.data()['username'],
-                    profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+                    userID: doc['userID'],
+                    username: doc['username'],
+                    profileImageUrl: doc['profileImageUrl'] ?? null,
                     hasViewed: false,
 
-                    // content: doc.data()['content'] ?? 'No Content',
-                    contentLength: doc.data()['contentLength'] ?? 0,
+                    // content: doc['content'] ?? 'No Content',
+                    contentLength: doc['contentLength'] ?? 0,
 
-                    featuredTopic: doc.data()['featuredTopic'] ?? null,
-                    featuredValue: doc.data()['featuredValue'] ?? ". . .",
+                    featuredTopic: doc['featuredTopic'] ?? null,
+                    featuredValue: doc['featuredValue'] ?? ". . .",
 
-                    giftLove: doc.data()['giftLove'] ?? 0,
-                    giftBird: doc.data()['giftBird'] ?? 0,
+                    giftLove: doc['giftLove'] ?? 0,
+                    giftBird: doc['giftBird'] ?? 0,
 
-                    title: doc.data()['title'] ?? 'Just Me',
-                    tags: doc.data()['tags'] ?? [],
-                    initLike: doc.data()['isLiked'] != null
-                        ? doc.data()['isLiked'].contains(this.uid)
+                    title: doc['title'] ?? 'Just Me',
+                    tags: doc['tags'] ?? [],
+                    initLike: doc['isLiked'] != null
+                        ? doc['isLiked'].contains(this.uid)
                         : false,
-                    numberOfLikes: doc.data()['likes'],
-                    numberOfViews: doc.data()['views'],
-                    listMapContent: doc.data()['listMapContent'] ?? [],
-                    postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+                    numberOfLikes: doc['likes'],
+                    numberOfViews: doc['views'],
+                    listMapContent: doc['listMapContent'] ?? [],
+                    postedTimestamp: doc['postedTimeStamp'].toDate(),
                   );
 
                   _tempFeedList.add(_feed);
@@ -252,29 +252,29 @@ class DatabaseService {
 
                       Feed _feed = Feed(
                         documentID: doc.id,
-                        userID: doc.data()['userID'],
-                        username: doc.data()['username'],
-                        profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+                        userID: doc['userID'],
+                        username: doc['username'],
+                        profileImageUrl: doc['profileImageUrl'] ?? null,
                         hasViewed: false,
 
-                        // content: doc.data()['content'] ?? 'No Content',
-                        contentLength: doc.data()['contentLength'] ?? 0,
+                        // content: doc['content'] ?? 'No Content',
+                        contentLength: doc['contentLength'] ?? 0,
 
-                        featuredTopic: doc.data()['featuredTopic'] ?? null,
-                        featuredValue: doc.data()['featuredValue'] ?? ". . .",
+                        featuredTopic: doc['featuredTopic'] ?? null,
+                        featuredValue: doc['featuredValue'] ?? ". . .",
 
-                        giftLove: doc.data()['giftLove'] ?? 0,
-                        giftBird: doc.data()['giftBird'] ?? 0,
+                        giftLove: doc['giftLove'] ?? 0,
+                        giftBird: doc['giftBird'] ?? 0,
 
-                        title: doc.data()['title'] ?? 'Just Me',
-                        tags: doc.data()['tags'] ?? [],
-                        initLike: doc.data()['isLiked'] != null
-                            ? doc.data()['isLiked'].contains(this.uid)
+                        title: doc['title'] ?? 'Just Me',
+                        tags: doc['tags'] ?? [],
+                        initLike: doc['isLiked'] != null
+                            ? doc['isLiked'].contains(this.uid)
                             : false,
-                        numberOfLikes: doc.data()['likes'],
-                        numberOfViews: doc.data()['views'],
-                        listMapContent: doc.data()['listMapContent'] ?? [],
-                        postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+                        numberOfLikes: doc['likes'],
+                        numberOfViews: doc['views'],
+                        listMapContent: doc['listMapContent'] ?? [],
+                        postedTimestamp: doc['postedTimeStamp'].toDate(),
                       );
 
                       _tempFeedList.add(_feed);
@@ -304,29 +304,29 @@ class DatabaseService {
 
                   Feed _feed = Feed(
                     documentID: doc.id,
-                    userID: doc.data()['userID'],
-                    username: doc.data()['username'],
-                    profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+                    userID: doc['userID'],
+                    username: doc['username'],
+                    profileImageUrl: doc['profileImageUrl'] ?? null,
                     hasViewed: false,
 
-                    // content: doc.data()['content'] ?? 'No Content',
-                    contentLength: doc.data()['contentLength'] ?? 0,
+                    // content: doc['content'] ?? 'No Content',
+                    contentLength: doc['contentLength'] ?? 0,
 
-                    featuredTopic: doc.data()['featuredTopic'] ?? null,
-                    featuredValue: doc.data()['featuredValue'] ?? ". . .",
+                    featuredTopic: doc['featuredTopic'] ?? null,
+                    featuredValue: doc['featuredValue'] ?? ". . .",
 
-                    giftLove: doc.data()['giftLove'] ?? 0,
-                    giftBird: doc.data()['giftBird'] ?? 0,
+                    giftLove: doc['giftLove'] ?? 0,
+                    giftBird: doc['giftBird'] ?? 0,
 
-                    title: doc.data()['title'] ?? 'Just Me',
-                    tags: doc.data()['tags'] ?? [],
-                    initLike: doc.data()['isLiked'] != null
-                        ? doc.data()['isLiked'].contains(this.uid)
+                    title: doc['title'] ?? 'Just Me',
+                    tags: doc['tags'] ?? [],
+                    initLike: doc['isLiked'] != null
+                        ? doc['isLiked'].contains(this.uid)
                         : false,
-                    numberOfLikes: doc.data()['likes'],
-                    numberOfViews: doc.data()['views'],
-                    listMapContent: doc.data()['listMapContent'] ?? [],
-                    postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+                    numberOfLikes: doc['likes'],
+                    numberOfViews: doc['views'],
+                    listMapContent: doc['listMapContent'] ?? [],
+                    postedTimestamp: doc['postedTimeStamp'].toDate(),
                   );
 
                   _tempFeedList.add(_feed);
@@ -354,29 +354,29 @@ class DatabaseService {
 
               Feed _feed = Feed(
                 documentID: doc.id,
-                userID: doc.data()['userID'],
-                username: doc.data()['username'],
-                profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+                userID: doc['userID'],
+                username: doc['username'],
+                profileImageUrl: doc['profileImageUrl'] ?? null,
                 hasViewed: false,
 
-                // content: doc.data()['content'] ?? 'No Content',
-                contentLength: doc.data()['contentLength'] ?? 0,
+                // content: doc['content'] ?? 'No Content',
+                contentLength: doc['contentLength'] ?? 0,
 
-                featuredTopic: doc.data()['featuredTopic'] ?? null,
-                featuredValue: doc.data()['featuredValue'] ?? ". . .",
+                featuredTopic: doc['featuredTopic'] ?? null,
+                featuredValue: doc['featuredValue'] ?? ". . .",
 
-                giftLove: doc.data()['giftLove'] ?? 0,
-                giftBird: doc.data()['giftBird'] ?? 0,
+                giftLove: doc['giftLove'] ?? 0,
+                giftBird: doc['giftBird'] ?? 0,
 
-                title: doc.data()['title'] ?? 'Just Me',
-                tags: doc.data()['tags'] ?? [],
-                initLike: doc.data()['isLiked'] != null
-                    ? doc.data()['isLiked'].contains(this.uid)
+                title: doc['title'] ?? 'Just Me',
+                tags: doc['tags'] ?? [],
+                initLike: doc['isLiked'] != null
+                    ? doc['isLiked'].contains(this.uid)
                     : false,
-                numberOfLikes: doc.data()['likes'],
-                numberOfViews: doc.data()['views'],
-                listMapContent: doc.data()['listMapContent'] ?? [],
-                postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+                numberOfLikes: doc['likes'],
+                numberOfViews: doc['views'],
+                listMapContent: doc['listMapContent'] ?? [],
+                postedTimestamp: doc['postedTimeStamp'].toDate(),
               );
 
               _tempFeedList.add(_feed);
@@ -450,33 +450,35 @@ class DatabaseService {
                 .then((QuerySnapshot snap) async {
                 snap.docs.forEach((doc) async {
                   print('got doc: ' + doc.id);
+                  print('ForEach Doc | data: ${doc.data()}');
+
                   if (!seenDocsList.contains(doc.id)) {
                     tempList.add(Feed(
                       documentID: doc.id,
-                      userID: doc.data()['userID'],
+                      userID: doc['userID'],
 
-                      username: doc.data()['username'],
-                      profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+                      username: doc['username'],
+                      profileImageUrl: doc['profileImageUrl'] ?? null,
                       hasViewed: false,
 
-                      // content: doc.data()['content'] ?? 'No Content',
-                      contentLength: doc.data()['contentLength'] ?? 0,
+                      // content: doc['content'] ?? 'No Content',
+                      contentLength: doc['contentLength'] ?? 0,
 
-                      featuredTopic: doc.data()['featuredTopic'] ?? null,
-                      featuredValue: doc.data()['featuredValue'] ?? ". . .",
+                      featuredTopic: doc['featuredTopic'] ?? null,
+                      featuredValue: doc['featuredValue'] ?? ". . .",
 
-                      giftLove: doc.data()['giftLove'] ?? 0,
-                      giftBird: doc.data()['giftBird'] ?? 0,
+                      giftLove: doc['giftLove'] ?? 0,
+                      giftBird: doc['giftBird'] ?? 0,
 
-                      title: doc.data()['title'] ?? 'Just Me',
-                      tags: doc.data()['tags'] ?? [],
-                      initLike: doc.data()['isLiked'] != null
-                          ? doc.data()['isLiked'].contains(this.uid)
+                      title: doc['title'] ?? 'Just Me',
+                      tags: doc['tags'] ?? [],
+                      initLike: doc['isLiked'] != null
+                          ? doc['isLiked'].contains(this.uid)
                           : false,
-                      numberOfLikes: doc.data()['likes'],
-                      numberOfViews: doc.data()['views'],
-                      listMapContent: doc.data()['listMapContent'] ?? [],
-                      postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+                      numberOfLikes: doc['likes'],
+                      numberOfViews: doc['views'],
+                      listMapContent: doc['listMapContent'] ?? [],
+                      postedTimestamp: doc['postedTimeStamp'].toDate(),
                     ));
                     //add to seen
                     seenDocsList.add(doc.id);
@@ -492,32 +494,35 @@ class DatabaseService {
                 .then((QuerySnapshot snap) async {
                 snap.docs.forEach((doc) async {
                   print('got doc: ' + doc.id);
+                  print('ForEach Doc | data: ${doc.data()}');
+                  print(doc.get('username').toString());
+                  print(doc['username'].toString());
                   if (!seenDocsList.contains(doc.id)) {
                     tempList.add(Feed(
                       documentID: doc.id,
-                      username: doc.data()['username'],
-                      profileImageUrl: doc.data()['profileImageUrl'] ?? null,
+                      username: doc['username'],
+                      profileImageUrl: doc['profileImageUrl'] ?? null,
                       hasViewed: false,
 
-                      userID: doc.data()['userID'],
-                      // content: doc.data()['content'] ?? 'No Content',
-                      contentLength: doc.data()['contentLength'] ?? 0,
+                      userID: doc['userID'],
+                      // content: doc['content'] ?? 'No Content',
+                      contentLength: doc['contentLength'] ?? 0,
 
-                      featuredTopic: doc.data()['featuredTopic'] ?? null,
-                      featuredValue: doc.data()['featuredValue'] ?? ". . .",
+                      featuredTopic: doc['featuredTopic'] ?? null,
+                      featuredValue: doc['featuredValue'] ?? ". . .",
 
-                      giftLove: doc.data()['giftLove'] ?? 0,
-                      giftBird: doc.data()['giftBird'] ?? 0,
+                      giftLove: doc['giftLove'] ?? 0,
+                      giftBird: doc['giftBird'] ?? 0,
 
-                      title: doc.data()['title'] ?? 'Just Me',
-                      tags: doc.data()['tags'] ?? [],
-                      initLike: doc.data()['isLiked'] != null
-                          ? doc.data()['isLiked'].contains(this.uid)
+                      title: doc['title'] ?? 'Just Me',
+                      tags: doc['tags'] ?? [],
+                      initLike: doc['isLiked'] != null
+                          ? doc['isLiked'].contains(this.uid)
                           : false,
-                      numberOfLikes: doc.data()['likes'],
-                      numberOfViews: doc.data()['views'],
-                      listMapContent: doc.data()['listMapContent'] ?? [],
-                      postedTimestamp: doc.data()['postedTimeStamp'].toDate(),
+                      numberOfLikes: doc['likes'],
+                      numberOfViews: doc['views'],
+                      listMapContent: doc['listMapContent'] ?? [],
+                      postedTimestamp: doc['postedTimeStamp'].toDate(),
                     ));
                     //add to seen
                     seenDocsList.add(doc.id);
@@ -541,13 +546,13 @@ class DatabaseService {
       });
     });
 
-    await feedListProvider.updateForYouData(tempList);
+    feedListProvider.updateForYouData(tempList);
   }
 
   Future<void> storeLastUpdatedLocal(DocumentSnapshot doc) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _hasLastUpdated = true;
-    _lastUpdated = doc.data()['postedTimeStamp'].toDate();
+    _lastUpdated = doc['postedTimeStamp'].toDate();
     prefs.setString('lastUpdated', _lastUpdated.toString());
     print('lastUpdated stored: ' + _lastUpdated.toString());
     // prefs.setStringList('seenDocs', seenDocsList);
@@ -598,6 +603,8 @@ class DatabaseService {
       'isLiked': [],
       'title': title,
       // 'content': content,
+      'giftLove': 0,
+      'giftBirf': 0,
       'featuredTopic': featuredTopic,
       'featuredValue': featuredValue,
       'contentLength': content.length,
@@ -732,6 +739,7 @@ class DatabaseService {
       'username': username,
       'phone': phone,
       'completeLogin': true,
+      'profileImageUrl': null,
     }).then((_) async {
       await usersPublicCollection
           .where('userID', isEqualTo: uid)
@@ -742,6 +750,7 @@ class DatabaseService {
             await usersPublicCollection.doc(doc.id).update({
               'username': username,
               'phone': phone,
+              'profileImageUrl': null,
             });
           });
         } else {
@@ -749,6 +758,7 @@ class DatabaseService {
             'userID': uid,
             'username': username,
             'phone': phone,
+            'profileImageUrl': null,
             'email': '',
             'totalFollowers': 0,
             'followers': [],
@@ -791,7 +801,7 @@ class DatabaseService {
           String _postID = doc.id;
           print('iterate Post ID: ' + _postID);
 
-          List _listLiked = doc.data()['isLiked'] ?? [];
+          List _listLiked = doc['isLiked'] ?? [];
 
           await likedPostsCollection
               .where('postID', isEqualTo: _postID)
@@ -879,6 +889,22 @@ class DatabaseService {
     });
   }
 
+  // Future<void> updateAllPostWithFields() async {
+  //   await allPostsCollection
+  //       .where('featuredTopic', isEqualTo: null)
+  //       .get()
+  //       .then((snap) {
+  //     snap.docs.forEach((doc) async {
+  //       await allPostsCollection.doc(doc.id).update({
+  //         'giftBird': 0,
+  //         'giftLove': 0,
+  //         'featuredTopic': null,
+  //         'featuredValue': null,
+  //       });
+  //     });
+  //   });
+  // }
+
   // Future<void> updateCompleteLogin() async {
   //   await usersPrivateCollection.get().then((snaps) {
   //     snaps.docs.forEach((doc) async {
@@ -895,7 +921,7 @@ class DatabaseService {
   //       allPostsCollection.doc(doc.id).update({
   //         'content': FieldValue.delete(),
   //         // 'contentLength':
-  //         //     doc.data()['content'] != null ? doc.data()['content'].length : 0,
+  //         //     doc['content'] != null ? doc['content'].length : 0,
   //       });
   //     });
   //   });
@@ -933,7 +959,7 @@ class DatabaseService {
   //               .where('followers', arrayContains: _currentID)
   //               .get()
   //               .then((followingSnaps) async {
-  //             print(doc.data()['username']);
+  //             print(doc['username']);
   //             print(followingSnaps.size);
   //             followingSnaps.docs.forEach((followingDoc) async {
   //               print(followingDoc.data()['userID']);

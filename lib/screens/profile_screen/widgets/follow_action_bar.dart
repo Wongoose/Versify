@@ -1,4 +1,4 @@
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:share/share.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/edit_profile_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.dart';
@@ -66,13 +66,13 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
               GestureDetector(
                 onTap: () {
                   if (widget.visitProfile) {
-                   DynamicLinkService()
+                    DynamicLinkService()
                         .createProfileDynamicLink(widget.userProfile.userUID)
                         .then((res) async {
-                      Share.text(
-                          'Versify Blogs',
-                          'Check out this user account on the Versify App!\n$res',
-                          'text/txt');
+                      Share.share(
+                        'Check out this user account on the Versify App!\n$res',
+                        subject: 'Versify Blogs',
+                      );
                     });
                   } else {
                     //init with authService user

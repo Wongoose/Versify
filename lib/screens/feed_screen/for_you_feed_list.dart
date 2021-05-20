@@ -270,7 +270,6 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
                 onRefresh: _onRefresh,
                 onLoading: _onLoading,
                 child: ListView.separated(
-                  cacheExtent: 1000,
                   primary: false,
                   addAutomaticKeepAlives: true,
                   itemCount: _feedListProvider.forYouData.length,

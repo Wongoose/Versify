@@ -1,4 +1,4 @@
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:share/share.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feed_list_provider.dart';
 import 'package:versify/providers/all_posts_provider.dart';
@@ -434,17 +434,17 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                           padding: EdgeInsets.all(15), primary: Colors.white),
                       onPressed: () {
                         setState(() => _shareLoading = true);
-                       DynamicLinkService()
+                        DynamicLinkService()
                             .createPostDynamicLink(allPostsViewProvider
                                 .followingCurrentFeed.documentID)
                             .then((res) async {
                           setState(() => _shareLoading = false);
-                          Share.text(
-                              'Versify Blogs',
-                              _isVisitProfile
-                                  ? 'Check out this amazing blog on the Versify app!\n$res'
-                                  : 'Check out the blog that I wrote on the Versify app!\n$res',
-                              'text/txt');
+                          Share.share(
+                            _isVisitProfile
+                                ? 'Check out this amazing blog on the Versify app!\n$res'
+                                : 'Check out the blog that I wrote on the Versify app!\n$res',
+                            subject: 'Versify Blogs',
+                          );
                         });
                       },
                       child: Align(
