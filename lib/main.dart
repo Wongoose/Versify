@@ -245,7 +245,7 @@ class VersifyHome extends StatefulWidget {
 class _VersifyHomeState extends State<VersifyHome> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  bool _completedBoarding = false;
+  bool _completedBoarding;
 
   Future<void> _saveDeviceToken() async {}
 
@@ -291,25 +291,22 @@ class _VersifyHomeState extends State<VersifyHome> {
     // _dynamicLinkService.addContext(context);
 
     // if (_hasDynamicLink != null) {
-    if (_completedBoarding != null && _completedBoarding == true) {
-      return Wrapper();
-      // return DynamicLinkPost(
-      //   postId: 'aQtV58oqPh2ZfuGL4CrZ',
-      // );
+    if (_completedBoarding != null) {
+      if (_completedBoarding == true) {
+        return Wrapper();
+      } else {
+        return OnBoarding(completeBoarding: completeBoarding);
+        //return boarding
+      }
     } else {
-      return OnBoarding(completeBoarding: completeBoarding);
-      //return boarding
+      return SplashLoading();
     }
-    // } else {
-    //   return SplashLoading();
-    // }
   }
-  // return ReviewPost();
 
   Future<bool> sharedPreferencesInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await deletePrefs(prefs);
-    bool _completedBoarding = prefs.getBool('completedBoarding') ?? true;
+    bool _completedBoarding = prefs.getBool('completedBoarding') ?? false;
 
     return _completedBoarding;
   }
