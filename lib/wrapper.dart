@@ -13,7 +13,7 @@ import 'package:versify/services/users_following_json_storage.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:versify/z-wrappers/splash_loading.dart';
+import 'package:versify/shared/splash_loading.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {

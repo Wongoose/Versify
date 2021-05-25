@@ -450,7 +450,6 @@ class DatabaseService {
                 .then((QuerySnapshot snap) async {
                 snap.docs.forEach((doc) async {
                   print('got doc: ' + doc.id);
-                  print('ForEach Doc | data: ${doc.data()}');
 
                   if (!seenDocsList.contains(doc.id)) {
                     tempList.add(Feed(
@@ -494,9 +493,6 @@ class DatabaseService {
                 .then((QuerySnapshot snap) async {
                 snap.docs.forEach((doc) async {
                   print('got doc: ' + doc.id);
-                  print('ForEach Doc | data: ${doc.data()}');
-                  print(doc.get('username').toString());
-                  print(doc['username'].toString());
                   if (!seenDocsList.contains(doc.id)) {
                     tempList.add(Feed(
                       documentID: doc.id,

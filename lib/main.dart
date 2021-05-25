@@ -12,6 +12,7 @@ import 'package:versify/providers/all_posts_provider.dart';
 import 'package:versify/providers/feed_type_provider.dart';
 import 'package:versify/providers/input_comments_provider.dart';
 import 'package:versify/providers/post_swipe_up_provider.dart';
+import 'package:versify/screens/onboarding/onboarding.dart';
 import 'package:versify/screens/profile_screen/profile_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_settings.dart';
@@ -21,21 +22,27 @@ import 'package:versify/services/database.dart';
 import 'package:versify/services/dynamic_links.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/services/users_following_json_storage.dart';
-import 'package:versify/shared/loading.dart';
 import 'package:versify/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:versify/z-wrappers/post_dynamic_link.dart';
-import 'package:versify/z-wrappers/splash_loading.dart';
-import 'package:versify/z-wrappers/wrapper_dynamic_links.dart';
+import 'package:versify/shared/splash_loading.dart';
 import 'models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(VersifyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
 }
 
 class VersifyApp extends StatelessWidget {
@@ -241,6 +248,7 @@ class _VersifyHomeState extends State<VersifyHome> {
   bool _completedBoarding = false;
 
   Future<void> _saveDeviceToken() async {}
+
   @override
   void initState() {
     super.initState();
@@ -268,54 +276,15 @@ class _VersifyHomeState extends State<VersifyHome> {
       }
     });
 
-    // _fcm.configure(onMessage: (Map<String, dynamic> message) async {
-    //   print('onMessage | Message: $message');
-
-    //   final SnackBar snackBar = SnackBar(
-    //     content: Text(message['notification']['title']),
-    //     action: SnackBarAction(
-    //       label: 'Go',
-    //       onPressed: null,
-    //     ),
-    //   );
-    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    // });
-
     widget.dynamicLinkService.handleDynamicLink(context);
     sharedPreferencesInit().then((result) {
       setState(() => _completedBoarding = result);
     });
-
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   _dynamicLinkService.handleDynamicLink(context).then((value) {
-    //     setState(() => _hasDynamicLink = value);
-    //   });
-    // });
-
-    // widget.authService.logout();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   print('didChangeAppLifecycleState | ${state.toString()}');
-  //   if (state == AppLifecycleState.resumed) {
-  //     _timerLink = new Timer(
-  //       const Duration(milliseconds: 1000),
-  //       () {
-  //         _dynamicLinkService.handleDynamicLink(context);
-  //       },
-  //     );
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   if (_timerLink != null) {
-  //     _timerLink.cancel();
-  //   }
-  //   super.dispose();
-  // }
+  void completeBoarding() {
+    setState(() => _completedBoarding = true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -328,22 +297,7 @@ class _VersifyHomeState extends State<VersifyHome> {
       //   postId: 'aQtV58oqPh2ZfuGL4CrZ',
       // );
     } else {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: null,
-          backgroundColor: Colors.white,
-          body: Container(
-            alignment: Alignment.center,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Text(
-              'not complete boarding',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-        ),
-      );
+      return OnBoarding(completeBoarding: completeBoarding);
       //return boarding
     }
     // } else {

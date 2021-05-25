@@ -1,0 +1,106 @@
+rules_version = '2';
+
+service cloud.firestore {
+    match /databases/{database}/documents {
+        //users
+        match /usersPrivate/{userID} {
+            allow read: if
+            authenticated();
+
+            allow create, update: if 
+            authenticated() && 
+            userIsMe() && 
+            request.resource.data.username is string &&
+            request.resource.data.username.size() <= 50;
+
+            allow delete: if
+            authenticated() &&
+            userIsMe();
+
+            //user functions
+            function userIsMe() {
+                return userID == request.auth.uid;
+            }
+        }
+
+        //allPosts
+        match /allPosts/{postID} {
+            allow read: if
+            authenticated();
+
+            allow delete: if
+            authenticated() &&
+            isMyPost();
+
+            allow create: if
+            authenticated();
+
+            allow update: if
+            authenticated() &&
+            request.resource.data.listMapContent == resource.data.listMapContent &&
+            request.resource.data.userID == resource.data.userID;
+
+            //post functions
+            function isMyPost() {
+                return resource.data.userID == request.auth.uid;
+            }
+
+        }
+
+        //usersPublicFollow
+        match /usersPublicFollow/{publicFollowID} {
+            allow read: if
+            authenticated();
+
+            allow delete: if
+            authenticated() &&
+            isMyPublicFollow();
+
+            allow create: if
+            authenticated();
+
+            allow update: if
+            //if is my public follow
+            (
+            authenticated() && isMyPublicFollow()
+            ) || 
+            // if is NOT my public follow (only allow following fields)
+            (
+            // allowed profileImageUrl && followers & totalFollowers
+            request.resource.data.description == resource.data.description &&
+            request.resource.data.email == resource.data.email &&
+            request.resource.data.latestPost == resource.data.latestPost &&
+            request.resource.data.phone == resource.data.phone &&
+            request.resource.data.socialLinks == resource.data.socialLinks &&
+            request.resource.data.totalFollowing == resource.data.totalFollowing &&
+            request.resource.data.userID == resource.data.userID &&
+            request.resource.data.username == resource.data.username
+            );
+
+            //post functions
+            function isMyPublicFollow() {
+                return resource.data.userID == request.auth.uid;
+            }
+
+        }
+
+        //reportPosts
+        match /reportedPosts/{compileReportID} {
+            allow read: if
+            authenticated();
+
+            allow create, update: if
+            authenticated();
+
+            allow delete: if
+            authenticated();
+
+        }
+    }
+
+    //functions
+
+    function authenticated() {
+        return request.auth != null;
+    }
+}

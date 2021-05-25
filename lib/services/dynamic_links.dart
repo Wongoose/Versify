@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:versify/services/auth.dart';
-import 'package:versify/z-wrappers/post_dynamic_link.dart';
-import 'package:versify/z-wrappers/profile_dynamic_link.dart';
-import 'package:versify/z-wrappers/wrapper_dynamic_links.dart';
+import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
+import 'package:versify/z-dynamic_link/profile_dynamic_link.dart';
+import 'package:versify/z-dynamic_link/wrapper_dynamic_links.dart';
 
 class DynamicLinkService {
   final AuthService authService;

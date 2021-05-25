@@ -22,7 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:versify/z-wrappers/splash_loading.dart';
+import 'package:versify/shared/splash_loading.dart';
 
 class HomeWrapper extends StatefulWidget {
   // RefreshFunc _refresh;

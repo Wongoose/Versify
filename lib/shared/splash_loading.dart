@@ -7,7 +7,7 @@ class SplashLoading extends StatelessWidget {
 
     return Scaffold(
       appBar: null,
-      backgroundColor: _theme.accentColor,
+      backgroundColor: Color(0xFFffdee9),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
