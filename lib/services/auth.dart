@@ -11,6 +11,13 @@ class AuthService {
   String userUID;
 
   bool get isUserSignedIn => _auth.currentUser != null;
+  bool get isUserAnonymous {
+    if (_auth.currentUser != null) {
+      return _auth.currentUser.isAnonymous;
+    } else {
+      return true;
+    }
+  }
 
   Future<bool> signInAnon() async {
     //method setup

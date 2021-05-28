@@ -63,8 +63,8 @@ class Wrapper extends StatelessWidget {
                 }
               } else {
                 // no user document but authenticated
-                if (_authService.isUserSignedIn) {
-                  //dynamic linking with new user
+                if (_authService.isUserAnonymous) {
+                  //dynamic linking with new user (anonymous)
                   print('Anonymous User | DynamicLink');
                   return GestureDetector(
                       onTap: () async {

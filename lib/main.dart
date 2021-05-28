@@ -30,6 +30,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/shared/splash_loading.dart';
 import 'models/user_model.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -245,7 +246,12 @@ class VersifyHome extends StatefulWidget {
 class _VersifyHomeState extends State<VersifyHome> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+
+  //providers
+  TutorialProvider _tutorialProvider;
+
   bool _completedBoarding;
+  bool _completedTutorial;
 
   Future<void> _saveDeviceToken() async {}
 
@@ -276,9 +282,20 @@ class _VersifyHomeState extends State<VersifyHome> {
       }
     });
 
+    //dynamic link
     widget.dynamicLinkService.handleDynamicLink(context);
-    sharedPreferencesInit().then((result) {
-      setState(() => _completedBoarding = result);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      sharedPreferencesInit().then((result) {
+        if (result) {
+          //tutorial done
+          _tutorialProvider.updateTutorialComplete(true);
+        } else {
+          // tutorial not done
+          _tutorialProvider.updateTutorialComplete(false);
+        }
+        setState(() => _completedBoarding = result);
+      });
     });
   }
 
@@ -288,6 +305,8 @@ class _VersifyHomeState extends State<VersifyHome> {
 
   @override
   Widget build(BuildContext context) {
+    //tutorialProvider
+    _tutorialProvider = Provider.of<TutorialProvider>(context);
     // _dynamicLinkService.addContext(context);
 
     // if (_hasDynamicLink != null) {
@@ -306,9 +325,9 @@ class _VersifyHomeState extends State<VersifyHome> {
   Future<bool> sharedPreferencesInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await deletePrefs(prefs);
-    bool _completedBoarding = prefs.getBool('completedBoarding') ?? false;
+    bool result = prefs.getBool('completedBoarding') ?? false;
 
-    return _completedBoarding;
+    return result;
   }
 
   Future<void> deletePrefs(SharedPreferences prefs) async {

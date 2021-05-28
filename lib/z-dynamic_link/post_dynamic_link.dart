@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/models/feed_model.dart';
+import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/shared/loading.dart';
 
@@ -18,6 +19,7 @@ class DynamicLinkPost extends StatefulWidget {
 
 class _DynamicLinkPostState extends State<DynamicLinkPost> {
   Feed _feed;
+  AuthService _authService;
 
   void initState() {
     super.initState();
@@ -72,7 +74,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                   TextButton(
                     child: Text('Yes'),
                     onPressed: () async {
-                      if (FirebaseAuth.instance.currentUser.isAnonymous) {
+                      if (_authService.isUserAnonymous) {
                         await FirebaseAuth.instance.currentUser
                             .delete()
                             .then((_) => SystemNavigator.pop());
@@ -86,7 +88,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                 ],
               ));
     } else {
-      if (FirebaseAuth.instance.currentUser.isAnonymous) {
+      if (_authService.isUserAnonymous) {
         await FirebaseAuth.instance.currentUser.delete().then((value) =>
             Navigator.popUntil(
                 context, ModalRoute.withName(Navigator.defaultRouteName)));
@@ -98,6 +100,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    _authService = Provider.of<AuthService>(context);
 
     return WillPopScope(
       onWillPop: () {
