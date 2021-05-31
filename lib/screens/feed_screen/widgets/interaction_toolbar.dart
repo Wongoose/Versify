@@ -439,7 +439,7 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
 // Consumer<ViewPostLikeProvider>(builder: (context, state, _) {
 //               return GestureDetector(
 //                 onTap: () async {
-//                   Scaffold.of(context).showSnackBar(SnackBar(
+//                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
 //                     duration: Duration(milliseconds: 1000),
 //                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
 //                     content: Row(

@@ -74,7 +74,9 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                   TextButton(
                     child: Text('Yes'),
                     onPressed: () async {
+                      print('onPopExit is true | yes clicked');
                       if (_authService.isUserAnonymous) {
+                        print('onPopExit is true | user is anon!');
                         await FirebaseAuth.instance.currentUser
                             .delete()
                             .then((_) => SystemNavigator.pop());
@@ -88,12 +90,15 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                 ],
               ));
     } else {
+      print('onPopExit is false');
       if (_authService.isUserAnonymous) {
+        print('onPopExit is false | user is anon!');
         await FirebaseAuth.instance.currentUser.delete().then((value) =>
             Navigator.popUntil(
                 context, ModalRoute.withName(Navigator.defaultRouteName)));
+      } else {
+        Navigator.pop(context);
       }
-      ;
     }
   }
 
@@ -119,9 +124,6 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
           ),
           leading: GestureDetector(
             onTap: () async {
-              if (FirebaseAuth.instance.currentUser.isAnonymous) {
-                await FirebaseAuth.instance.currentUser.delete();
-              }
               await _onWillPop();
             },
             child: Icon(

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/feed_list_provider.dart';
+import 'package:versify/services/profile_database.dart';
 import 'package:versify/services/users_following_json_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -675,7 +676,11 @@ class DatabaseService {
   }
 
   Future<CreateAcc> firestoreCreateAccount(
-      {String userUID, String email}) async {
+      {String userUID,
+      String email,
+      String username,
+      String phone,
+      bool completeLogin}) async {
     try {
       return await usersPrivateCollection.doc(userUID).get().then((doc) async {
         bool _userHasAccount = doc.exists;
@@ -683,8 +688,10 @@ class DatabaseService {
           return CreateAcc.hasAccount;
         } else {
           return await usersPrivateCollection.doc(userUID).set({
-            'username': null,
-            'phone': null,
+            'username': username ?? null,
+            'description': null,
+            'profileImageUrl': null,
+            'phone': phone ?? null,
             'email': email,
             'totalFollowers': 0,
             'totalFollowing': 0,
@@ -693,7 +700,8 @@ class DatabaseService {
               'love': FieldValue.serverTimestamp(),
               'peace': FieldValue.serverTimestamp(),
             },
-            'completeLogin': false,
+            'socialLinks': null,
+            'completeLogin': completeLogin ?? false,
           }).then((_) async {
             final String _allFollowingCollectionPath =
                 '${usersPrivateCollection.path}/$userUID/allFollowing';
@@ -711,8 +719,8 @@ class DatabaseService {
 
             await usersPublicCollection.doc().set({
               'userID': userUID,
-              'username': null,
-              'phone': null,
+              'username': username ?? null,
+              'phone': phone ?? null,
               'email': email,
               'totalFollowers': 0,
               'followers': [],
@@ -730,39 +738,52 @@ class DatabaseService {
   }
 
   Future<void> updateNewAccUser(
-      {String uid, String username, String phone}) async {
-    await usersPrivateCollection.doc(uid).update({
-      'username': username,
-      'phone': phone,
-      'completeLogin': true,
-      'profileImageUrl': null,
-    }).then((_) async {
-      await usersPublicCollection
-          .where('userID', isEqualTo: uid)
-          .get()
-          .then((snap) async {
-        if (snap.docs.isNotEmpty) {
-          snap.docs.forEach((doc) async {
-            await usersPublicCollection.doc(doc.id).update({
+      {String uid, String username, String phone, String email}) async {
+    try {
+      await usersPrivateCollection.doc(uid).get().then((doc) async {
+        if (doc.exists) {
+          await usersPrivateCollection.doc(uid).update({
+            'username': username,
+            'phone': phone,
+            'completeLogin': true, //shouldn't be true
+            'profileImageUrl': null,
+          });
+        } else {
+          // firestoreCreateAccount
+          firestoreCreateAccount(
+              userUID: uid,
+              username: username,
+              phone: phone,
+              email: email,
+              completeLogin: true);
+        }
+        await usersPublicCollection
+            .where('userID', isEqualTo: uid)
+            .get()
+            .then((snap) async {
+          if (snap.docs.isNotEmpty) {
+            snap.docs.forEach((doc) async {
+              await usersPublicCollection.doc(doc.id).update({
+                'username': username,
+                'phone': phone,
+                'profileImageUrl': null,
+              });
+            });
+          } else {
+            await usersPublicCollection.add({
+              'userID': uid,
               'username': username,
               'phone': phone,
               'profileImageUrl': null,
+              'email': '',
+              'totalFollowers': 0,
+              'followers': [],
+              'latestPost': FieldValue.serverTimestamp(),
             });
-          });
-        } else {
-          await usersPublicCollection.doc().set({
-            'userID': uid,
-            'username': username,
-            'phone': phone,
-            'profileImageUrl': null,
-            'email': '',
-            'totalFollowers': 0,
-            'followers': [],
-            'latestPost': FieldValue.serverTimestamp(),
-          });
-        }
+          }
+        });
       });
-    });
+    } catch (e) {}
   }
 
   Future<bool> checkValidUsername(String username) async {

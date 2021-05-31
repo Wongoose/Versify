@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:versify/services/database.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/home_wrapper.dart';
+import 'package:versify/wrapper.dart';
 
 // ignore: must_be_immutable
 class SignUpPhone extends StatefulWidget {
@@ -128,11 +129,18 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                       uid: _user.userUID,
                       username: widget.usernameController.text,
                       phone: _profileDataProvider.phoneNumberNewAcc.phoneNumber,
+                      email: _authService.authUser.email,
                     )
                         .then((value) async {
                       _profileDataProvider.updateListeners();
-                      Navigator.popUntil(
-                          context, ModalRoute.withName(widget.routeName));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Wrapper(),
+                          ));
+
+                      // Navigator.popUntil(
+                      //     context, ModalRoute.withName(widget.routeName));
                       // await ProfileDBService()
                       //     .whetherHasAccount(_user.userUID)
                       //     .then((user) {

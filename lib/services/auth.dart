@@ -8,12 +8,13 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   MyUser myUser;
+  User authUser;
   String userUID;
 
   bool get isUserSignedIn => _auth.currentUser != null;
   bool get isUserAnonymous {
-    if (_auth.currentUser != null) {
-      return _auth.currentUser.isAnonymous;
+    if (authUser != null) {
+      return authUser.isAnonymous;
     } else {
       return true;
     }
@@ -27,6 +28,7 @@ class AuthService {
       return await _auth.signInAnonymously().then((UserCredential result) {
         if (result.user.uid != null) {
           print('User signed In Anon!');
+          this.authUser = result.user;
           return true;
         } else {
           print('No User ID');
@@ -45,7 +47,12 @@ class AuthService {
   }
 
   MyUser _userFromFB(User firebaseUser) {
-    return firebaseUser != null ? MyUser(userUID: firebaseUser.uid) : null;
+    if (firebaseUser != null) {
+      this.authUser = firebaseUser;
+      return MyUser(userUID: firebaseUser.uid);
+    } else {
+      return null;
+    }
   }
 
   Future<dynamic> signInEmail(String email, password) async {
@@ -136,6 +143,7 @@ class AuthService {
     assert(_user.uid == currentUser.uid);
     print("User Name: ${_user.displayName}");
     print("User Email ${_user.email}");
+
     return currentUser;
   }
 

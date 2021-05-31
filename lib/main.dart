@@ -108,6 +108,8 @@ class VersifyApp extends StatelessWidget {
             final JsonFollowingStorage _jsonFollowingStorage =
                 JsonFollowingStorage();
 
+            final TutorialProvider _tutorialProvider = TutorialProvider();
+
             JsonAllBadgesStorage _jsonAllBadgesStorage;
 
             EditProfileProvider _editProfileProvider;
@@ -162,6 +164,7 @@ class VersifyApp extends StatelessWidget {
                     Provider<AuthService>.value(value: _authService),
                     Provider<DatabaseService>.value(value: _firestoreDBService),
                     Provider<ProfileDBService>.value(value: _profileDBService),
+                    Provider<TutorialProvider>.value(value: _tutorialProvider),
                     Provider<JsonFollowingStorage>.value(
                         value: _jsonFollowingStorage),
                     Provider<JsonAllBadgesStorage>.value(

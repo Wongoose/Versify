@@ -157,7 +157,8 @@ class _SignUpAuthState extends State<SignUpAuth> {
                               showDialogWhenCancel();
                             } else {
                               //error occured
-                              Scaffold.of(context).showSnackBar(SnackBar(
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
                                 content: Text(
                                   'An error has occured while logging in. Please try again.',
                                 ),

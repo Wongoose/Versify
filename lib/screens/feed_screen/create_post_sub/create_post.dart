@@ -104,7 +104,7 @@ class _CreatePostState extends State<CreatePost> {
 
                     if (widget.titleController.text.length <= 10) {
                       _validTitle = false;
-                      Scaffold.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Padding(
                             padding: EdgeInsets.all(8),
                             child: Text(widget.titleController.text == ''
@@ -118,7 +118,7 @@ class _CreatePostState extends State<CreatePost> {
                     if (!contentBodyProvider.validBodyLength) {
                       _validContent = false;
                       if (_validTitle) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Padding(
                               padding: EdgeInsets.all(8),
                               child:

@@ -92,7 +92,7 @@ class _AccountVerificationState extends State<AccountVerification> {
       });
     } catch (err) {
       print(err.toString());
-      // Scaffold.of(context).showSnackBar(SnackBar(
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       //   content: Text('Failed to update phone number. An error has occured.'),
       // ));
       Navigator.pop(context);

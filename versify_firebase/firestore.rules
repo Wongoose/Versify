@@ -7,7 +7,10 @@ service cloud.firestore {
             allow read: if
             authenticated();
 
-            allow create, update: if 
+            allow create: if
+            authenticated();
+
+            allow update: if 
             authenticated() && 
             userIsMe() && 
             request.resource.data.username is string &&
@@ -77,22 +80,23 @@ service cloud.firestore {
             authenticated();
 
             allow update: if
-            //if is my public follow
-            (
-            authenticated() && isMyPublicFollow()
-            ) || 
-            // if is NOT my public follow (only allow following fields)
-            (
-            // allowed profileImageUrl && followers & totalFollowers
-            request.resource.data.description == resource.data.description &&
-            request.resource.data.email == resource.data.email &&
-            request.resource.data.latestPost == resource.data.latestPost &&
-            request.resource.data.phone == resource.data.phone &&
-            request.resource.data.socialLinks == resource.data.socialLinks &&
-            request.resource.data.totalFollowing == resource.data.totalFollowing &&
-            request.resource.data.userID == resource.data.userID &&
-            request.resource.data.username == resource.data.username
-            );
+            authenticated();
+            // //if is my public follow
+            // (
+            // authenticated() && isMyPublicFollow()
+            // ) || 
+            // // if is NOT my public follow (only allow following fields)
+            // (
+            // // allowed profileImageUrl && followers & totalFollowers
+            // request.resource.data.description == resource.data.description &&
+            // request.resource.data.email == resource.data.email &&
+            // request.resource.data.latestPost == resource.data.latestPost &&
+            // request.resource.data.phone == resource.data.phone &&
+            // request.resource.data.socialLinks == resource.data.socialLinks &&
+            // request.resource.data.totalFollowing == resource.data.totalFollowing &&
+            // request.resource.data.userID == resource.data.userID &&
+            // request.resource.data.username == resource.data.username
+            // );
 
             //post functions
             function isMyPublicFollow() {

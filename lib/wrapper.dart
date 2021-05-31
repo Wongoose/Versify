@@ -39,7 +39,7 @@ class Wrapper extends StatelessWidget {
 
     // futurebuilder maybe??
     if (user != null) {
-      print('Wrapper stream user' + user.userUID.toString());
+      print('Wrapper stream user: ' + user.userUID.toString());
       return FutureBuilder<MyUser>(
           future: _profileDBService.whetherHasAccount(user.userUID),
           //change whetherHasAcc function to return MyUser
@@ -47,8 +47,10 @@ class Wrapper extends StatelessWidget {
             if (myUserSnap.connectionState == ConnectionState.done) {
               if (myUserSnap.data != null) {
                 //has user document in firestore
+
                 if (myUserSnap.data.completeLogin == true) {
                   //oldUser compelte login
+                  print(myUserSnap.data.userUID + "| is completeLogin = true");
                   _authService.myUser = myUserSnap.data;
 
                   initSharedPrefs(logInUserID: myUserSnap.data.userUID);
@@ -97,6 +99,7 @@ class Wrapper extends StatelessWidget {
     if (_currentUserID != logInUserID) {
       prefs.setString('currentUserID', logInUserID);
       prefs.remove('sortedFollowingList');
+      prefs.remove('lastUpdated');
     } else {
       //sameUser
       // prefs.setString('currentUserID', logInUserID);
