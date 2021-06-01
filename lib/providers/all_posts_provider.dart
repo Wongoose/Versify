@@ -182,6 +182,25 @@ class AllPostsView extends ChangeNotifier {
     notifyListeners();
   }
 
+  void forYouInsertView(Feed feed, int index) {
+    _forYouFeedList.insert(index, feed);
+    _forYouViews.insert(
+      index,
+      ViewPostWidget(
+        title: feed.title,
+        // content: feed.content,
+        listMapContent: feed.listMapContent,
+        name: feed.username,
+        tags: feed.tags,
+        lastUpdated: feed.postedTimestamp,
+        themeIndex: 0,
+        feed: feed,
+        pageViewType: PageViewType.allPosts,
+      ),
+    );
+    // notifyListeners();
+  }
+
   void forYouClearViews() {
     _forYouViews.clear();
   }

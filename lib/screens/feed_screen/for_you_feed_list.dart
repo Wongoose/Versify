@@ -1,7 +1,9 @@
 import 'package:versify/main.dart';
+import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
 import 'package:versify/providers/feed_list_provider.dart';
 import 'package:versify/providers/all_posts_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widgets/post_feed_widget.dart';
 import 'package:versify/services/database.dart';
@@ -182,6 +184,8 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final TutorialProvider _tutorialProvider =
+        Provider.of<TutorialProvider>(context, listen: true);
 
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
     // _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
@@ -195,142 +199,158 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
 
     print('For You Feed Built');
 
-    return _future == null
-        ? Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 55),
-            child: Loading(),
-          )
-
-        // : FutureBuilder(
-        //     future: _future,
-        //     builder: (context, snapshot) {
-        //       if (snapshot.hasError) print('Error listFeed: ${snapshot.error}');
-        //       if (snapshot.connectionState == ConnectionState.done) {
-        //         List<Feed> loadedFeeds = snapshot.data;
-
-        : Consumer<AllPostsView>(
-            builder: (context, state, child) {
-              if (widget.feedListController.hasClients == true &&
-                  _prevIndexFromPageView != state.forYouCurrentIndex) {
-                if (state.allPostsViewCurrentFeedType == FeedType.forYou) {
-                  scrollPositionAfterView(state.forYouCurrentIndex);
-                  _prevIndexFromPageView = state.forYouCurrentIndex;
-                }
+    if (_future == null) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 55),
+        child: Loading(),
+      );
+    } else {
+      if (_tutorialProvider.viewedFirstPost) {
+        return Consumer<AllPostsView>(
+          builder: (context, state, child) {
+            if (widget.feedListController.hasClients == true &&
+                _prevIndexFromPageView != state.forYouCurrentIndex) {
+              if (state.allPostsViewCurrentFeedType == FeedType.forYou) {
+                scrollPositionAfterView(state.forYouCurrentIndex);
+                _prevIndexFromPageView = state.forYouCurrentIndex;
               }
+            }
 
-              return SmartRefresher(
-                key: PageStorageKey<String>('forYouFeedList'),
-                enablePullDown: true,
-                enablePullUp: true,
-                header: MaterialClassicHeader(
-                  height: 40,
-                  color: _theme.primaryColor,
-                  backgroundColor: Colors.white,
-                  distance: 50,
-                ),
-                physics: AlwaysScrollableScrollPhysics(),
-                reverse: false,
-                footer: CustomFooter(
-                  builder: (BuildContext context, LoadStatus mode) {
-                    Widget body;
-                    if (_feedListProvider.noforYouData) {
-                      body = Text('None left for today!');
-                    } else if (mode == LoadStatus.idle) {
-                      body = Text(
-                        "",
-                        style: TextStyle(color: Colors.black),
-                      );
-                    } else if (mode == LoadStatus.loading) {
-                      body = SpinKitThreeBounce(
-                        color: _theme.primaryColor,
-                        size: 30,
-                      );
-                    } else if (mode == LoadStatus.failed) {
-                      body = Text(
-                        "Load Failed!Click retry!",
-                        style: TextStyle(color: Colors.black),
-                      );
-                    } else if (mode == LoadStatus.canLoading) {
-                      body =
-                          SpinKitThreeBounce(color: Colors.pink[200], size: 30);
-                    } else {
-                      body = Text(
-                        "No more Data",
-                        style: TextStyle(color: Colors.black),
-                      );
-                    }
-                    return Container(
-                      height: 55.0,
-                      child: Center(child: body),
+            return SmartRefresher(
+              key: PageStorageKey<String>('forYouFeedList'),
+              enablePullDown: true,
+              enablePullUp: true,
+              header: MaterialClassicHeader(
+                height: 40,
+                color: _theme.primaryColor,
+                backgroundColor: Colors.white,
+                distance: 50,
+              ),
+              physics: AlwaysScrollableScrollPhysics(),
+              reverse: false,
+              footer: CustomFooter(
+                builder: (BuildContext context, LoadStatus mode) {
+                  Widget body;
+                  if (_feedListProvider.noforYouData) {
+                    body = Text('None left for today!');
+                  } else if (mode == LoadStatus.idle) {
+                    body = Text(
+                      "",
+                      style: TextStyle(color: Colors.black),
                     );
-                  },
-                ),
-                controller: _refreshController,
-                scrollController: widget.feedListController,
-                onRefresh: _onRefresh,
-                onLoading: _onLoading,
-                child: ListView.separated(
-                  primary: false,
-                  addAutomaticKeepAlives: true,
-                  itemCount: _feedListProvider.forYouData.length,
-                  scrollDirection: Axis.vertical,
-                  // controller: widget.feedListController,
-                  // physics: BouncingScrollPhysics(),
-                  separatorBuilder: (BuildContext context, int index) {
-                    int _colorIndex = 0;
-                    int _nextIndex = index + 1;
-                    int _nextColorIndex;
+                  } else if (mode == LoadStatus.loading) {
+                    body = SpinKitThreeBounce(
+                      color: _theme.primaryColor,
+                      size: 30,
+                    );
+                  } else if (mode == LoadStatus.failed) {
+                    body = Text(
+                      "Load Failed!Click retry!",
+                      style: TextStyle(color: Colors.black),
+                    );
+                  } else if (mode == LoadStatus.canLoading) {
+                    body =
+                        SpinKitThreeBounce(color: Colors.pink[200], size: 30);
+                  } else {
+                    body = Text(
+                      "No more Data",
+                      style: TextStyle(color: Colors.black),
+                    );
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child: body),
+                  );
+                },
+              ),
+              controller: _refreshController,
+              scrollController: widget.feedListController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: ListView.separated(
+                primary: false,
+                addAutomaticKeepAlives: true,
+                itemCount: _feedListProvider.forYouData.length,
+                scrollDirection: Axis.vertical,
+                // controller: widget.feedListController,
+                // physics: BouncingScrollPhysics(),
+                separatorBuilder: (BuildContext context, int index) {
+                  int _colorIndex = 0;
+                  int _nextIndex = index + 1;
+                  int _nextColorIndex;
 
-                    if (index > 2) {
-                      _colorIndex = index % 3;
-                    } else {
-                      _colorIndex = index;
-                    }
-                    if (_nextIndex > 2) {
-                      _nextColorIndex = _nextIndex % 3;
-                    } else {
-                      _nextColorIndex = _nextIndex;
-                    }
-                    return Align(
+                  if (index > 2) {
+                    _colorIndex = index % 3;
+                  } else {
+                    _colorIndex = index;
+                  }
+                  if (_nextIndex > 2) {
+                    _nextColorIndex = _nextIndex % 3;
+                  } else {
+                    _nextColorIndex = _nextIndex;
+                  }
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(5.5, 0, 0, 0),
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(5.5, 0, 0, 0),
-                        alignment: Alignment.centerLeft,
-                        height: 8,
-                        width: 8,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              _colorScheme[_colorIndex]['primary'],
-                              _colorScheme[_nextColorIndex]['primary']
-                            ],
-                          ),
-                          color: _colorScheme[_colorIndex]['primary'],
+                      height: 8,
+                      width: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            _colorScheme[_colorIndex]['primary'],
+                            _colorScheme[_nextColorIndex]['primary']
+                          ],
                         ),
+                        color: _colorScheme[_colorIndex]['primary'],
                       ),
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    return SizeProviderWidget(
-                      //when change between following and forYou may not render hence size is null
-                      onChildSize: (size) {
-                        print(
-                            'Feed Widget height is: ' + size.height.toString());
-                        _dynamicItemExtentList[index] = size.height;
-                        // print(_dynamicItemExtentList);
-                      },
-                      child: PostFeedWidget(
-                          index: index,
-                          feed: _feedListProvider.forYouData[index]),
-                    );
-                  },
-                ),
-              );
-            },
-          );
+                    ),
+                  );
+                },
+                itemBuilder: (context, index) {
+                  return SizeProviderWidget(
+                    //when change between following and forYou may not render hence size is null
+                    onChildSize: (size) {
+                      print('Feed Widget height is: ' + size.height.toString());
+                      _dynamicItemExtentList[index] = size.height;
+                      // print(_dynamicItemExtentList);
+                    },
+                    child: PostFeedWidget(
+                        index: index,
+                        feed: _feedListProvider.forYouData[index]),
+                  );
+                },
+              ),
+            );
+          },
+        );
+      } else {
+        _feedListProvider.insertForYouFeed(_welcomeFeed, 0);
+        return SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            children: _feedListProvider.forYouData
+                .map((feed) {
+                  int indexOfFeed = _feedListProvider.forYouData.indexOf(feed);
+
+                  return Opacity(
+                    opacity: indexOfFeed == 0 ? 1 : 0.4,
+                    child: PostFeedWidget(
+                        isWelcome: true,
+                        index: indexOfFeed,
+                        feed: _feedListProvider.forYouData[indexOfFeed]),
+                  );
+                })
+                .toList()
+                .cast<Widget>(),
+          ),
+        );
+      }
+    }
   }
   //   return ListView.builder(
   //     itemCount: _feedListProvider.data.length,
@@ -370,6 +390,30 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
 
     _refreshController.refreshCompleted();
   }
+
+  Feed _welcomeFeed = Feed(
+    userID: 'OuPlwP2MaSWrLQiKH78BYAy5Pj22',
+    username: 'versify_wongoose',
+    hasViewed: false,
+    contentLength: 0,
+    featuredTopic: 'New post!',
+    featuredValue: null,
+    giftLove: 0,
+    giftBird: 0,
+    title: 'Welcome to Versify',
+    tags: ['#love30', '#peace30'],
+    initLike: false,
+    numberOfLikes: 1203,
+    numberOfViews: 292999,
+    listMapContent: [
+      {
+        'type': 'text',
+        'value':
+            'Hello brother, today is the only day that the world is like htisdoqiwjdoiwqjd oqiehd oiwefh owief oiwefjoiwejfoiwe jfoiwejfoiwe oifjwoefjweoif jweoi fjwoij foije oifj weoifj iowefj weoi fjiowe ofiw eoifjweoifjweoifj weoi fwoei fwio fweoif oie oi weoi fweoihf we fwei oi owei hfowi hfowie hfowi hwoi fhweoi fhweoif hw \nfwefwefwefwefwefwefwefwe\nfwefwefewfwefwfwefwefwef\nfwfwefwefwefwefwfwfwfwefwefwefweefwefwefw\wnfwefwefwfef w efw efw w ff wf\n wfwefwef w'
+      }
+    ],
+    postedTimestamp: DateTime.now(),
+  );
 }
 
 class SizeProviderWidget extends StatefulWidget {

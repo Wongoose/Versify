@@ -77,10 +77,9 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                       print('onPopExit is true | yes clicked');
                       if (_authService.isUserAnonymous) {
                         print('onPopExit is true | user is anon!');
-                        await FirebaseAuth.instance.currentUser
-                            .delete()
-                            .then((_) => SystemNavigator.pop());
+                        await FirebaseAuth.instance.currentUser.delete();
                       }
+                      SystemNavigator.pop();
                     },
                   ),
                   TextButton(

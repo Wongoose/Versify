@@ -1,4 +1,5 @@
 import 'package:versify/providers/bottom_nav_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/create_post_sub/create_topics.dart';
 import 'package:versify/screens/feed_screen/create_post_sub/create_wrapper.dart';
 import 'package:versify/services/database.dart';
@@ -24,6 +25,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final TutorialProvider _tutorialProvider =
+        Provider.of<TutorialProvider>(context, listen: true);
 
     print('BOTTOM Nav BAR Rebuilt!');
     PageViewProvider pageViewProvider =
@@ -45,53 +48,55 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     return AnimatedContainer(
                       duration: Duration(milliseconds: 2020),
                       padding: EdgeInsets.all(15),
-                      child: bottomNavProvider.show
-                          ? FloatingActionButton.extended(
-                              tooltip: 'Write your story!',
-                              elevation: 2.0,
-                              label: Text(
-                                'Write',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Nunito',
-                                ),
-                              ),
-                              icon: Icon(
-                                FontAwesomeIcons.penAlt,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                              backgroundColor: _theme.primaryColor,
-                              onPressed: () => {
-                                Navigator.push(context, CupertinoPageRoute(
-                                  builder: (context) {
-                                    return CreateWrapper();
+                      child: _tutorialProvider.pickedTopics
+                          ? bottomNavProvider.show
+                              ? FloatingActionButton.extended(
+                                  tooltip: 'Write your story!',
+                                  elevation: 2.0,
+                                  label: Text(
+                                    'Write',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Nunito',
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    FontAwesomeIcons.penAlt,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                  backgroundColor: _theme.primaryColor,
+                                  onPressed: () => {
+                                    Navigator.push(context, CupertinoPageRoute(
+                                      builder: (context) {
+                                        return CreateWrapper();
 
-                                    //   return CreateTopics(
-                                    //       databaseService: _databaseService);
+                                        //   return CreateTopics(
+                                        //       databaseService: _databaseService);
+                                      },
+                                    )),
+                                    // _databaseService.dummyAddData(),
+                                    // print('FAB clicked!'),
                                   },
-                                )),
-                                // _databaseService.dummyAddData(),
-                                // print('FAB clicked!'),
-                              },
-                            )
-                          : FloatingActionButton(
-                              elevation: 2.0,
-                              child: Icon(FontAwesomeIcons.penAlt,
-                                  size: 18, color: Colors.white),
-                              backgroundColor: _theme.primaryColor,
-                              onPressed: () => {
-                                Navigator.push(context, CupertinoPageRoute(
-                                  builder: (context) {
-                                    return CreateWrapper();
-                                    // return CreateTopics(
-                                    //   databaseService: _databaseService,
-                                    // );
+                                )
+                              : FloatingActionButton(
+                                  elevation: 2.0,
+                                  child: Icon(FontAwesomeIcons.penAlt,
+                                      size: 18, color: Colors.white),
+                                  backgroundColor: _theme.primaryColor,
+                                  onPressed: () => {
+                                    Navigator.push(context, CupertinoPageRoute(
+                                      builder: (context) {
+                                        return CreateWrapper();
+                                        // return CreateTopics(
+                                        //   databaseService: _databaseService,
+                                        // );
+                                      },
+                                    )),
+                                    // _databaseService.dummyAddData(),
                                   },
-                                )),
-                                // _databaseService.dummyAddData(),
-                              },
-                            ),
+                                )
+                          : Container(),
                     );
                   }),
           AnimatedBuilder(

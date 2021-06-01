@@ -1,7 +1,10 @@
+import 'package:flutter/services.dart';
+import 'package:overlay_tutorial/overlay_tutorial.dart';
 import 'package:versify/providers/all_posts_provider.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
 import 'package:versify/providers/edit_profile_provider.dart';
 import 'package:versify/providers/feed_type_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/following_page_view.dart';
 import 'package:versify/screens/feed_screen/for_you_page_view.dart';
@@ -23,6 +26,7 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/shared/splash_loading.dart';
+import 'package:versify/tutorial/feed_list_tutorial.dart';
 
 class HomeWrapper extends StatefulWidget {
   // RefreshFunc _refresh;
@@ -66,6 +70,14 @@ class _HomeWrapperState extends State<HomeWrapper> {
   }
 
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        systemNavigationBarDividerColor: Colors.white,
+        systemNavigationBarColor: Colors.white,
+      ),
+    );
+
     _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
     _future =
@@ -82,6 +94,9 @@ class _HomeWrapperState extends State<HomeWrapper> {
     final AuthService _authService =
         Provider.of<AuthService>(context, listen: false);
 
+    // final TutorialProvider _tutorialProvider =
+    //     Provider.of<TutorialProvider>(context, listen: false);
+
     print('HomeWidget Built!!! WOIII');
 
     return FutureBuilder(
@@ -95,111 +110,118 @@ class _HomeWrapperState extends State<HomeWrapper> {
               Provider<ForYouPageView>.value(value: forYouPageView),
               Provider<FollowingPageView>.value(value: followingPageView),
             ],
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: Colors.white,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: Container(
-                  decoration: BoxDecoration(
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Colors.black26,
-                      //     offset: Offset(0, 0),
-                      //     blurRadius: 5,
-                      //   )
-                      // ],
-                      ),
-                  child: Stack(
-                    alignment: Alignment.bottomLeft,
-                    children: [
-                      Consumer<PageViewProvider>(
-                        builder: (context, pageViewProvider, _) {
-                          return GestureDetector(
-                            onTap: () async {
-                              if (_feedTypeProvider.currentFeedType ==
-                                  FeedType.following) {
-                                await _followingController.animateTo(0.0,
-                                    curve: Curves.fastLinearToSlowEaseIn,
-                                    duration: Duration(milliseconds: 1200));
-                              } else {
-                                await _forYouController.animateTo(0.0,
-                                    curve: Curves.fastLinearToSlowEaseIn,
-                                    duration: Duration(milliseconds: 1200));
-                              }
+            child: Consumer<TutorialProvider>(
+              builder: (context, state, child) => OverlayTutorialScope(
+                enabled: false,
+                overlayColor: Colors.black.withOpacity(0.8),
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: Colors.white,
+                  appBar: PreferredSize(
+                    preferredSize: Size.fromHeight(kToolbarHeight),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.black26,
+                          //     offset: Offset(0, 0),
+                          //     blurRadius: 5,
+                          //   )
+                          // ],
+                          ),
+                      child: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          Consumer<PageViewProvider>(
+                            builder: (context, pageViewProvider, _) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  if (_feedTypeProvider.currentFeedType ==
+                                      FeedType.following) {
+                                    await _followingController.animateTo(0.0,
+                                        curve: Curves.fastLinearToSlowEaseIn,
+                                        duration: Duration(milliseconds: 1200));
+                                  } else {
+                                    await _forYouController.animateTo(0.0,
+                                        curve: Curves.fastLinearToSlowEaseIn,
+                                        duration: Duration(milliseconds: 1200));
+                                  }
+                                },
+                                child: pageViewProvider.pageIndex == 1
+                                    ? FeedListAppBar()
+                                    : HomeAppBar(
+                                        pageViewProvider: pageViewProvider),
+                              );
                             },
-                            child: pageViewProvider.pageIndex == 1
-                                ? FeedListAppBar()
-                                : HomeAppBar(
-                                    pageViewProvider: pageViewProvider),
-                          );
-                        },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  body: Stack(
+                    alignment: Alignment.bottomCenter,
+                    fit: StackFit.loose,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                          ),
+                        ),
+                        child: Consumer<PageViewProvider>(
+                          builder: (context, pageViewProvider, _) {
+                            return PageView(
+                              controller: bottomNavController,
+                              onPageChanged: (index) =>
+                                  pageViewProvider.pageChanged(index),
+                              allowImplicitScrolling: true,
+                              scrollDirection: Axis.horizontal,
+                              pageSnapping: true,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  // padding: EdgeInsets.fromLTRB(5, 8, 8, 5),
+                                  child: WordScreen(),
+                                ),
+                                FeedListWrapper(
+                                  followingController: _followingController,
+                                  forYouController: _forYouController,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: ChangeNotifierProvider<
+                                      VisitProfileProvider>(
+                                    create: (_) => VisitProfileProvider(),
+                                    child: MainProfilePage(
+                                      bottomNavController: bottomNavController,
+                                      visitProfile: false,
+                                      userID: _authService.myUser.userUID,
+                                      profileBlogsProvider:
+                                          _profileBlogsProvider,
+                                      profileAllPostsView: _profileAllPostsView,
+                                      bottomNavVisible: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      CustomBottomNavigationBar(
+                        controller: bottomNavController,
+                        // pageViewProvider: _pageViewProvider,
+                        // scrollController: _followingController,
+                        // pageIndex: pageViewProvider.pageIndex,
                       ),
                     ],
                   ),
+                  // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
                 ),
               ),
-              body: Stack(
-                alignment: Alignment.bottomCenter,
-                fit: StackFit.loose,
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                      ),
-                    ),
-                    child: Consumer<PageViewProvider>(
-                      builder: (context, pageViewProvider, _) {
-                        return PageView(
-                          controller: bottomNavController,
-                          onPageChanged: (index) =>
-                              pageViewProvider.pageChanged(index),
-                          allowImplicitScrolling: true,
-                          scrollDirection: Axis.horizontal,
-                          pageSnapping: true,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(0),
-                              // padding: EdgeInsets.fromLTRB(5, 8, 8, 5),
-                              child: WordScreen(),
-                            ),
-                            FeedListWrapper(
-                              followingController: _followingController,
-                              forYouController: _forYouController,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child:
-                                  ChangeNotifierProvider<VisitProfileProvider>(
-                                create: (_) => VisitProfileProvider(),
-                                child: MainProfilePage(
-                                  bottomNavController: bottomNavController,
-                                  visitProfile: false,
-                                  userID: _authService.myUser.userUID,
-                                  profileBlogsProvider: _profileBlogsProvider,
-                                  profileAllPostsView: _profileAllPostsView,
-                                  bottomNavVisible: true,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  CustomBottomNavigationBar(
-                    controller: bottomNavController,
-                    // pageViewProvider: _pageViewProvider,
-                    // scrollController: _followingController,
-                    // pageIndex: pageViewProvider.pageIndex,
-                  ),
-                ],
-              ),
-              // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
             ),
           );
         }

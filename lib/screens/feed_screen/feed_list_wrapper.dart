@@ -1,9 +1,11 @@
 import 'package:versify/providers/feed_type_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/following_feed_list.dart';
 import 'package:versify/screens/feed_screen/for_you_feed_list.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/tutorial/feed_list_tutorial.dart';
 
 enum FeedType { following, forYou }
 
@@ -34,12 +36,19 @@ class _FeedListWrapperState extends State<FeedListWrapper> {
     FeedTypeProvider _feedTypeProvider =
         Provider.of<FeedTypeProvider>(context, listen: true);
 
-    if (_feedTypeProvider.currentFeedType == FeedType.following) {
-      return _followingFeed;
-    } else if (_feedTypeProvider.currentFeedType == FeedType.forYou) {
-      return _forYouFeed;
+    final TutorialProvider _tutorialProvider =
+        Provider.of<TutorialProvider>(context, listen: true);
+
+    if (_tutorialProvider.pickedTopics == false) {
+      return TutorialFeedList();
     } else {
-      return Loading();
+      if (_feedTypeProvider.currentFeedType == FeedType.following) {
+        return _followingFeed;
+      } else if (_feedTypeProvider.currentFeedType == FeedType.forYou) {
+        return _forYouFeed;
+      } else {
+        return Loading();
+      }
     }
   }
 }

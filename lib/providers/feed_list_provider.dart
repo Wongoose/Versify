@@ -55,6 +55,11 @@ class FeedListProvider extends ChangeNotifier {
     print('ChangeNotifier: ' + forYouData.toString());
   }
 
+  Future<void> insertForYouFeed(Feed feed, int index) async {
+    forYouData.insert(index, feed);
+    viewsProvider.forYouInsertView(feed, index);
+  }
+
   void followingDataClear() {
     followingData.clear();
   }

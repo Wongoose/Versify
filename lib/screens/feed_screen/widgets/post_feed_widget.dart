@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/all_posts_provider.dart';
 import 'package:versify/providers/feed_type_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/following_page_view.dart';
 import 'package:versify/screens/feed_screen/for_you_page_view.dart';
@@ -14,8 +15,9 @@ import 'package:provider/provider.dart';
 class PostFeedWidget extends StatelessWidget {
   final int index;
   final Feed feed;
+  final bool isWelcome;
 
-  PostFeedWidget({this.index, this.feed});
+  PostFeedWidget({this.index, this.feed, this.isWelcome});
 
   final List<Map<String, Color>> _colorScheme = [
     {
@@ -224,6 +226,8 @@ class PostFeedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final TutorialProvider _tutorialProvider =
+        Provider.of<TutorialProvider>(context, listen: false);
 
     FeedTypeProvider _feedTypeProvider =
         Provider.of<FeedTypeProvider>(context, listen: false);
@@ -266,6 +270,10 @@ class PostFeedWidget extends StatelessWidget {
                     }
                   }),
                 );
+                if (isWelcome ?? false) {
+                  _tutorialProvider.updateProgress(
+                      TutorialProgress.viewedFirstPost, true);
+                }
               },
               child: Container(
                 alignment: Alignment.centerLeft,
