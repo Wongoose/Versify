@@ -1,3 +1,4 @@
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:versify/main.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
@@ -320,6 +321,8 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
                       // print(_dynamicItemExtentList);
                     },
                     child: PostFeedWidget(
+                        isGrey: false,
+                        isWelcome: false,
                         index: index,
                         feed: _feedListProvider.forYouData[index]),
                   );
@@ -333,20 +336,35 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
         return SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
           child: Column(
-            children: _feedListProvider.forYouData
-                .map((feed) {
-                  int indexOfFeed = _feedListProvider.forYouData.indexOf(feed);
+            children: [
+              PostFeedWidget(
+                  isWelcome: true,
+                  isGrey: false,
+                  index: 0,
+                  feed: _feedListProvider.forYouData[0]),
+              Stack(
+                children: [
+                  Column(
+                    children: _feedListProvider.forYouData
+                        .map((feed) {
+                          int indexOfFeed =
+                              _feedListProvider.forYouData.indexOf(feed);
 
-                  return Opacity(
-                    opacity: indexOfFeed == 0 ? 1 : 0.4,
-                    child: PostFeedWidget(
-                        isWelcome: true,
-                        index: indexOfFeed,
-                        feed: _feedListProvider.forYouData[indexOfFeed]),
-                  );
-                })
-                .toList()
-                .cast<Widget>(),
+                          return indexOfFeed == 0
+                              ? SizedBox.shrink()
+                              : PostFeedWidget(
+                                  isWelcome: false,
+                                  isGrey: true,
+                                  index: indexOfFeed,
+                                  feed: _feedListProvider
+                                      .forYouData[indexOfFeed]);
+                        })
+                        .toList()
+                        .cast<Widget>(),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       }

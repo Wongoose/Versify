@@ -51,6 +51,8 @@ dependencies:
   cached_network_image: ^3.0.0
   share: ^2.0.1
   overlay_tutorial: ^2.0.1
+  shimmer_animation: ^2.0.0
+  overlay_support: ^1.2.1
   # esys_flutter_share: ^1.0.2
   # scroll_bottom_navigation_bar: 
   # skeleton_loader: 

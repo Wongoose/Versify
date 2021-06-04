@@ -327,6 +327,8 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
                         // print(_dynamicItemExtentList);
                       },
                       child: PostFeedWidget(
+                          isGrey: false,
+                          isWelcome: false,
                           index: index,
                           feed: _feedListProvider.followingData[index]),
                     );

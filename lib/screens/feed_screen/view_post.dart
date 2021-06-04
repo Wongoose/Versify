@@ -380,62 +380,141 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(height: 15),
-                            Wrap(
-                                runSpacing: 5,
-                                children: widget.tags
-                                    .map(
-                                      (individualTag) => Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                        child: FittedBox(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            padding:
-                                                EdgeInsets.fromLTRB(6, 3, 6, 3),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              border: Border.fromBorderSide(
-                                                  BorderSide(
-                                                      color: _theme.primaryColor
-                                                          .withOpacity(0.7))),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 300,
+                                  child: Wrap(
+                                      runSpacing: 5,
+                                      children: widget.tags.isEmpty
+                                          ? [Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 0, 5, 0),
+                                              child: FittedBox(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      6, 3, 6, 3),
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.fromBorderSide(
+                                                        BorderSide(
+                                                            color: _theme
+                                                                .primaryColor
+                                                                .withOpacity(
+                                                                    0.8))),
 
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
 
-                                              // color: colorScheme[themeIndex]['secondary']
+                                                    // color: colorScheme[themeIndex]['secondary']
 
-                                              //     .withOpacity(0.3),
-                                            ),
-                                            child: Text(
-                                              individualTag
-                                                      .toString()
-                                                      .contains('#')
-                                                  ? individualTag
-                                                      .toString()
-                                                      .replaceRange(
-                                                          individualTag
-                                                                  .toString()
-                                                                  .length -
-                                                              2,
-                                                          individualTag
-                                                              .toString()
-                                                              .length,
-                                                          '')
-                                                  : '#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, '')}',
-                                              style: TextStyle(
-                                                  fontFamily: 'Nunito',
-                                                  fontSize: 11,
+                                                    //     .withOpacity(0.3),
+                                                  ),
+                                                  child: Text(
+                                                    'no tags',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Nunito',
+                                                        fontSize: 11,
 
-                                                  // color: Colors.white,
+                                                        // color: Colors.white,
 
-                                                  color: _theme.primaryColor
-                                                      .withOpacity(0.7)),
-                                            ),
-                                          ),
+                                                        color: _theme
+                                                            .primaryColor
+                                                            .withOpacity(0.8)),
+                                                  ),
+                                                ),
+                                              ),
+                                            )]
+                                          : widget.tags
+                                              .map(
+                                                (individualTag) => Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 0, 5, 0),
+                                                  child: FittedBox(
+                                                    alignment: Alignment.center,
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              6, 3, 6, 3),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.fromBorderSide(
+                                                            BorderSide(
+                                                                color: _theme
+                                                                    .primaryColor
+                                                                    .withOpacity(
+                                                                        0.8))),
+
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+
+                                                        // color: colorScheme[themeIndex]['secondary']
+
+                                                        //     .withOpacity(0.3),
+                                                      ),
+                                                      child: Text(
+                                                        individualTag
+                                                                .toString()
+                                                                .contains('#')
+                                                            ? individualTag
+                                                                .toString()
+                                                                .replaceRange(
+                                                                    individualTag
+                                                                            .toString()
+                                                                            .length -
+                                                                        2,
+                                                                    individualTag
+                                                                        .toString()
+                                                                        .length,
+                                                                    '')
+                                                            : '#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, '')}',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Nunito',
+                                                            fontSize: 11,
+
+                                                            // color: Colors.white,
+
+                                                            color: _theme
+                                                                .primaryColor
+                                                                .withOpacity(
+                                                                    0.8)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList()),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 4),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.timer,
+                                        color:
+                                            _theme.accentColor.withOpacity(1),
+                                        size: 15,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        '${(widget.feed.contentLength / 5 / 1000 * 5.65 + 0.5).round()}min',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black.withOpacity(0.5),
                                         ),
                                       ),
-                                    )
-                                    .toList()),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                             SizedBox(height: 15),
                           ],
                         ),
@@ -463,27 +542,6 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timer,
-                                    color: _theme.primaryColor.withOpacity(0.7),
-                                    size: 15,
-                                  ),
-                                  SizedBox(width: 2),
-                                  Text(
-                                    '${(widget.feed.contentLength / 5 / 1000 * 5.65 + 0.5).round()}min',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black.withOpacity(0.5),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 10),
                             Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: ViewPostContent(

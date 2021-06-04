@@ -138,7 +138,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                     child: ProfilePic(
                       userProfile: state.currentViewPostUser,
                       primary: _theme.primaryColor,
-                      secondary: _theme.accentColor,
+                      secondary: _theme.primaryColor,
                       size: 1,
                     ),
                   ),
@@ -151,7 +151,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                           ? ProfilePic(
                               userProfile: state.currentViewPostUser,
                               primary: _theme.primaryColor,
-                              secondary: _theme.accentColor,
+                              secondary: _theme.primaryColor,
                               size: 1,
                             )
                           : Align(
@@ -253,7 +253,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                           style: TextStyle(
                             fontSize: 12,
                             color: !state.currentUserIsFollowing
-                                ? Theme.of(context).primaryColor
+                                ? Theme.of(context).accentColor
                                 : Colors.black54,
                           ),
                         ),
@@ -320,7 +320,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                             fontSize: 12,
                             color: !state.visitProfileProvider.userProfile
                                     .isFollowing
-                                ? Theme.of(context).primaryColor
+                                ? Theme.of(context).accentColor
                                 : Colors.black54,
                           ),
                         ),

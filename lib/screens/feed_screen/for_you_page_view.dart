@@ -292,7 +292,7 @@ class _ForYouPageViewState extends State<ForYouPageView> {
 
                       _prevIndex = currentIndex;
                     },
-                    scrollDirection: Axis.horizontal,
+                    scrollDirection: Axis.vertical,
                     itemCount: _allPostsViewProvider.forYouViews.length,
                     itemBuilder: (context, index) {
                       return _allPostsViewProvider.forYouViews[index];

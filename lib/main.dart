@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
 import 'package:versify/providers/content_body_provider.dart';
 import 'package:versify/providers/edit_profile_provider.dart';
@@ -201,30 +202,33 @@ class VersifyApp extends StatelessWidget {
                     Provider<RefreshFunc>.value(value: refreshFeeds),
                     // FutureProvider<List<Feed>>.value(value: _getFeedDataMain()),
                   ],
-                  child: MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    title: 'Versify',
-                    theme: ThemeData(
-                      // colorScheme: ColorScheme.fromSwatch(),
-                      canvasColor: Colors.white,
-                      primaryColor: Color(0xFFff699F),
-                      accentColor: Color(0xFFff89B2),
-                      fontFamily: GoogleFonts.getFont('Nunito Sans').fontFamily,
-                      backgroundColor: Colors.white,
+                  child: OverlaySupport.global(
+                    child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      title: 'Versify',
+                      theme: ThemeData(
+                        // colorScheme: ColorScheme.fromSwatch(),
+                        canvasColor: Colors.white,
+                        primaryColor: Color(0xFFff699F),
+                        accentColor: Color(0xFF61c0bf),
+                        fontFamily:
+                            GoogleFonts.getFont('Nunito Sans').fontFamily,
+                        backgroundColor: Colors.white,
+                      ),
+                      builder: (context, child) {
+                        return MediaQuery(
+                          child: child,
+                          data: MediaQuery.of(context)
+                              .copyWith(textScaleFactor: 1.0),
+                        );
+                      },
+                      home: VersifyHome(
+                          authService: _authService,
+                          dynamicLinkService: _dynamicLinkService),
+                      routes: {
+                        '/accountSettings': (context) => AccountSettings(),
+                      },
                     ),
-                    builder: (context, child) {
-                      return MediaQuery(
-                        child: child,
-                        data: MediaQuery.of(context)
-                            .copyWith(textScaleFactor: 1.0),
-                      );
-                    },
-                    home: VersifyHome(
-                        authService: _authService,
-                        dynamicLinkService: _dynamicLinkService),
-                    routes: {
-                      '/accountSettings': (context) => AccountSettings(),
-                    },
                   ),
                 );
               }),

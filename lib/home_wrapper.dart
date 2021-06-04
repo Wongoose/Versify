@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:overlay_tutorial/overlay_tutorial.dart';
 import 'package:versify/providers/all_posts_provider.dart';
 import 'package:versify/providers/bottom_nav_provider.dart';
@@ -27,6 +28,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/shared/splash_loading.dart';
 import 'package:versify/tutorial/feed_list_tutorial.dart';
+import 'package:versify/services/notification.dart';
 
 class HomeWrapper extends StatefulWidget {
   // RefreshFunc _refresh;
@@ -414,7 +416,34 @@ class FeedListAppBar extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                 backgroundColor: Colors.white,
               ),
-              onPressed: () {},
+              onPressed: () {
+                NotificationOverlay().simpleNotification(
+                    duration: Duration(seconds: 4),
+                    delay: Duration(seconds: 0));
+                // showOverlayNotification(
+                //   (context) {
+                //     return Material(
+                //       color: Colors.transparent,
+                //       child: Container(
+                //         margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+                //         alignment: Alignment.center,
+                //         height: 80,
+                //         width: 400,
+                //         decoration: BoxDecoration(
+                //           color: Colors.black,
+                //           borderRadius: BorderRadius.circular(20),
+                //         ),
+                //         child: Text(
+                //           'Hello world',
+                //           style: TextStyle(color: Colors.white),
+                //         ),
+                //       ),
+                //     );
+                //   },
+                //   position: NotificationPosition.top,
+                //   duration: Duration(seconds: 4),
+                // );
+              },
               clipBehavior: Clip.none,
               icon: Icon(
                 Icons.notifications_none_rounded,
