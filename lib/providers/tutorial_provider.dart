@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-enum TutorialProgress { pickTopics, viewedFirstPost }
+enum TutorialProgress { pickTopics, viewedFirstPost, refreshFirst }
 
 class TutorialProvider extends ChangeNotifier {
   bool allCompleted = false;
   bool pickedTopics = false;
+  bool refreshFirst = false;
   bool viewedFirstPost = false;
   bool overlayScopeEnabled = true;
 
@@ -26,6 +27,9 @@ class TutorialProvider extends ChangeNotifier {
         break;
       case TutorialProgress.viewedFirstPost:
         viewedFirstPost = complete;
+        break;
+      case TutorialProgress.refreshFirst:
+        refreshFirst = complete;
         break;
     }
     notifyListeners();

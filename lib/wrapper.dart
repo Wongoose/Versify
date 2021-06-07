@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:versify/home_wrapper.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/onboarding/new_user_options.dart';
+import 'package:versify/screens/onboarding/pick_topics.dart';
 import 'package:versify/screens/onboarding/sign_up_user_details.dart';
 import 'package:versify/screens/profile_screen/profile_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
@@ -21,9 +23,6 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final MyUser user = Provider.of<MyUser>(context, listen: true);
 
-    ProfileDBService _profileDBService =
-        Provider.of<ProfileDBService>(context, listen: false);
-
     final AuthService _authService =
         Provider.of<AuthService>(context, listen: false);
 
@@ -33,62 +32,69 @@ class Wrapper extends StatelessWidget {
     final JsonAllBadgesStorage _jsonAllBadgesStorage =
         Provider.of<JsonAllBadgesStorage>(context);
 
-    // print('Wrapper: ' + jsonProvider.toString());
+    final TutorialProvider _tutorialProvider =
+        Provider.of<TutorialProvider>(context, listen: false);
 
-    // MyUser user = _authProvider.user;
+    final ProfileDBService _profileDBService =
+        Provider.of<ProfileDBService>(context, listen: false);
 
-    // futurebuilder maybe??
-    if (user != null) {
-      print('Wrapper stream user: ' + user.userUID.toString());
-      return FutureBuilder<MyUser>(
-          future: _profileDBService.whetherHasAccount(user.userUID),
-          //change whetherHasAcc function to return MyUser
-          builder: (context, myUserSnap) {
-            if (myUserSnap.connectionState == ConnectionState.done) {
-              if (myUserSnap.data != null) {
-                //has user document in firestore
+    if (_tutorialProvider.pickedTopics) {
+      if (user != null) {
+        print('Wrapper stream user: ' + user.userUID.toString());
+        return FutureBuilder<MyUser>(
+            future: _profileDBService.whetherHasAccount(user.userUID),
+            //change whetherHasAcc function to return MyUser
+            builder: (context, myUserSnap) {
+              if (myUserSnap.connectionState == ConnectionState.done) {
+                if (myUserSnap.data != null) {
+                  //has user document in firestore
 
-                if (myUserSnap.data.completeLogin == true) {
-                  //oldUser compelte login
-                  print(myUserSnap.data.userUID + "| is completeLogin = true");
-                  _authService.myUser = myUserSnap.data;
+                  if (myUserSnap.data.completeLogin == true) {
+                    //oldUser compelte login
+                    print(
+                        myUserSnap.data.userUID + "| is completeLogin = true");
+                    _authService.myUser = myUserSnap.data;
 
-                  initSharedPrefs(logInUserID: myUserSnap.data.userUID);
-                  _profileDBService.profileDBInit();
-                  _jsonFollowingStorage.jsonInit(); //diff accounts
-                  _jsonAllBadgesStorage.jsonInit();
+                    initSharedPrefs(logInUserID: myUserSnap.data.userUID);
+                    _profileDBService.profileDBInit();
+                    _jsonFollowingStorage.jsonInit(); //diff accounts
+                    _jsonAllBadgesStorage.jsonInit();
 
-                  return new HomeWrapper();
+                    return new HomeWrapper();
+                  } else {
+                    //not complete login
+                    return SignUpDetails();
+                  }
                 } else {
-                  //not complete login
-                  return SignUpDetails();
+                  // no user document but authenticated
+                  if (_authService.isUserAnonymous) {
+                    //dynamic linking with new user (anonymous)
+                    print('Anonymous User | DynamicLink');
+                    return GestureDetector(
+                        onTap: () async {
+                          await _authService.logout();
+                        },
+                        child: Container(
+                          color: Colors.white,
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                        ));
+                  } else {
+                    //user authenticated not-anonymous but no firestore document
+                    //back to signUp
+                    return SignUpDetails();
+                  }
                 }
               } else {
-                // no user document but authenticated
-                if (_authService.isUserAnonymous) {
-                  //dynamic linking with new user (anonymous)
-                  print('Anonymous User | DynamicLink');
-                  return GestureDetector(
-                      onTap: () async {
-                        await _authService.logout();
-                      },
-                      child: Container(
-                        color: Colors.white,
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                      ));
-                } else {
-                  //user authenticated not-anonymous but no firestore document
-                  //back to signUp
-                  return SignUpDetails();
-                }
+                return SplashLoading();
               }
-            } else {
-              return SplashLoading();
-            }
-          });
+            });
+      } else {
+        return OnBoardingNewUser(boardingUserDetails: false);
+      }
     } else {
-      return OnBoardingNewUser(boardingUserDetails: false);
+      //tutorial pick topics
+      return IntroPickTopics();
     }
   }
 

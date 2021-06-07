@@ -48,7 +48,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     return AnimatedContainer(
                       duration: Duration(milliseconds: 2020),
                       padding: EdgeInsets.all(15),
-                      child: _tutorialProvider.pickedTopics
+                      child: _tutorialProvider.refreshFirst
                           ? bottomNavProvider.show
                               ? FloatingActionButton.extended(
                                   tooltip: 'Write your story!',

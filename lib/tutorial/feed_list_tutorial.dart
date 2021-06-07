@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_tutorial/overlay_tutorial.dart';
@@ -19,7 +21,7 @@ class TutorialFeedList extends StatelessWidget {
 
     void _onRefresh() {
       Future.delayed(Duration(seconds: 1)).then((value) {
-        _tutorialProvider.updateProgress(TutorialProgress.pickTopics, true);
+        _tutorialProvider.updateProgress(TutorialProgress.refreshFirst, true);
         _refreshController.refreshCompleted();
       });
     }
@@ -49,157 +51,147 @@ class TutorialFeedList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 30),
-            Text(
-              'swipe to refresh blogs',
-              style: TextStyle(color: Colors.black54, fontSize: 11),
-            ),
-            SizedBox(height: 5),
-            Icon(
-              Icons.arrow_downward_rounded,
-              color: Colors.black54,
-              size: 15,
-            ),
+            BouncingRefresh(),
+
             Expanded(child: Container()),
-            OverlayTutorialHole(
-              enabled: true,
-              overlayTutorialEntry: OverlayTutorialRectEntry(
-                  padding: EdgeInsets.all(45),
-                  radius: Radius.circular(1000),
-                  overlayTutorialHints: [
-                    OverlayTutorialWidgetHint(
-                        position: (rect) => Offset(0, rect.bottom),
-                        builder: (context, rect, rRect) {
-                          return Material(
-                            color: Colors.transparent,
-                            child: Container(
-                              // height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 100),
-                                  SizedBox(
-                                    width: 300,
-                                    child: Text(
-                                      'Hi, I\'m Vicky.\nI will help you get your away around Versify for the first time!',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 30),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _tutorialProvider
-                                          .updateOverlayScope(false);
-                                    },
-                                    child: Text(
-                                      'Let\'s get started!',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                  ]),
-              child: Image.asset(
-                'assets/images/laugh.png',
-                height: 120,
-                width: 120,
+            Image.asset(
+              'assets/images/laugh.png',
+              height: 160,
+              width: 160,
+            ),
+            SizedBox(height: 30),
+            SizedBox(
+              width: 260,
+              child: RichText(
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: 'Welcome',
+                    style: TextStyle(
+                        color: Color(0xffff548e),
+                        fontSize: 30,
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.bold,
+                        height: 1.1),
+                  ),
+                  TextSpan(
+                    text: ' to your\nblogs feed',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.bold,
+                        height: 1.1),
+                  )
+                ]),
               ),
             ),
-            // Expanded(child: Container()),
-            Expanded(child: Container()),
-            Container(
-              padding: EdgeInsets.fromLTRB(2, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: 260,
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(children: [
-                    TextSpan(
-                      text: 'Welcome',
-                      style: TextStyle(
-                          color: Color(0xffff548e),
-                          fontSize: 35,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.bold,
-                          height: 1.1),
-                    ),
-                    TextSpan(
-                      text: ' to\nyour blogs feed',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 35,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.bold,
-                          height: 1.1),
-                    )
-                  ]),
-                ),
-              ),
-            ),
-            SizedBox(height: 25),
-            Container(
-              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
+            // Expanded(flex: 1, child: Container()),
+            SizedBox(height: 120),
+            SizedBox(
+              width: 280,
               child: Text(
-                'PICK YOUR FAVOURITE TOPICS',
+                '"For God so loved the world, he sent his only begotten son."',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black45,
-                  fontWeight: FontWeight.w600,
+                  color: Colors.black54,
                 ),
               ),
             ),
-            SizedBox(height: 10),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Wrap(
-                spacing: 15,
-                alignment: WrapAlignment.start,
-                children: _topicsProvider.chipSnaps
-                    .map(
-                      (chipData) => FilterChip(
-                          selected: chipData.checked,
-                          checkmarkColor: Colors.white,
-                          selectedColor: Color(0xffff548e),
-                          showCheckmark: true,
-                          onSelected: ((onSelected) {
-                            chipData.checked = onSelected;
-                            _topicsProvider.updateChips();
-                          }),
-                          shape: StadiumBorder(
-                            side: BorderSide(
-                              color: Color(0xffff548e),
-                              width: 1.0,
-                            ),
-                          ),
-                          backgroundColor: Colors.white,
-                          label: Text(chipData.topic),
-                          labelStyle: TextStyle(
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.w600,
-                              color: chipData.checked
-                                  ? Colors.white
-                                  : Color(0xffff548e))),
-                    )
-                    .toList()
-                    .cast<Widget>(),
-              ),
-            ),
-            SizedBox(height: 20),
-            // Expanded(flex: 3, child: Container()),
+            // Expanded(flex: 1, child: Container()),
+            SizedBox(height: 80),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BouncingRefresh extends StatefulWidget {
+  const BouncingRefresh({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _BouncingRefreshState createState() => _BouncingRefreshState();
+}
+
+class _BouncingRefreshState extends State<BouncingRefresh> {
+  double marginTop = 2;
+  double start;
+  double end;
+  double increment;
+
+  Timer timer;
+
+  bool isGoingDown = true;
+
+  void bounce(Timer t) async {
+    timer = t;
+    if (marginTop <= start) {
+      setState(() {
+        marginTop += increment;
+        isGoingDown = true;
+      });
+    } else if (marginTop >= end) {
+      setState(() {
+        marginTop -= increment;
+        isGoingDown = false;
+      });
+    }
+
+    if (marginTop < end && marginTop > start) {
+      if (isGoingDown) {
+        setState(() {
+          marginTop += increment;
+        });
+      } else {
+        setState(() {
+          marginTop -= increment;
+        });
+      }
+    }
+  }
+
+  void interpolate(double start, double end) {
+    setState(() {
+      increment = (end - start) / 50;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    marginTop = 2;
+    start = 2;
+    end = 15;
+    interpolate(start, end);
+    Timer.periodic(const Duration(milliseconds: 8), bounce);
+  }
+
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: marginTop),
+      child: Column(
+        children: [
+          Text(
+            'swipe to refresh blogs',
+            style: TextStyle(color: Colors.black54, fontSize: 11),
+          ),
+          SizedBox(height: 5),
+          Icon(
+            Icons.arrow_downward_rounded,
+            color: Colors.black54,
+            size: 15,
+          ),
+        ],
       ),
     );
   }

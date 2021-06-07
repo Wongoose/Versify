@@ -907,6 +907,18 @@ class DatabaseService {
     });
   }
 
+  //tutorial
+  Future<bool> completeSelectionTopics(List<String> topicInterests) async {
+    try {
+      await usersPrivateCollection.doc(this.uid).update({
+        'topicInterests': topicInterests,
+      });
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   // Future<void> updateAllPostWithFields() async {
   //   await allPostsCollection
   //       .where('featuredTopic', isEqualTo: null)

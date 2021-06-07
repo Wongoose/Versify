@@ -174,32 +174,33 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
           ),
           replacement: GestureDetector(
             onTap: () async {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Sign up to follow'),
-              )));
-              // if (!_followLoading) {
-              //   print('Follow onTap() with hash provider: ' +
-              //       widget.hashCode.toString());
-              //   setState(() => _followLoading = true);
+              if (!_authService.isUserAnonymous) {
+                if (!_followLoading) {
+                  print('Follow onTap() with hash provider: ' +
+                      widget.hashCode.toString());
+                  setState(() => _followLoading = true);
 
-              //   await widget.profileDBService
-              //       .updateFollowing(
-              //     profileUID: widget.userProfile.userUID,
-              //     isFollowing: true,
-              //     usersPublicFollowID:
-              //         widget.userProfile.usersPublicFollowID,
-              //   )
-              //       .then((publicFollowID) {
-              //     widget.userProfile.usersPublicFollowID =
-              //         publicFollowID;
-              //     _followLoading = false;
-              //     _visitProfileProvider.updateFollowing(true);
+                  await widget.profileDBService
+                      .updateFollowing(
+                    profileUID: widget.userProfile.userUID,
+                    isFollowing: true,
+                    usersPublicFollowID: widget.userProfile.usersPublicFollowID,
+                  )
+                      .then((publicFollowID) {
+                    widget.userProfile.usersPublicFollowID = publicFollowID;
+                    _followLoading = false;
+                    _visitProfileProvider.updateFollowing(true);
 
-              //     // _isFollowing = true;
-              //   });
-              // }
+                    // _isFollowing = true;
+                  });
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text('Sign up to follow'),
+                )));
+              }
             },
             child: Container(
               height: 40,

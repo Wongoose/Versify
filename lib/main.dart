@@ -211,6 +211,7 @@ class VersifyApp extends StatelessWidget {
                         canvasColor: Colors.white,
                         primaryColor: Color(0xFFff699F),
                         accentColor: Color(0xFF61c0bf),
+                        splashColor: Color(0xFFffdee9),
                         fontFamily:
                             GoogleFonts.getFont('Nunito Sans').fontFamily,
                         backgroundColor: Colors.white,
