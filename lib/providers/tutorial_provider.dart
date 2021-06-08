@@ -4,20 +4,23 @@ enum TutorialProgress { pickTopics, viewedFirstPost, refreshFirst }
 
 class TutorialProvider extends ChangeNotifier {
   bool allCompleted = false;
-  bool pickedTopics = false;
+  bool pickedTopics = true;
   bool refreshFirst = false;
   bool viewedFirstPost = false;
+  bool viewedSecondPost = false;
+
   bool overlayScopeEnabled = true;
+
+  bool get secondPostNotificationEnabled {
+    return viewedFirstPost == true && viewedSecondPost == false;
+  }
 
   void updateTutorialComplete(bool completed) {
     print('update TutorialComplete | completed: $completed');
     allCompleted = completed;
   }
 
-  void updateOverlayScope(bool enabled) {
-    overlayScopeEnabled = enabled;
-    notifyListeners();
-  }
+
 
   void updateProgress(TutorialProgress tutorialProgress, bool complete) {
     print('updateTutorialProgress RAN');

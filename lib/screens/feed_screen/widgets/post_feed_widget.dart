@@ -275,9 +275,6 @@ class PostFeedWidget extends StatelessWidget {
                 );
                 if (isWelcome ?? false) {
                   NotificationOverlay().welcomePostNotification();
-
-                  _tutorialProvider.updateProgress(
-                      TutorialProgress.viewedFirstPost, true);
                 }
               },
               child: Shimmer(

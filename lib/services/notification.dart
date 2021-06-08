@@ -4,16 +4,28 @@ import 'package:overlay_support/overlay_support.dart';
 class NotificationOverlay {
   void welcomePostNotification() {
     simpleNotification(
-        duration: Duration(seconds: 8), delay: Duration(seconds: 4));
+      duration: Duration(seconds: 5),
+      delay: Duration(seconds: 4),
+      title: "Are you excited?",
+      body:
+          "I can\'t believe you\'re reading your first blog! See you at the end.",
+      imagePath: "assets/images/copywriting.png",
+    );
   }
 
-  Future<void> simpleNotification({Duration duration, Duration delay}) async {
-    Future.delayed(delay).then((_) {
+  void simpleNotification(
+      {Duration duration,
+      Duration delay,
+      @required String title,
+      @required String body,
+      @required String imagePath}) {
+    Future.delayed(delay ?? Duration(seconds: 0)).then((_) {
       showSimpleNotification(
         Material(
           color: Colors.transparent,
           child: Container(
             margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+            padding: EdgeInsets.fromLTRB(25, 15, 20, 15),
             alignment: Alignment.center,
             height: 80,
             decoration: BoxDecoration(
@@ -24,14 +36,55 @@ class NotificationOverlay {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              'Hello world',
-              style: TextStyle(color: Colors.black),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(2),
+                  child: AspectRatio(
+                    aspectRatio: 1 / 1,
+                    child: Image(
+                      image: AssetImage(
+                        imagePath ?? 'assets/images/love.png',
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 15),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title ?? 'Sign Up profile',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 260,
+                      child: Text(
+                        body ?? 'Login now to unlock more features!',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
         elevation: 0,
-        duration: duration,
+        duration: duration ?? Duration(seconds: 4),
         background: Colors.transparent,
         foreground: Colors.transparent,
         slideDismissDirection: DismissDirection.horizontal,

@@ -5,6 +5,7 @@ import 'package:versify/providers/all_posts_provider.dart';
 import 'package:versify/providers/feed_type_provider.dart';
 import 'package:versify/providers/input_comments_provider.dart';
 import 'package:versify/providers/post_swipe_up_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widgets/input_comment.dart';
 import 'package:versify/services/auth.dart';
@@ -24,6 +25,7 @@ class ForYouPageView extends StatefulWidget {
 
 class _ForYouPageViewState extends State<ForYouPageView> {
   AllPostsView _allPostsViewProvider;
+  TutorialProvider _tutorialProvider;
   PageController _pageController;
   DatabaseService _databaseService;
   int _prevIndex = 0;
@@ -49,6 +51,10 @@ class _ForYouPageViewState extends State<ForYouPageView> {
   Future<void> popScopeUpdateFeed() async {
     Feed _feedToBeUpdated = _allPostsViewProvider.forYouCurrentFeed;
     // setState(() => _loading = true);
+    if (_tutorialProvider.viewedFirstPost == false) {
+      _tutorialProvider.updateProgress(TutorialProgress.viewedFirstPost, true);
+    }
+
     Navigator.pop(context);
     await _databaseService
         .updateFeedAfterSwipe(
@@ -64,8 +70,10 @@ class _ForYouPageViewState extends State<ForYouPageView> {
   Widget build(BuildContext context) {
     _allPostsViewProvider = Provider.of<AllPostsView>(context, listen: false);
     _databaseService = Provider.of<DatabaseService>(context);
-    FeedListProvider _feedListProvider = Provider.of<FeedListProvider>(context);
-    InputCommentsProvider _inputCommentsProvider =
+    _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
+    final FeedListProvider _feedListProvider =
+        Provider.of<FeedListProvider>(context);
+    final InputCommentsProvider _inputCommentsProvider =
         Provider.of<InputCommentsProvider>(context, listen: false);
 
     print('For You PageView Build with allPostsView: ' +

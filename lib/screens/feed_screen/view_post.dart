@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/post_swipe_up_provider.dart';
+import 'package:versify/providers/tutorial_provider.dart';
 import 'package:versify/providers/view_post_gift_provider.dart';
 import 'package:versify/providers/view_post_like_provider.dart';
 import 'package:versify/providers/all_posts_provider.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/services/notification.dart';
 
 //New ViePost
 
@@ -59,6 +61,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
   ViewPostLikeProvider _likeProvider;
   dynamic _postsProvider; //AllPostsView or ProfileAllPostsView
   PostSwipeUpProvider _swipeUpProvider;
+  TutorialProvider _tutorialProvider;
 
   bool _firstInit = true;
 
@@ -104,17 +107,24 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
     _likeProvider.initialLike();
   }
 
-  // void readySwipDownFunc() {
-  //   setState(() {
-  //     _prevPostVisibile = true;
-  //   });
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     _viewPostController.position.jumpTo(200);
-  //   });
-  // }
+  void tutorialInit() {
+    if (postFrameDone) {
+      if (_tutorialProvider.secondPostNotificationEnabled &&
+          _postsProvider.forYouCurrentIndex > 0) {
+        NotificationOverlay().simpleNotification(
+          body: 'Hope you enjoy this new post. Keep going!',
+          imagePath: 'assets/images/copywriting.png',
+          title: 'A good start!',
+          delay: Duration(seconds: 3),
+        );
+      }
+    }
+  }
 
   _ViewPostWidgetState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      tutorialInit();
+
       _firstInit = true;
       print('isClicked: ' + _postsProvider.clickFromPostFeedWidget.toString());
       _postsProvider.clickFromPostFeedWidget ? _readMoreTap() : null;
@@ -191,6 +201,10 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
 
         if (isEnd) {
           print('Is ENd');
+          if (_tutorialProvider.viewedFirstPost == false) {
+            _tutorialProvider.updateProgress(
+                TutorialProgress.viewedFirstPost, true);
+          }
 
           if (readyForSwipeUp == 0) {
             _viewPostController.position.animateTo(
@@ -260,6 +274,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
     _swipeUpProvider = Provider.of<PostSwipeUpProvider>(context, listen: false);
+    _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 
     if (widget.pageViewType == PageViewType.allPosts) {
       print('Type of PageView is allpost');
@@ -389,46 +404,50 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                   child: Wrap(
                                       runSpacing: 5,
                                       children: widget.tags.isEmpty
-                                          ? [Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 5, 0),
-                                              child: FittedBox(
-                                                alignment: Alignment.center,
-                                                child: Container(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      6, 3, 6, 3),
+                                          ? [
+                                              Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 5, 0),
+                                                child: FittedBox(
                                                   alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    border: Border.fromBorderSide(
-                                                        BorderSide(
-                                                            color: _theme
-                                                                .primaryColor
-                                                                .withOpacity(
-                                                                    0.8))),
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            6, 3, 6, 3),
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.fromBorderSide(
+                                                          BorderSide(
+                                                              color: _theme
+                                                                  .primaryColor
+                                                                  .withOpacity(
+                                                                      0.8))),
 
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
 
-                                                    // color: colorScheme[themeIndex]['secondary']
+                                                      // color: colorScheme[themeIndex]['secondary']
 
-                                                    //     .withOpacity(0.3),
-                                                  ),
-                                                  child: Text(
-                                                    'no tags',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Nunito',
-                                                        fontSize: 11,
+                                                      //     .withOpacity(0.3),
+                                                    ),
+                                                    child: Text(
+                                                      'no tags',
+                                                      style: TextStyle(
+                                                          fontFamily: 'Nunito',
+                                                          fontSize: 11,
 
-                                                        // color: Colors.white,
+                                                          // color: Colors.white,
 
-                                                        color: _theme
-                                                            .primaryColor
-                                                            .withOpacity(0.8)),
+                                                          color: _theme
+                                                              .primaryColor
+                                                              .withOpacity(
+                                                                  0.8)),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            )]
+                                              )
+                                            ]
                                           : widget.tags
                                               .map(
                                                 (individualTag) => Padding(
