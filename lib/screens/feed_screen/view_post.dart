@@ -109,8 +109,8 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
 
   void tutorialInit() {
     if (postFrameDone) {
-      if (_tutorialProvider.secondPostNotificationEnabled &&
-          _postsProvider.forYouCurrentIndex > 0) {
+      if (_tutorialProvider.viewSecondPost &&
+          _postsProvider.forYouCurrentIndex != 0) {
         NotificationOverlay().simpleNotification(
           body: 'Hope you enjoy this new post. Keep going!',
           imagePath: 'assets/images/copywriting.png',
@@ -201,9 +201,9 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
 
         if (isEnd) {
           print('Is ENd');
-          if (_tutorialProvider.viewedFirstPost == false) {
-            _tutorialProvider.updateProgress(
-                TutorialProgress.viewedFirstPost, true);
+          if (_tutorialProvider.viewFirstPost) {
+            _tutorialProvider
+                .updateProgress(TutorialProgress.viewFirstPostDone);
           }
 
           if (readyForSwipeUp == 0) {

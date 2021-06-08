@@ -51,8 +51,8 @@ class _ForYouPageViewState extends State<ForYouPageView> {
   Future<void> popScopeUpdateFeed() async {
     Feed _feedToBeUpdated = _allPostsViewProvider.forYouCurrentFeed;
     // setState(() => _loading = true);
-    if (_tutorialProvider.viewedFirstPost == false) {
-      _tutorialProvider.updateProgress(TutorialProgress.viewedFirstPost, true);
+    if (_tutorialProvider.viewFirstPost) {
+      _tutorialProvider.updateProgress(TutorialProgress.viewFirstPostDone);
     }
 
     Navigator.pop(context);

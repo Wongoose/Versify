@@ -38,7 +38,10 @@ class Wrapper extends StatelessWidget {
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context, listen: false);
 
-    if (_tutorialProvider.pickedTopics) {
+    if (_tutorialProvider.pickTopics) {
+      //tutorial pick topics
+      return IntroPickTopics();
+    } else {
       if (user != null) {
         print('Wrapper stream user: ' + user.userUID.toString());
         return FutureBuilder<MyUser>(
@@ -92,9 +95,6 @@ class Wrapper extends StatelessWidget {
       } else {
         return OnBoardingNewUser(boardingUserDetails: false);
       }
-    } else {
-      //tutorial pick topics
-      return IntroPickTopics();
     }
   }
 

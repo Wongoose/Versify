@@ -206,7 +206,44 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
         child: Loading(),
       );
     } else {
-      if (_tutorialProvider.viewedFirstPost) {
+      if (_tutorialProvider.viewFirstPost) {
+        //tutorial view first post
+        _feedListProvider.insertForYouFeed(_welcomeFeed, 0);
+        return SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              PostFeedWidget(
+                  isWelcome: true,
+                  isGrey: false,
+                  index: 0,
+                  feed: _feedListProvider.forYouData[0]),
+              Stack(
+                children: [
+                  Column(
+                    children: _feedListProvider.forYouData
+                        .map((feed) {
+                          int indexOfFeed =
+                              _feedListProvider.forYouData.indexOf(feed);
+
+                          return indexOfFeed == 0
+                              ? SizedBox.shrink()
+                              : PostFeedWidget(
+                                  isWelcome: false,
+                                  isGrey: true,
+                                  index: indexOfFeed,
+                                  feed: _feedListProvider
+                                      .forYouData[indexOfFeed]);
+                        })
+                        .toList()
+                        .cast<Widget>(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      } else {
         return Consumer<AllPostsView>(
           builder: (context, state, child) {
             if (widget.feedListController.hasClients == true &&
@@ -330,42 +367,6 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
               ),
             );
           },
-        );
-      } else {
-        _feedListProvider.insertForYouFeed(_welcomeFeed, 0);
-        return SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              PostFeedWidget(
-                  isWelcome: true,
-                  isGrey: false,
-                  index: 0,
-                  feed: _feedListProvider.forYouData[0]),
-              Stack(
-                children: [
-                  Column(
-                    children: _feedListProvider.forYouData
-                        .map((feed) {
-                          int indexOfFeed =
-                              _feedListProvider.forYouData.indexOf(feed);
-
-                          return indexOfFeed == 0
-                              ? SizedBox.shrink()
-                              : PostFeedWidget(
-                                  isWelcome: false,
-                                  isGrey: true,
-                                  index: indexOfFeed,
-                                  feed: _feedListProvider
-                                      .forYouData[indexOfFeed]);
-                        })
-                        .toList()
-                        .cast<Widget>(),
-                  ),
-                ],
-              ),
-            ],
-          ),
         );
       }
     }

@@ -66,8 +66,8 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                 setState(() => _loading = false);
                 if (_success) {
                   //Navigate
-                  _tutorialProvider.updateProgress(
-                      TutorialProgress.pickTopics, true);
+                  _tutorialProvider
+                      .updateProgress(TutorialProgress.pickTopicsDone);
                 } else {
                   toast('Oops! Please try again.');
                 }

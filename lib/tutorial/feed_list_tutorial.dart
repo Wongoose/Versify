@@ -21,7 +21,8 @@ class TutorialFeedList extends StatelessWidget {
 
     void _onRefresh() {
       Future.delayed(Duration(seconds: 1)).then((value) {
-        _tutorialProvider.updateProgress(TutorialProgress.refreshFirst, true);
+        _tutorialProvider
+            .updateProgress(TutorialProgress.refreshTutorialFeedDone);
         _refreshController.refreshCompleted();
       });
     }

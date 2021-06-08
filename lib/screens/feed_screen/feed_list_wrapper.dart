@@ -39,7 +39,7 @@ class _FeedListWrapperState extends State<FeedListWrapper> {
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: true);
 
-    if (_tutorialProvider.refreshFirst == false) {
+    if (_tutorialProvider.refreshFeedList) {
       return TutorialFeedList();
     } else {
       if (_feedTypeProvider.currentFeedType == FeedType.following) {
