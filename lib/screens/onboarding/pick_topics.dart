@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/database.dart';
@@ -31,6 +32,8 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
     final DatabaseService _dbService = Provider.of<DatabaseService>(context);
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: false);
+
+    print('Whole rebuild');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,7 +91,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(0, 25, 0, 25),
+        padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +145,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                   physics: NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
                   crossAxisSpacing: 0,
-                  mainAxisSpacing: 20,
+                  mainAxisSpacing: 5,
                   childAspectRatio: 2 / 2.4,
                   children: _topicList
                       .map((String topic) {
@@ -194,6 +197,11 @@ class _SingleTopicWidgetState extends State<SingleTopicWidget> {
     'Prayer': 'assets/images/backgrounds/prayer_background.jpg',
   };
 
+  final ImagePicker _imagePicker = ImagePicker();
+  Future<void> compress() async {
+    await _imagePicker.getImage(source: ImageSource.gallery);
+  }
+
   bool isSelected;
 
   void initState() {
@@ -203,23 +211,25 @@ class _SingleTopicWidgetState extends State<SingleTopicWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print('Individual Topic rebuild');
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         if (isSelected) {
           //remove from picked list
           widget.pickedIndex.remove(widget.index);
-          isSelected = false;
+          setState(() => isSelected = false);
+
         } else if (widget.pickedIndex.length != 3) {
           //add to picked list
           widget.pickedIndex.add(widget.index);
-          isSelected = true;
+
+          setState(() => isSelected = true);
         }
         // widget.topicClicked(widget.topic, widget.index);
-        setState(() {});
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 15),
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -230,13 +240,19 @@ class _SingleTopicWidgetState extends State<SingleTopicWidget> {
               ),
               child: Ink(
                 decoration: BoxDecoration(
+                  border: isSelected
+                      ? Border.all(
+                          color: Colors.greenAccent,
+                          width: 2,
+                        )
+                      : null,
                   image: isSelected
                       ? null
                       : DecorationImage(
                           image: AssetImage(_topicPathMap[widget.topic]),
                           fit: BoxFit.cover,
                         ),
-                  color: isSelected ? Color(0xFFffdee9) : null,
+                  color: isSelected ? Colors.black87 : null,
                   // color: Color(0xFFffdee9),
                   // gradient: LinearGradient(
                   //   colors: false
@@ -269,15 +285,31 @@ class _SingleTopicWidgetState extends State<SingleTopicWidget> {
                         children: [
                           Expanded(flex: 1, child: Container()),
 
-                          Text(
-                            '${widget.topic}',
-                            style: TextStyle(
-                                color:
-                                    isSelected ? Colors.black87 : Colors.white,
-                                fontFamily: 'Nunito',
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600),
+                          isSelected
+                              ? Text(
+                                  'Selected',
+                                  style: TextStyle(
+                                      color: Colors.greenAccent,
+                                      fontFamily: 'Nunito',
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400),
+                                )
+                              : SizedBox.shrink(),
+                          Expanded(flex: 1, child: Container()),
+
+                          FittedBox(
+                            child: Text(
+                              '${widget.topic}',
+                              style: TextStyle(
+                                  color:
+                                      isSelected ? Colors.white : Colors.white,
+                                  fontFamily: 'Nunito',
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
+                          SizedBox(height: isSelected ? 10 : 0),
+
                           // Text(
                           //   'Versify\'s writing bot will guide you',
                           //   textAlign: TextAlign.center,
@@ -286,7 +318,7 @@ class _SingleTopicWidgetState extends State<SingleTopicWidget> {
                           //       fontSize: 10,
                           //       fontWeight: FontWeight.w400),
                           // ),
-                          Expanded(flex: 1, child: Container()),
+                          Expanded(flex: 2, child: Container()),
                         ],
                       ),
                     ),
@@ -312,11 +344,11 @@ class _SingleTopicWidgetState extends State<SingleTopicWidget> {
                     margin: EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).accentColor,
+                      color: Colors.greenAccent,
                     ),
                     child: Icon(
                       Icons.check,
-                      color: Colors.white,
+                      color: Colors.black,
                       size: 15,
                     ),
                   ),

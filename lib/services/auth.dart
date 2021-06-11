@@ -1,6 +1,5 @@
 import 'package:versify/models/user_model.dart';
 import 'package:versify/services/database.dart';
-import 'package:versify/services/profile_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 

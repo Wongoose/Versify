@@ -70,6 +70,21 @@ class VersifyApp extends StatelessWidget {
       ],
     );
     precacheImage(AssetImage("assets/images/logo_circle.png"), context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/love_background.jpg"), context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/faith_background.jpg"), context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/grief_background.jpg"), context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/healing_background.jpg"),
+        context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/joy_background.jpg"), context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/peace_background.jpg"), context);
+    precacheImage(
+        AssetImage("assets/images/backgrounds/prayer_background.jpg"), context);
 
     return FutureBuilder(
         future: _initialization,
