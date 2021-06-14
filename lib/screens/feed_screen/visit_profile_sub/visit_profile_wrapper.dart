@@ -1,11 +1,11 @@
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
-import 'package:versify/screens/feed_screen/view_post.dart';
-import 'package:versify/screens/profile_screen/main_profile.dart';
-import 'package:versify/screens/profile_screen/profile_data_provider.dart';
-import 'package:versify/screens/profile_screen/profile_blogs_provider.dart';
-import 'package:versify/screens/profile_screen/profile_pageview_provider.dart';
-import 'package:versify/screens/profile_screen/visit_profile_provider.dart';
+import 'package:versify/screens/feed_screen/widget_view_post/view_post.dart';
+import 'package:versify/screens/profile_screen/widgets_profile/main_profile.dart';
+import 'package:versify/providers/home/profile_data_provider.dart';
+import 'package:versify/providers/home/profile_blogs_provider.dart';
+import 'package:versify/providers/home/profile_pageview_provider.dart';
+import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/report_user_dialog.dart';

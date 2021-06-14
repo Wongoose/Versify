@@ -5,7 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
-import 'package:versify/screens/profile_screen/visit_profile_provider.dart';
+import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/screens/profile_screen/widgets/follow_action_bar.dart';
 import 'package:versify/screens/profile_screen/widgets/sliver_tab_bar.dart';
 // import 'package:versify/services/database.dart';

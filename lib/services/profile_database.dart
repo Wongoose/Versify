@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/screens/profile_screen/profile_blogs_provider.dart';
+import 'package:versify/providers/home/profile_blogs_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum ReportUser {

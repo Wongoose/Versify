@@ -1,5 +1,5 @@
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
-import 'package:versify/screens/feed_screen/all_comments.dart';
+import 'package:versify/screens/feed_screen/widgets_feeds/all_comments.dart';
 import 'package:versify/shared/profilePicture.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

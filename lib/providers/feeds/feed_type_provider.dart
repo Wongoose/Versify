@@ -1,4 +1,4 @@
-import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
+import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 
 class FeedTypeProvider extends ChangeNotifier {

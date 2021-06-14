@@ -2,7 +2,7 @@ import 'package:share/share.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.dart';
-import 'package:versify/screens/profile_screen/visit_profile_provider.dart';
+import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/dynamic_links.dart';
 import 'package:versify/services/profile_database.dart';

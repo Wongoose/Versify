@@ -1,33 +1,29 @@
 import 'package:flutter/services.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:overlay_tutorial/overlay_tutorial.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/providers/home/bottom_nav_provider.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/feeds/feed_type_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
-import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
-import 'package:versify/screens/feed_screen/following_page_view.dart';
-import 'package:versify/screens/feed_screen/for_you_page_view.dart';
+import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart';
+import 'package:versify/screens/feed_screen/widgets_feeds/following_page_view.dart';
+import 'package:versify/screens/feed_screen/widgets_feeds/for_you_page_view.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.dart';
-import 'package:versify/screens/profile_screen/main_profile.dart';
-import 'package:versify/screens/profile_screen/profile_blogs_provider.dart';
-import 'package:versify/screens/profile_screen/profile_pageview_provider.dart';
+import 'package:versify/screens/profile_screen/widgets_profile/main_profile.dart';
+import 'package:versify/providers/home/profile_blogs_provider.dart';
+import 'package:versify/providers/home/profile_pageview_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_settings.dart';
-import 'package:versify/screens/profile_screen/visit_profile_provider.dart';
+import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/screens/word_screen/word_screen.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
-import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/bottom_navigation.dart';
-import 'package:versify/shared/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/shared/splash_loading.dart';
-import 'package:versify/tutorial/feed_list_tutorial.dart';
 import 'package:versify/services/notification.dart';
 
 class HomeWrapper extends StatefulWidget {
@@ -192,22 +188,29 @@ class _HomeWrapperState extends State<HomeWrapper> {
                                   followingController: _followingController,
                                   forYouController: _forYouController,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: ChangeNotifierProvider<
-                                      VisitProfileProvider>(
-                                    create: (_) => VisitProfileProvider(),
-                                    child: MainProfilePage(
-                                      bottomNavController: bottomNavController,
-                                      visitProfile: false,
-                                      userID: _authService.myUser.userUID,
-                                      profileBlogsProvider:
-                                          _profileBlogsProvider,
-                                      profileAllPostsView: _profileAllPostsView,
-                                      bottomNavVisible: true,
-                                    ),
-                                  ),
-                                ),
+                                _authService.isUserAnonymous
+                                    ? Container(
+                                        child: Text('User is Anon'),
+                                      )
+                                    : Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                        child: ChangeNotifierProvider<
+                                            VisitProfileProvider>(
+                                          create: (_) => VisitProfileProvider(),
+                                          child: MainProfilePage(
+                                            bottomNavController:
+                                                bottomNavController,
+                                            visitProfile: false,
+                                            userID: _authService.myUser.userUID,
+                                            profileBlogsProvider:
+                                                _profileBlogsProvider,
+                                            profileAllPostsView:
+                                                _profileAllPostsView,
+                                            bottomNavVisible: true,
+                                          ),
+                                        ),
+                                      ),
                               ],
                             );
                           },
@@ -416,34 +419,7 @@ class FeedListAppBar extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                 backgroundColor: Colors.white,
               ),
-              onPressed: () {
-                NotificationOverlay().simpleNotification(
-                    duration: Duration(seconds: 4),
-                    delay: Duration(seconds: 0));
-                // showOverlayNotification(
-                //   (context) {
-                //     return Material(
-                //       color: Colors.transparent,
-                //       child: Container(
-                //         margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
-                //         alignment: Alignment.center,
-                //         height: 80,
-                //         width: 400,
-                //         decoration: BoxDecoration(
-                //           color: Colors.black,
-                //           borderRadius: BorderRadius.circular(20),
-                //         ),
-                //         child: Text(
-                //           'Hello world',
-                //           style: TextStyle(color: Colors.white),
-                //         ),
-                //       ),
-                //     );
-                //   },
-                //   position: NotificationPosition.top,
-                //   duration: Duration(seconds: 4),
-                // );
-              },
+              onPressed: () {},
               clipBehavior: Clip.none,
               icon: Icon(
                 Icons.notifications_none_rounded,

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/content_widget.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/create_post/content_body_provider.dart';
-import 'package:versify/screens/create_screen/review_post_provider.dart';
+import 'package:versify/screens/create_screen/sub_screens/review_post_provider.dart';
 import 'package:versify/screens/create_screen/widgets/feature_quote.dart';
 import 'package:versify/screens/create_screen/widgets/quote_text.dart';
 import 'package:versify/services/auth.dart';

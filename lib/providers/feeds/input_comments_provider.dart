@@ -1,4 +1,4 @@
-import 'package:versify/screens/feed_screen/widgets/input_comment.dart';
+import 'package:versify/screens/feed_screen/widget_view_post/input_comment.dart';
 import 'package:flutter/cupertino.dart';
 
 class InputCommentsProvider extends ChangeNotifier {
