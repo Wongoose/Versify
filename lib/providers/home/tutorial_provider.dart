@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:versify/services/notification.dart';
 
 enum TutorialProgress {
   none,
@@ -6,6 +8,7 @@ enum TutorialProgress {
   refreshTutorialFeedDone,
   viewFirstPostDone,
   viewSecondPostDone,
+  signUpProfileNotifDone,
 }
 
 class TutorialProvider extends ChangeNotifier {
@@ -15,6 +18,7 @@ class TutorialProvider extends ChangeNotifier {
   bool refreshFeedList = false;
   bool viewFirstPost = false;
   bool viewSecondPost = false;
+  bool signUpProfileNotif = false;
 
   //----
 
@@ -57,6 +61,15 @@ class TutorialProvider extends ChangeNotifier {
         break;
       case TutorialProgress.viewSecondPostDone:
         viewSecondPost = false;
+        signUpProfileNotif = true;
+        NotificationOverlay().simpleNotification(
+            body: 'Sign Up now to unlock more features!',
+            imagePath: 'assets/images/relatable.png',
+            title: 'Sign Up Profile',
+            delay: Duration(seconds: 3));
+        break;
+      case TutorialProgress.signUpProfileNotifDone:
+        signUpProfileNotif = false;
         break;
     }
     notifyListeners();

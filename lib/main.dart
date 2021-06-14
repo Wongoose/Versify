@@ -324,7 +324,7 @@ class _VersifyHomeState extends State<VersifyHome> {
       });
     });
 
-    widget.authService.logout();
+    // widget.authService.logout();
   }
 
   void completeBoarding() {

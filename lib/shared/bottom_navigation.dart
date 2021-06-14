@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:versify/providers/home/bottom_nav_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/create_screen/sub_screens/create_topics.dart';
@@ -119,105 +122,119 @@ class CustomBottomNavigationBar extends StatelessWidget {
                             : 0
                         : 55,
                     duration: Duration(milliseconds: 200),
-                    child: BottomAppBar(
-                      elevation: 1,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(40, 2, 40, 2),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            // Expanded(
-                            //   child: TextButton.icon(
-                            //     style: TextButton.styleFrom(
-                            //       primary: Colors.white,
-                            //       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            //       backgroundColor: Colors.white,
-                            //     ),
-                            //     onPressed: () => {
-                            //       controller.animateToPage(
-                            //         0,
-                            //         duration: Duration(milliseconds: 300),
-                            //         curve: Curves.easeInOut,
-                            //       ),
-                            //     },
-                            //     icon: Icon(
-                            //       pageViewProvider.pageIndex != 0
-                            //           ? Icons.format_quote_rounded
-                            //           : Icons.format_quote_rounded,
-                            //       color: pageViewProvider.pageIndex != 0
-                            //           ? Colors.black87
-                            //           : _theme.primaryColor,
-                            //       size: 33,
-                            //     ),
-                            //     label: Text(''),
-                            //   ),
-                            // ),
-                            Expanded(
-                              child: TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  primary: Colors.white,
-                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () => {
-                                  controller.animateToPage(
-                                    1,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                  )
-                                },
-                                label: Text(''),
-                                icon: pageViewProvider.pageIndex != 1
-                                    ? Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                        child: Icon(
-                                          AntDesign.home,
-                                          color: Colors.black87,
-                                          size: 27,
+                    child: Shimmer(
+                      enabled: _tutorialProvider.signUpProfileNotif,
+                      duration: Duration(milliseconds: 500),
+                      interval: Duration(milliseconds: 500),
+                      color: Colors.pink,
+                      direction: ShimmerDirection.fromLTRB(),
+                      child: BottomAppBar(
+                        elevation: 1,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(40, 2, 40, 2),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              // Expanded(
+                              //   child: TextButton.icon(
+                              //     style: TextButton.styleFrom(
+                              //       primary: Colors.white,
+                              //       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              //       backgroundColor: Colors.white,
+                              //     ),
+                              //     onPressed: () => {
+                              //       controller.animateToPage(
+                              //         0,
+                              //         duration: Duration(milliseconds: 300),
+                              //         curve: Curves.easeInOut,
+                              //       ),
+                              //     },
+                              //     icon: Icon(
+                              //       pageViewProvider.pageIndex != 0
+                              //           ? Icons.format_quote_rounded
+                              //           : Icons.format_quote_rounded,
+                              //       color: pageViewProvider.pageIndex != 0
+                              //           ? Colors.black87
+                              //           : _theme.primaryColor,
+                              //       size: 33,
+                              //     ),
+                              //     label: Text(''),
+                              //   ),
+                              // ),
+                              Expanded(
+                                child: TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  onPressed: () => {
+                                    controller.animateToPage(
+                                      1,
+                                      duration: Duration(milliseconds: 300),
+                                      curve: Curves.easeInOut,
+                                    )
+                                  },
+                                  label: Text(''),
+                                  icon: pageViewProvider.pageIndex != 1
+                                      ? Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                          child: Icon(
+                                            AntDesign.home,
+                                            color: Colors.black87,
+                                            size: 27,
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                          child: Icon(
+                                            Entypo.home,
+                                            color: _theme.primaryColor,
+                                            size: 29,
+                                          ),
                                         ),
-                                      )
-                                    : Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                        child: Icon(
-                                          Entypo.home,
-                                          color: _theme.primaryColor,
-                                          size: 29,
+                                ),
+                              ),
+                              Expanded(
+                                child: _tutorialProvider.signUpProfileNotif
+                                    ? BouncingProfile(
+                                        controller: controller,
+                                        pageViewProvider: pageViewProvider,
+                                        theme: _theme)
+                                    : TextButton.icon(
+                                        style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                          backgroundColor: Colors.white,
+                                        ),
+                                        label: Text(''),
+                                        onPressed: () => {
+                                          controller.animateToPage(
+                                            2,
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.easeInOut,
+                                          )
+                                        },
+                                        icon: Icon(
+                                          pageViewProvider.pageIndex != 2
+                                              ? Icons.person_outline_rounded
+                                              : Icons.person_rounded,
+                                          color: pageViewProvider.pageIndex != 2
+                                              ? Colors.black87
+                                              : _theme.primaryColor,
+                                          size: 34,
                                         ),
                                       ),
-                              ),
-                            ),
-                            Expanded(
-                              child: TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  primary: Colors.white,
-                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                  backgroundColor: Colors.white,
-                                ),
-                                label: Text(''),
-                                onPressed: () => {
-                                  controller.animateToPage(
-                                    2,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                  )
-                                },
-                                icon: Icon(
-                                  pageViewProvider.pageIndex != 2
-                                      ? Icons.person_outline_rounded
-                                      : Icons.person_rounded,
-                                  color: pageViewProvider.pageIndex != 2
-                                      ? Colors.black87
-                                      : _theme.primaryColor,
-                                  size: 34,
-                                ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ));
@@ -227,143 +244,123 @@ class CustomBottomNavigationBar extends StatelessWidget {
     });
   }
 }
-// child: Padding(
-//                 padding: EdgeInsets.fromLTRB(25, 2, 25, 8),
-//                 child: Row(
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   mainAxisSize: MainAxisSize.max,
-//                   children: [
-//                     Expanded(
-//                       child: TextButton.icon(
-//                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-//                         onPressed: () => {
-//                           controller.animateToPage(
-//                             0,
-//                             duration: Duration(milliseconds: 300),
-//                             curve: Curves.easeInOut,
-//                           ),
-//                         },
-//                         icon: Icon(
-//                           bottomNavProvider.pageIndex != 0
-//                               ? Icons.auto_stories
-//                               : Icons.auto_stories,
-//                           color:
-//                               bottomNavProvider.pageIndex != 0 ? Colors.white : Colors.pinkAccent,
-//                           size: 33,
-//                         ),
-//                         label: Text(''),
-//                       ),
-//                     ),
-//                     Expanded(
-//                       child: TextButton.icon(
-//                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-//                         onPressed: () => {
-//                           controller.animateToPage(
-//                             1,
-//                             duration: Duration(milliseconds: 300),
-//                             curve: Curves.easeInOut,
-//                           )
-//                         },
-//                         label: Text(''),
-//                         icon: bottomNavProvider.pageIndex != 1
-//                             ? Icon(
-//                                 Icons.home_outlined,
-//                                 color: Colors.white,
-//                                 size: 32,
-//                               )
-//                             : Icon(
-//                                 Icons.home,
-//                                 color: Colors.pinkAccent,
-//                                 size: 32,
-//                               ),
-//                       ),
-//                     ),
-//                     Expanded(
-//                       child: TextButton.icon(
-//                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-//                         label: Text(''),
-//                         onPressed: () => {
-//                           controller.animateToPage(
-//                             2,
-//                             duration: Duration(milliseconds: 300),
-//                             curve: Curves.easeInOut,
-//                           )
-//                         },
-//                         icon: Icon(
-//                           bottomNavProvider.pageIndex != 2
-//                               ? Icons.account_circle_outlined
-//                               : Icons.account_circle_sharp,
-//                           color:
-//                               bottomNavProvider.pageIndex != 2 ? Colors.white : Colors.pinkAccent,
-//                           size: 32,
-//                         ),
-//                       ),
-//                     )
-//                   ],
-//                 ),
-//               ),
 
-//  backgroundColor: Colors.black,
-//                   type: BottomNavigationBarType.fixed,
-//                   currentIndex: bottomNavProvider.pageIndex,
-//                   unselectedItemColor: Colors.white24,
-//                   selectedItemColor: Colors.pinkAccent,
-//                   unselectedLabelStyle: TextStyle(color: Colors.white24),
-//                   onTap: (int indexClicked) => {
-//                     controller.animateToPage(
-//                       indexClicked,
-//                       duration: Duration(milliseconds: 300),
-//                       curve: Curves.easeInOut,
-//                     )
-//                   },
-//                   items: [
-//                     BottomNavigationBarItem(
-//                       icon: Padding(
-//                         padding: const EdgeInsets.all(1.0),
-//                         child: Icon(
-//                           FontAwesomeIcons.envelopeOpen,
-//                           size: 20,
-//                         ),
-//                       ),
-//                       label: 'Word',
-//                     ),
-//                     BottomNavigationBarItem(
-//                       icon: Padding(
-//                         padding: const EdgeInsets.all(2.0),
-//                         child: Icon(
-//                           FontAwesomeIcons.plus,
-//                           size: 20,
-//                         ),
-//                       ),
-//                       label: 'Feed',
-//                     ),
-//                     BottomNavigationBarItem(
-//                       icon: Icon(
-//                         FontAwesomeIcons.user,
-//                         size: 20,
-//                       ),
-//                       label: 'Me',
-//                     ),
+class BouncingProfile extends StatefulWidget {
+  const BouncingProfile({
+    Key key,
+    @required this.controller,
+    @required this.pageViewProvider,
+    @required ThemeData theme,
+  })  : _theme = theme,
+        super(key: key);
 
-// ScrollBottomNavigationBar(
-//       controller: scrollController,
-//       backgroundColor: Colors.black,
-//       elevation: 0,
-//       unselectedItemColor: Colors.white,
-//       type: BottomNavigationBarType.fixed,
-//       items: [
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.home),
-//           label: 'hello',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.home),
-//           label: 'hello',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.home),
-//           label: 'hello',
-//         )
-//       ],
-//     );
+  final PageController controller;
+  final PageViewProvider pageViewProvider;
+  final ThemeData _theme;
+
+  @override
+  _BouncingProfileState createState() => _BouncingProfileState();
+}
+
+class _BouncingProfileState extends State<BouncingProfile> {
+  double marginTop = 1;
+  double start;
+  double end;
+  double increment;
+
+  Timer timer;
+
+  bool isGoingDown = true;
+
+  void bounce(Timer t) async {
+    timer = t;
+    if (marginTop <= start) {
+      setState(() {
+        marginTop += increment;
+        isGoingDown = true;
+      });
+    } else if (marginTop >= end) {
+      setState(() {
+        marginTop -= increment;
+        isGoingDown = false;
+      });
+    }
+
+    if (marginTop < end && marginTop > start) {
+      if (isGoingDown) {
+        setState(() {
+          marginTop += increment;
+        });
+      } else {
+        setState(() {
+          marginTop -= increment;
+        });
+      }
+    }
+  }
+
+  void interpolate(double start, double end) {
+    setState(() {
+      increment = (end - start) / 60;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    marginTop = 1;
+    start = 1;
+    end = 6;
+    interpolate(start, end);
+    Timer.periodic(const Duration(milliseconds: 3), bounce);
+  }
+
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      style: TextButton.styleFrom(
+        primary: Colors.white,
+        padding: EdgeInsets.fromLTRB(10, 0, 0, 3),
+        backgroundColor: Colors.white,
+      ),
+      label: Text(''),
+      onPressed: () => {
+        widget.controller.animateToPage(
+          2,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        )
+      },
+      icon: Container(
+        margin: EdgeInsets.only(top: marginTop),
+        child: Stack(
+          children: [
+            Icon(
+              widget.pageViewProvider.pageIndex != 2
+                  ? Icons.person_outline_rounded
+                  : Icons.person_rounded,
+              color: widget.pageViewProvider.pageIndex != 2
+                  ? Colors.black87
+                  : widget._theme.primaryColor,
+              size: 34,
+            ),
+            Positioned(
+              
+              right: 0,
+              child: Icon(
+                Icons.circle,
+                color: widget._theme.accentColor,
+                size: 10,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

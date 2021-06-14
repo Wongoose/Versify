@@ -53,6 +53,8 @@ class _ForYouPageViewState extends State<ForYouPageView> {
     // setState(() => _loading = true);
     if (_tutorialProvider.viewFirstPost) {
       _tutorialProvider.updateProgress(TutorialProgress.viewFirstPostDone);
+    } else if (_tutorialProvider.viewSecondPost) {
+      _tutorialProvider.updateProgress(TutorialProgress.viewSecondPostDone);
     }
 
     Navigator.pop(context);

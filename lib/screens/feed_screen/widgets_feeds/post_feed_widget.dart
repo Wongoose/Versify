@@ -281,8 +281,8 @@ class PostFeedWidget extends StatelessWidget {
                 duration: Duration(milliseconds: 1000),
                 interval: Duration(milliseconds: 1000),
                 color: Colors.pink,
-                enabled: isWelcome,
                 direction: ShimmerDirection.fromLTRB(),
+                enabled: isWelcome,
                 child: Container(
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
