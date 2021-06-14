@@ -1,4 +1,4 @@
-import 'package:versify/providers/all_posts_provider.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:flutter/material.dart';
 
 class ReadMoreOverlay extends StatelessWidget {

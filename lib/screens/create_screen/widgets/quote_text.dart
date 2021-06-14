@@ -1,6 +1,6 @@
-import 'package:versify/providers/content_body_provider.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/feature_quote.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/search_verse_bottomsheet.dart';
+import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/screens/create_screen/widgets/feature_quote.dart';
+import 'package:versify/screens/create_screen/widgets/search_verse_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

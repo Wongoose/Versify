@@ -1,5 +1,5 @@
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/all_posts_provider.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/screens/feed_screen/for_you_page_view.dart';
 import 'package:versify/screens/profile_screen/profile_page_view.dart';
 import 'package:versify/screens/profile_screen/profile_pageview_provider.dart';

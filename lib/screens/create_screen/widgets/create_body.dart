@@ -1,4 +1,4 @@
-import 'package:versify/providers/content_body_provider.dart';
+import 'package:versify/providers/create_post/content_body_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/shared/profilePicture.dart';
 import 'package:flutter/material.dart';

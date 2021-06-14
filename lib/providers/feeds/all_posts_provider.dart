@@ -1,6 +1,6 @@
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/feed_type_provider.dart';
+import 'package:versify/providers/feeds/feed_type_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/view_post.dart';
 import 'package:flutter/cupertino.dart';

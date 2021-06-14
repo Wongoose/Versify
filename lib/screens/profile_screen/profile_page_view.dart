@@ -1,6 +1,6 @@
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/input_comments_provider.dart';
+import 'package:versify/providers/feeds/input_comments_provider.dart';
 import 'package:versify/screens/feed_screen/widgets/input_comment.dart';
 import 'package:versify/screens/profile_screen/profile_data_provider.dart';
 import 'package:versify/screens/profile_screen/profile_blogs_provider.dart';

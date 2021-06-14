@@ -1,4 +1,4 @@
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/chip_object.dart';
+import 'package:versify/screens/create_screen/widgets/chip_object.dart';
 import 'package:flutter/cupertino.dart';
 
 class SuggestionTopicsProvider extends ChangeNotifier {

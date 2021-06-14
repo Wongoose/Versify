@@ -1,7 +1,7 @@
-import 'package:versify/providers/bottom_nav_provider.dart';
-import 'package:versify/providers/tutorial_provider.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/create_topics.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/create_wrapper.dart';
+import 'package:versify/providers/home/bottom_nav_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
+import 'package:versify/screens/create_screen/create_topics.dart';
+import 'package:versify/screens/create_screen/create_wrapper.dart';
 import 'package:versify/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

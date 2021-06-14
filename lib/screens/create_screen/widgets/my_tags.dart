@@ -1,5 +1,5 @@
-import 'package:versify/providers/create_topics_provider.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/create_tags_bottomsheet.dart';
+import 'package:versify/providers/create_post/create_topics_provider.dart';
+import 'package:versify/screens/create_screen/widgets/create_tags_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

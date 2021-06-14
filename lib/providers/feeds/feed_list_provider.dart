@@ -1,5 +1,5 @@
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/all_posts_provider.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:flutter/cupertino.dart';
 
 class FeedListProvider extends ChangeNotifier {

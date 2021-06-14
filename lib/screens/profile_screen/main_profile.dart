@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/edit_profile_provider.dart';
+import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/screens/profile_screen/badges_folder/badges_tab_display.dart';
 import 'package:versify/screens/profile_screen/blog_list2.dart';
 import 'package:versify/screens/profile_screen/profile_blogs_provider.dart';

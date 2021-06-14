@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/content_widget.dart';
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/content_body_provider.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/review_post_provider.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/feature_quote.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/quote_text.dart';
+import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/screens/create_screen/review_post_provider.dart';
+import 'package:versify/screens/create_screen/widgets/feature_quote.dart';
+import 'package:versify/screens/create_screen/widgets/quote_text.dart';
 import 'package:versify/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

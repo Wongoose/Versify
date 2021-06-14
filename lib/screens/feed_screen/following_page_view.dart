@@ -1,10 +1,10 @@
 import 'package:share/share.dart';
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/feed_list_provider.dart';
-import 'package:versify/providers/all_posts_provider.dart';
-import 'package:versify/providers/feed_type_provider.dart';
-import 'package:versify/providers/input_comments_provider.dart';
-import 'package:versify/providers/post_swipe_up_provider.dart';
+import 'package:versify/providers/feeds/feed_list_provider.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
+import 'package:versify/providers/feeds/feed_type_provider.dart';
+import 'package:versify/providers/feeds/input_comments_provider.dart';
+import 'package:versify/providers/feeds/post_swipe_up_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widgets/input_comment.dart';
 import 'package:versify/services/auth.dart';

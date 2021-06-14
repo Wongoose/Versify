@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_tutorial/overlay_tutorial.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:versify/providers/create_topics_provider.dart';
-import 'package:versify/providers/tutorial_provider.dart';
+import 'package:versify/providers/create_post/create_topics_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
 
 class TutorialFeedList extends StatelessWidget {
   final RefreshController _refreshController =

@@ -1,5 +1,4 @@
-import 'package:versify/providers/view_post_gift_provider.dart';
-import 'package:versify/screens/feed_screen/widgets/gift_widget.dart';
+import 'package:versify/providers/feeds/view_post_gift_provider.dart';
 import 'package:versify/screens/profile_screen/badges_folder/badge_widget.dart';
 import 'package:versify/services/all_badges_json_storage.dart';
 import 'package:flutter/material.dart';

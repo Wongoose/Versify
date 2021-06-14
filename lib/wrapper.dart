@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:versify/home_wrapper.dart';
-import 'package:versify/providers/tutorial_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/onboarding/new_user_options.dart';
 import 'package:versify/screens/onboarding/pick_topics.dart';
 import 'package:versify/screens/onboarding/sign_up_user_details.dart';

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/edit_profile_provider.dart';
+import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_specific_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';

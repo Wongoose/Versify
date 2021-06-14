@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:overlay_tutorial/overlay_tutorial.dart';
-import 'package:versify/providers/all_posts_provider.dart';
-import 'package:versify/providers/bottom_nav_provider.dart';
-import 'package:versify/providers/edit_profile_provider.dart';
-import 'package:versify/providers/feed_type_provider.dart';
-import 'package:versify/providers/tutorial_provider.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
+import 'package:versify/providers/home/bottom_nav_provider.dart';
+import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/feeds/feed_type_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/following_page_view.dart';
 import 'package:versify/screens/feed_screen/for_you_page_view.dart';

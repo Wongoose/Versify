@@ -1,5 +1,5 @@
 import 'package:versify/models/content_widget.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/content_normal_text.dart';
+import 'package:versify/screens/create_screen/widgets/content_normal_text.dart';
 import 'package:flutter/cupertino.dart';
 
 // enum WidgetType { quote, text, image, bold }

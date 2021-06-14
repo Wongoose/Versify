@@ -1,7 +1,7 @@
-import 'package:versify/providers/content_body_provider.dart';
-import 'package:versify/providers/create_topics_provider.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/create_post.dart';
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/content_normal_text.dart';
+import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/providers/create_post/create_topics_provider.dart';
+import 'package:versify/screens/create_screen/create_post.dart';
+import 'package:versify/screens/create_screen/widgets/content_normal_text.dart';
 import 'package:versify/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

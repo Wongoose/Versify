@@ -1,4 +1,4 @@
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/smart_text.dart';
+import 'package:versify/screens/create_screen/widgets/smart_text.dart';
 import 'package:flutter/material.dart';
 
 class TextContent extends StatelessWidget {

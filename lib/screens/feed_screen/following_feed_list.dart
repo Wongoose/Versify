@@ -1,9 +1,9 @@
 import 'package:versify/main.dart';
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/bottom_nav_provider.dart';
-import 'package:versify/providers/feed_list_provider.dart';
-import 'package:versify/providers/all_posts_provider.dart';
-import 'package:versify/providers/feed_type_provider.dart';
+import 'package:versify/providers/home/bottom_nav_provider.dart';
+import 'package:versify/providers/feeds/feed_list_provider.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
+import 'package:versify/providers/feeds/feed_type_provider.dart';
 import 'package:versify/screens/feed_screen/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/for_you_page_view.dart';
 import 'package:versify/screens/feed_screen/widgets/post_feed_widget.dart';

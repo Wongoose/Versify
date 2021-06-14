@@ -1,5 +1,5 @@
-import 'package:versify/providers/feed_type_provider.dart';
-import 'package:versify/providers/tutorial_provider.dart';
+import 'package:versify/providers/feeds/feed_type_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/following_feed_list.dart';
 import 'package:versify/screens/feed_screen/for_you_feed_list.dart';
 import 'package:versify/shared/loading.dart';

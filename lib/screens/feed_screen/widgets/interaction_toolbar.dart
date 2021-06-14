@@ -1,7 +1,7 @@
 import 'package:share/share.dart';
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/view_post_gift_provider.dart';
-import 'package:versify/providers/view_post_like_provider.dart';
+import 'package:versify/providers/feeds/view_post_gift_provider.dart';
+import 'package:versify/providers/feeds/view_post_like_provider.dart';
 import 'package:versify/screens/feed_screen/widgets/gift_widget.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';

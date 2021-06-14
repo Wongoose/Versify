@@ -1,4 +1,4 @@
-import 'package:versify/providers/input_comments_provider.dart';
+import 'package:versify/providers/feeds/input_comments_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

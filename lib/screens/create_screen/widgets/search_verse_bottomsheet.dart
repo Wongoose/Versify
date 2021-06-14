@@ -1,4 +1,4 @@
-import 'package:versify/screens/feed_screen/create_post_sub/widgets/feature_quote.dart';
+import 'package:versify/screens/create_screen/widgets/feature_quote.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

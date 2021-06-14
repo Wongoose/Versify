@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/feed_list_provider.dart';
+import 'package:versify/providers/feeds/feed_list_provider.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/services/users_following_json_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';

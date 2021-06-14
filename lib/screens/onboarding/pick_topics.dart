@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/database.dart';
-import 'package:versify/providers/tutorial_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
 
 class IntroPickTopics extends StatefulWidget {
   @override

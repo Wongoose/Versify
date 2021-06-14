@@ -1,5 +1,5 @@
 import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/edit_profile_provider.dart';
+import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
