@@ -688,12 +688,13 @@ class DatabaseService {
         if (_userHasAccount) {
           return CreateAcc.hasAccount;
         } else {
+          print('firestoreCreateAccount | with uid: $userUID');
           return await usersPrivateCollection.doc(userUID).set({
             'username': username ?? null,
             'description': null,
             'profileImageUrl': null,
             'phone': phone ?? null,
-            'email': email,
+            'email': email ?? null,
             'totalFollowers': 0,
             'totalFollowing': 0,
             'tagRatings': ['love10', 'peace30'],
@@ -713,12 +714,12 @@ class DatabaseService {
 
             print('Collection Path is: ' + privateAllFollowingCollection.path);
 
-            await privateAllFollowingCollection.add({
+            privateAllFollowingCollection.add({
               'numFollowing': 0,
               'usersFollowing': [],
             });
 
-            await usersPublicCollection.doc().set({
+            usersPublicCollection.doc().set({
               'userID': userUID,
               'username': username ?? null,
               'phone': phone ?? null,

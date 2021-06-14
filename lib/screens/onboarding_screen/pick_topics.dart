@@ -7,6 +7,9 @@ import 'package:versify/services/database.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 
 class IntroPickTopics extends StatefulWidget {
+  final Function completePickTutorials;
+  IntroPickTopics(this.completePickTutorials);
+
   @override
   _IntroPickTopicsState createState() => _IntroPickTopicsState();
 }
@@ -32,16 +35,19 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
   DatabaseService _dbService;
   TutorialProvider _tutorialProvider;
 
-  void updateSelectionTopics(List<String> topicInterests) async {
-    bool _success = await _dbService.completeSelectionTopics(topicInterests);
+  void updateSelectionTopics(List<String> topicInterests) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      bool _success = await _dbService.completeSelectionTopics(topicInterests);
 
-    if (_success) {
-      //Navigate
-      _tutorialProvider.updateProgress(TutorialProgress.pickTopicsDone);
-    } else {
-      toast('Oops! Please try again.');
-    }
-    setState(() => _loading = false);
+      if (_success) {
+        //Navigate
+        _tutorialProvider.updateProgress(TutorialProgress.pickTopicsDone);
+        widget.completePickTutorials();
+      } else {
+        toast('Oops! Please try again.');
+      }
+      setState(() => _loading = false);
+    });
   }
 
   @override
@@ -50,7 +56,10 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
     _dbService = Provider.of<DatabaseService>(context);
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 
-    print('Whole rebuild');
+    print('Whole rebuild with dbService | ${_dbService.toString()}');
+    print('authUserID is: ' + _authService.userUID.toString() ?? 'none');
+    // print('authUser is: ' + _authService.authUser.uid.toString());
+    print('dbUser is: ' + _dbService.uid.toString());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -77,7 +86,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
               onPressed: () async {
                 setState(() => _loading = true);
                 List<String> _topicInterests = [];
-                
+
                 _pickedIndex.forEach((index) {
                   _topicInterests.add(_topicList[index]);
                 });
@@ -87,7 +96,13 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                   _authService.signInAnon().then((successSignIn) async {
                     if (successSignIn) {
                       //create usersPrivateCollection
-                      updateSelectionTopics(_topicInterests);
+                      _dbService
+                          .firestoreCreateAccount(
+                              userUID: _authService.authUser.uid,
+                              username: _authService.authUser.uid)
+                          .then((createAcc) {
+                        updateSelectionTopics(_topicInterests);
+                      });
                     }
                   });
                 } else {

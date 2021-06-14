@@ -19,6 +19,10 @@ import 'package:versify/shared/splash_loading.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {
+  final Function completePickTutorials;
+
+  Wrapper({this.completePickTutorials});
+
   @override
   Widget build(BuildContext context) {
     final MyUser user = Provider.of<MyUser>(context, listen: true);
@@ -40,7 +44,7 @@ class Wrapper extends StatelessWidget {
 
     if (_tutorialProvider.pickTopics) {
       //tutorial pick topics
-      return IntroPickTopics();
+      return IntroPickTopics(completePickTutorials);
     } else {
       if (user != null) {
         print('Wrapper stream user: ' + user.userUID.toString());
@@ -52,10 +56,8 @@ class Wrapper extends StatelessWidget {
                 if (myUserSnap.data != null) {
                   //has user document in firestore
 
-                  if (myUserSnap.data.completeLogin == true) {
-                    //oldUser compelte login
-                    print(
-                        myUserSnap.data.userUID + "| is completeLogin = true");
+                  if (_authService.isUserAnonymous) {
+                    print(myUserSnap.data.userUID + "| is signInAnonymous");
                     _authService.myUser = myUserSnap.data;
 
                     initSharedPrefs(logInUserID: myUserSnap.data.userUID);
@@ -65,8 +67,22 @@ class Wrapper extends StatelessWidget {
 
                     return new HomeWrapper();
                   } else {
-                    //not complete login
-                    return SignUpDetails();
+                    if (myUserSnap.data.completeLogin == true) {
+                      //oldUser compelte login
+                      print(myUserSnap.data.userUID +
+                          "| is completeLogin = true");
+                      _authService.myUser = myUserSnap.data;
+
+                      initSharedPrefs(logInUserID: myUserSnap.data.userUID);
+                      _profileDBService.profileDBInit();
+                      _jsonFollowingStorage.jsonInit(); //diff accounts
+                      _jsonAllBadgesStorage.jsonInit();
+
+                      return new HomeWrapper();
+                    } else {
+                      //not complete login
+                      return SignUpDetails();
+                    }
                   }
                 } else {
                   // no user document but authenticated

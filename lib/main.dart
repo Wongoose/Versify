@@ -174,6 +174,8 @@ class VersifyApp extends StatelessWidget {
 
                   _jsonAllBadgesStorage =
                       JsonAllBadgesStorage(uid: _authService.userUID);
+                } else {
+                  _firestoreDBService = DatabaseService();
                 }
                 return MultiProvider(
                   providers: [
@@ -321,22 +323,28 @@ class _VersifyHomeState extends State<VersifyHome> {
         setState(() => _completedBoarding = result);
       });
     });
+
+    widget.authService.logout();
   }
 
   void completeBoarding() {
     setState(() => _completedBoarding = true);
   }
 
+  void completePickTutorials() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     //tutorialProvider
-    _tutorialProvider = Provider.of<TutorialProvider>(context);
+    _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
     // _dynamicLinkService.addContext(context);
 
     // if (_hasDynamicLink != null) {
     if (_completedBoarding != null) {
       if (_completedBoarding == true) {
-        return Wrapper();
+        return Wrapper(completePickTutorials: completePickTutorials);
       } else {
         return OnBoarding(completeBoarding: completeBoarding);
         //return boarding

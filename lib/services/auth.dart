@@ -48,8 +48,10 @@ class AuthService {
   MyUser _userFromFB(User firebaseUser) {
     if (firebaseUser != null) {
       this.authUser = firebaseUser;
+      this.userUID = firebaseUser.uid;
       return MyUser(userUID: firebaseUser.uid);
     } else {
+      this.userUID = null;
       return null;
     }
   }
@@ -69,9 +71,9 @@ class AuthService {
 
   Future<CreateAcc> createGoogleAccount() async {
     try {
-      return await signInWithGoogle(newUser: true).then((resUser) async {
+      return signInWithGoogle(newUser: true).then((resUser) async {
         String userUID = resUser.uid;
-        return await DatabaseService()
+        return DatabaseService()
             .firestoreCreateAccount(userUID: userUID, email: resUser.email)
             .then((createAcc) {
           return createAcc;

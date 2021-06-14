@@ -56,13 +56,18 @@ service cloud.firestore {
             authenticated();
 
             allow update: if
-            authenticated() &&
+
+            authenticated() && 
+            (isAnon() == false || isUpdateLike() == false) &&
             request.resource.data.listMapContent == resource.data.listMapContent &&
             request.resource.data.userID == resource.data.userID;
 
             //post functions
             function isMyPost() {
                 return resource.data.userID == request.auth.uid;
+            }
+            function isUpdateLike() {
+                return request.resource.data.isLiked != resource.data.isLiked;
             }
 
         }
@@ -123,5 +128,9 @@ service cloud.firestore {
 
     function authenticated() {
         return request.auth != null;
+    }
+
+    function isAnon() {
+        return request.auth.token.firebase.sign_in_provider == 'anonymous'
     }
 }
