@@ -53,6 +53,7 @@ class EditProfileProvider extends ChangeNotifier {
       email: user.email,
       socialLinks: _socialLinks,
       isFollowing: user.isFollowing ?? false,
+      profileImageUrl: user.profileImageUrl,
     );
 
     Map _socialLinks2 = {};
@@ -68,6 +69,7 @@ class EditProfileProvider extends ChangeNotifier {
       email: user.email,
       socialLinks: _socialLinks2,
       isFollowing: user.isFollowing ?? false,
+      profileImageUrl: user.profileImageUrl,
     );
     print('has initialize editing user');
   }

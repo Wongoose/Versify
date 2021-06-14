@@ -1,4 +1,5 @@
 import 'package:share/share.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.dart';
@@ -32,14 +33,20 @@ class ProfileActionBar extends StatefulWidget {
 class _ProfileActionBarState extends State<ProfileActionBar> {
   // bool _isFollowing = false;
   bool _followLoading = false;
+  bool _profileDetailsIsEmpty = false;
 
   void _launchUrl(String _url) async {
     await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
   }
 
+  // @override
   // void initState() {
   //   super.initState();
-  //   _isFollowing = widget.userProfile.isFollowing;
+  //   if (!widget.visitProfile) {
+  //     //userIsMe
+  //     _profileDetailsIsEmpty = widget.userProfile.description.isEmpty ||
+  //         widget.userProfile.profileImageUrl.isEmpty;
+  //   }
   // }
 
   @override
@@ -47,12 +54,16 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
     print('Mainprofile ProfileActionBar rebuilt');
 
     final AuthService _authService = Provider.of<AuthService>(context);
+    final EditProfileProvider _editProfileProvider =
+        Provider.of<EditProfileProvider>(context, listen: true);
 
     final VisitProfileProvider _visitProfileProvider =
         Provider.of<VisitProfileProvider>(context, listen: true);
 
-    if (widget.visitProfile) {
-      // _isFollowing = widget.userProfile.isFollowing;
+    if (!widget.visitProfile) {
+      //userIsMe
+      _profileDetailsIsEmpty = _authService.myUser.description.isEmpty ||
+          _authService.myUser.profileImageUrl == null;
     }
 
     return Row(
@@ -100,25 +111,48 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                     //     });
                   }
                 },
-                child: Container(
-                  height: 40,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(3),
-                    border: Border.all(color: Colors.black54, width: 0.5),
-                  ),
-                  child: Text(
-                    widget.visitProfile ? 'Share' : 'Edit profile',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black87,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w600,
+                child: Stack(
+                  children: [
+                    Shimmer(
+                      enabled: _profileDetailsIsEmpty,
+                      duration: Duration(milliseconds: 500),
+                      interval: Duration(milliseconds: 500),
+                      color: Colors.pink,
+                      direction: ShimmerDirection.fromLTRB(),
+                      child: Container(
+                        height: 40,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(3),
+                          border: Border.all(color: Colors.black54, width: 0.5),
+                        ),
+                        child: Text(
+                          widget.visitProfile ? 'Share' : 'Edit profile',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black87,
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      top: 8,
+                      right: 10,
+                      child: Visibility(
+                        visible: _profileDetailsIsEmpty,
+                        child: Icon(
+                          Icons.circle,
+                          color: Theme.of(context).accentColor,
+                          size: 10,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               GestureDetector(

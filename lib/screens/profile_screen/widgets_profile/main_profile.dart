@@ -297,13 +297,17 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                       // height: 50,
                                       child: Consumer<EditProfileProvider>(
                                         builder: (context, state, _) => Text(
-                                          _userProfile.description ??
-                                              'This user has no description',
+                                          _userProfile.description.isNotEmpty
+                                              ? _userProfile.description
+                                              : 'No description...',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               fontSize: 12.5,
                                               fontWeight: FontWeight.normal,
-                                              color: Colors.black),
+                                              color: _userProfile
+                                                      .description.isEmpty
+                                                  ? Colors.black54
+                                                  : Colors.black),
                                         ),
                                       ),
                                     ),

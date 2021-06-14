@@ -50,34 +50,6 @@ class PostFeedWidget extends StatelessWidget {
     },
   ];
   String _content = '';
-  // final _colorScheme = [
-  //   {
-  //     //red
-  //     'primary': Colors.pink,
-  //     'secondary': Color(0xffff548e),
-  //   },
-  //   {
-  //     //orange
-  //     'primary': Colors.amber[800],
-  //     'secondary': Colors.orange[400],
-  //   },
-  //   {
-  //     //green
-  //     'primary': Colors.teal[400],
-  //     'secondary': Colors.teal[300],
-  //   },
-  //   {
-  //     //blue
-  //     'primary': Colors.blue,
-  //     'secondary': Colors.blueAccent,
-  //   },
-  //   {
-  //     //purple
-  //     'primary': Colors.purple[700],
-  //     'secondary': Colors.deepPurpleAccent,
-  //   },
-  // ];
-  //
 
   void showVerseDialog({BuildContext context, int colorIndex}) {
     showDialog(
@@ -422,6 +394,10 @@ class PostFeedWidget extends StatelessWidget {
                                                 EdgeInsets.fromLTRB(8, 5, 8, 5),
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
+                                              color: isGrey || isWelcome
+                                                  ? Colors.transparent
+                                                  : _colorScheme[_colorIndex]
+                                                      ['primary'],
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               border: Border.all(
@@ -443,8 +419,11 @@ class PostFeedWidget extends StatelessWidget {
                                                 fontWeight: FontWeight.w400,
                                                 color: isGrey
                                                     ? Colors.grey
-                                                    : _colorScheme[_colorIndex]
-                                                        ['primary'],
+                                                    : isWelcome
+                                                        ? _colorScheme[
+                                                                _colorIndex]
+                                                            ['primary']
+                                                        : Colors.white,
                                               ),
                                             ),
                                           ),

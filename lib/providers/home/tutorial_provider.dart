@@ -63,7 +63,7 @@ class TutorialProvider extends ChangeNotifier {
         viewSecondPost = false;
         signUpProfileNotif = true;
         NotificationOverlay().simpleNotification(
-            body: 'Sign Up now to unlock more features!',
+            body: 'Sign-up now to unlock more features!',
             imagePath: 'assets/images/relatable.png',
             title: 'Sign Up Profile',
             delay: Duration(seconds: 3));

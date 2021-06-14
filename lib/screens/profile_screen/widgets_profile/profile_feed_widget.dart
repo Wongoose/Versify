@@ -1,6 +1,4 @@
 import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/feeds/all_posts_provider.dart';
-import 'package:versify/screens/feed_screen/widgets_feeds/for_you_page_view.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/profile_page_view.dart';
 import 'package:versify/providers/home/profile_pageview_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,23 +14,23 @@ class ProfileFeedWidget extends StatelessWidget {
   final List<Map<String, Color>> _colorScheme = [
     {
       //red
-      'primary': Color(0xffff548e),
-      'secondary': Color(0xffff548e),
-    },
-    {
-      //orange
-      'primary': Colors.amber[700],
-      'secondary': Colors.amber[700],
-    },
-    {
-      //green
-      'primary': Color(0xFFFF696A),
-      'secondary': Color(0xFFFF696A),
+      'primary': Color(0xFFff699F),
+      'secondary': Color(0xFFff89B2),
     },
     {
       //blue
-      'primary': Colors.blueAccent,
-      'secondary': Colors.blueAccent,
+      'primary': Color(0xFFa15ce2),
+      'secondary': Color(0xFFa15ce2),
+    },
+    {
+      //green
+      'primary': Color(0xFF61C0BF),
+      'secondary': Color(0xFF61c0bf),
+    },
+    {
+      //orange
+      'primary': Color(0xFF61C0BF),
+      'secondary': Colors.amber[700],
     },
     {
       //purple
@@ -96,12 +94,12 @@ class ProfileFeedWidget extends StatelessWidget {
         Provider.of<ProfileAllPostsView>(context, listen: false);
 
     print('New feed widget built!');
-    int _colorIndex = 2;
-    // if (index > 4) {
-    //   _colorIndex = index % 5;
-    // } else {
-    //   _colorIndex = index;
-    // }
+    int _colorIndex = 0;
+    if (index > 2) {
+      _colorIndex = index % 3;
+    } else {
+      _colorIndex = index;
+    }
 
     contentFromMap();
 
@@ -150,7 +148,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: _colorScheme[_colorIndex]['secondary'],
+                                  color: _colorScheme[_colorIndex]['primary'],
                                 ),
                                 child: Text(
                                   feed.featuredTopic ?? 'Blog singles',
@@ -240,7 +238,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                         border: Border.fromBorderSide(
                                             BorderSide(
                                                 color: _colorScheme[_colorIndex]
-                                                        ['secondary']
+                                                        ['primary']
                                                     .withOpacity(0.7))),
                                         borderRadius: BorderRadius.circular(5),
                                         // color: _colorScheme[_colorIndex]['secondary']
@@ -265,7 +263,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                             fontSize: 11,
                                             // color: Colors.white,
                                             color: _colorScheme[_colorIndex]
-                                                    ['secondary']
+                                                    ['primary']
                                                 .withOpacity(0.7)),
                                       ),
                                     ),
