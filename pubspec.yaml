@@ -88,7 +88,6 @@ flutter:
   assets:
    - assets/images/
    - assets/images/backgrounds/
-   - assets/images/backgrounds/r-joy_background.jpg/
  
 
   fonts:
