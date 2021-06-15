@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/services/notification.dart';
 
@@ -73,5 +74,39 @@ class TutorialProvider extends ChangeNotifier {
         break;
     }
     notifyListeners();
+  }
+
+  // --------- PICK TOPICS
+  final List<String> listOfTopics = [
+    'Love',
+    'Hope',
+    'Peace',
+    'Joy',
+    'Healing',
+    'Kindness',
+    'Loss',
+    'Patience',
+    'Faith',
+    'Prayer'
+  ];
+
+  List<String> listOfSelectedTopics = [];
+
+  bool topicIsSelected(String topic) {
+    return listOfSelectedTopics.contains(topic);
+  }
+
+  void topicClicked(String topic) {
+    bool isSelected = topicIsSelected(topic);
+
+    if (isSelected) {
+      listOfSelectedTopics.remove(topic);
+      notifyListeners();
+    } else if (listOfSelectedTopics.length != 3) {
+      listOfSelectedTopics.add(topic);
+      notifyListeners();
+    } else {
+      toast("Pick 3 topics only", duration: Toast.LENGTH_SHORT);
+    }
   }
 }

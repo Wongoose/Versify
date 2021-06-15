@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/auth.dart';
@@ -15,20 +14,6 @@ class IntroPickTopics extends StatefulWidget {
 }
 
 class _IntroPickTopicsState extends State<IntroPickTopics> {
-  final List<String> _topicList = [
-    'Love',
-    'Hope',
-    'Peace',
-    'Joy',
-    'Healing',
-    'Kindness',
-    'Loss',
-    'Patience',
-    'Faith',
-    'Prayer'
-  ];
-
-  List<int> _pickedIndex = [];
   bool _loading = false;
 
   //providers
@@ -85,11 +70,8 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
               ),
               onPressed: () async {
                 setState(() => _loading = true);
-                List<String> _topicInterests = [];
-
-                _pickedIndex.forEach((index) {
-                  _topicInterests.add(_topicList[index]);
-                });
+                List<String> _listOfTopicInterests =
+                    _tutorialProvider.listOfSelectedTopics;
 
                 if (!_authService.isUserSignedIn) {
                   //user not signed in
@@ -101,12 +83,12 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                               userUID: _authService.authUser.uid,
                               username: _authService.authUser.uid)
                           .then((createAcc) {
-                        updateSelectionTopics(_topicInterests);
+                        updateSelectionTopics(_listOfTopicInterests);
                       });
                     }
                   });
                 } else {
-                  updateSelectionTopics(_topicInterests);
+                  updateSelectionTopics(_listOfTopicInterests);
                 }
               },
               label: Text(''),
@@ -178,19 +160,21 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: GridView.count(
                   shrinkWrap: true,
+                  addAutomaticKeepAlives: true,
+                  addRepaintBoundaries: false,
                   physics: NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 5,
                   childAspectRatio: 2 / 2.4,
-                  children: _topicList
+                  children: _tutorialProvider.listOfTopics
                       .map((String topic) {
-                        int _indexOfTopic = _topicList.indexOf(topic);
+                        int _indexOfTopic =
+                            _tutorialProvider.listOfTopics.indexOf(topic);
 
                         return SingleTopicWidget(
                           topic: topic,
                           index: _indexOfTopic,
-                          pickedIndex: _pickedIndex,
                         );
                       })
                       .toList()
@@ -203,187 +187,194 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
   }
 }
 
-class SingleTopicWidget extends StatefulWidget {
+class SingleTopicWidget extends StatelessWidget {
   final String topic;
   final int index;
-  final List<int> pickedIndex;
 
-  const SingleTopicWidget({
+  SingleTopicWidget({
     Key key,
     this.topic,
     this.index,
-    this.pickedIndex,
   }) : super(key: key);
 
-  @override
-  _SingleTopicWidgetState createState() => _SingleTopicWidgetState();
-}
-
-class _SingleTopicWidgetState extends State<SingleTopicWidget> {
-  final Map<String, String> _topicPathMap = {
-    'Love': 'assets/images/backgrounds/love_background.jpg',
-    'Hope': 'assets/images/backgrounds/peace_background.jpg',
-    'Peace': 'assets/images/backgrounds/peace_background.jpg',
-    'Joy': 'assets/images/backgrounds/joy_background.jpg',
-    'Healing': 'assets/images/backgrounds/healing_background.jpg',
-    'Kindness': 'assets/images/backgrounds/love_background.jpg',
-    'Loss': 'assets/images/backgrounds/grief_background.jpg',
-    'Patience': 'assets/images/backgrounds/love_background.jpg',
-    'Faith': 'assets/images/backgrounds/faith_background.jpg',
-    'Prayer': 'assets/images/backgrounds/prayer_background.jpg',
+  final Map<String, DecorationImage> _topicPathMap = {
+    'Love': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-love_background.jpg'),
+        fit: BoxFit.cover),
+    'Hope': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-peace_background.jpg'),
+        fit: BoxFit.cover),
+    'Peace': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-peace_background.jpg'),
+        fit: BoxFit.cover),
+    'Joy': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-joy_background.jpg'),
+        fit: BoxFit.cover),
+    'Healing': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-healing_background.jpg'),
+        fit: BoxFit.cover),
+    'Kindness': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-love_background.jpg'),
+        fit: BoxFit.cover),
+    'Loss': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-grief_background.jpg'),
+        fit: BoxFit.cover),
+    'Patience': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-love_background.jpg'),
+        fit: BoxFit.cover),
+    'Faith': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-faith_background.jpg'),
+        fit: BoxFit.cover),
+    'Prayer': DecorationImage(
+        image: AssetImage('assets/images/backgrounds/r-prayer_background.jpg'),
+        fit: BoxFit.cover),
   };
 
-  bool isSelected;
+  // bool isSelected;
 
-  void initState() {
-    super.initState();
-    isSelected = widget.pickedIndex.contains(widget.index);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   isSelected = widget.pickedIndex.contains(widget.index);
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final TutorialProvider _tutorialProvider =
+        Provider.of<TutorialProvider>(context, listen: false);
+
     print('Individual Topic rebuild');
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        if (isSelected) {
-          //remove from picked list
-          widget.pickedIndex.remove(widget.index);
-          setState(() => isSelected = false);
-        } else if (widget.pickedIndex.length != 3) {
-          //add to picked list
-          widget.pickedIndex.add(widget.index);
-
-          setState(() => isSelected = true);
-        }
-        // widget.topicClicked(widget.topic, widget.index);
+        _tutorialProvider.topicClicked(topic);
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Card(
-              elevation: isSelected ? 3 : 0,
-              shape: RoundedRectangleBorder(
+            Container(
+              decoration: BoxDecoration(
+                // border: _isSelected
+                //     ? Border.all(
+                //         color: Colors.greenAccent,
+                //         width: 2,
+                //       )
+                //     : null,
+
+                image: _topicPathMap[topic],
+
+                // color: _isSelected ? Colors.black87 : null,
+                // color: Color(0xFFffdee9),
+                // gradient: LinearGradient(
+                //   colors: false
+                //       ? [Colors.white, Colors.white]
+                //       : [Color(0xFFffdee9), Colors.pink[200]],
+                //   begin: Alignment.bottomLeft,
+                //   end: Alignment.topRight,
+                // ),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Ink(
-                decoration: BoxDecoration(
-                  border: isSelected
-                      ? Border.all(
-                          color: Colors.greenAccent,
-                          width: 2,
-                        )
-                      : null,
-                  image: isSelected
-                      ? null
-                      : DecorationImage(
-                          image: AssetImage(_topicPathMap[widget.topic]),
-                          fit: BoxFit.cover,
-                        ),
-                  color: isSelected ? Colors.black87 : null,
-                  // color: Color(0xFFffdee9),
-                  // gradient: LinearGradient(
-                  //   colors: false
-                  //       ? [Colors.white, Colors.white]
-                  //       : [Color(0xFFffdee9), Colors.pink[200]],
-                  //   begin: Alignment.bottomLeft,
-                  //   end: Alignment.topRight,
-                  // ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Stack(
-                  children: [
-                    Visibility(
-                      visible: !isSelected,
-                      child: Opacity(
-                        opacity: 0.8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(flex: 1, child: Container()),
+            ),
+            Consumer<TutorialProvider>(
+              builder: (context, state, _) {
+                bool _isSelected = state.topicIsSelected(topic);
 
-                          isSelected
-                              ? Text(
-                                  'Selected',
-                                  style: TextStyle(
-                                      color: Colors.greenAccent,
-                                      fontFamily: 'Nunito',
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400),
-                                )
-                              : SizedBox.shrink(),
-                          Expanded(flex: 1, child: Container()),
-
-                          FittedBox(
-                            child: Text(
-                              '${widget.topic}',
-                              style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.white : Colors.white,
-                                  fontFamily: 'Nunito',
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w600),
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15),
+                    border: _isSelected
+                        ? Border.all(
+                            color: Colors.greenAccent,
+                            width: 2,
+                          )
+                        : null,
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Visibility(
+                        visible: true,
+                        child: Opacity(
+                          opacity: _isSelected ? 0.95 : 0.7,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          SizedBox(height: isSelected ? 10 : 0),
-
-                          // Text(
-                          //   'Versify\'s writing bot will guide you',
-                          //   textAlign: TextAlign.center,
-                          //   style: TextStyle(
-                          //       color: isSelected ? Colors.black87 : Colors.white,
-                          //       fontSize: 10,
-                          //       fontWeight: FontWeight.w400),
-                          // ),
-                          Expanded(flex: 2, child: Container()),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Visibility(
-              visible: isSelected,
-              child: Positioned(
-                bottom: -5,
-                right: -5,
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            _isSelected
+                                ? Text(
+                                    'Selected',
+                                    style: TextStyle(
+                                        color: Colors.greenAccent,
+                                        fontFamily: 'Nunito',
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                : SizedBox.shrink(),
+                            Expanded(flex: 1, child: Container()),
+                            FittedBox(
+                              child: Text(
+                                '$topic',
+                                style: TextStyle(
+                                    color: _isSelected
+                                        ? Colors.white
+                                        : Colors.white,
+                                    fontFamily: 'Nunito',
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            SizedBox(height: _isSelected ? 10 : 0),
+                            Expanded(flex: 2, child: Container()),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: _isSelected,
+                        child: Positioned(
+                          bottom: -8,
+                          right: -8,
+                          child: Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Container(
+                              height: 30,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(5),
+                              margin: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.greenAccent,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.black,
+                                size: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(5),
-                    margin: EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.greenAccent,
-                    ),
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.black,
-                      size: 15,
-                    ),
-                  ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),
