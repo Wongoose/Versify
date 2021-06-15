@@ -4,6 +4,7 @@ import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/providers/home/bottom_nav_provider.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/feeds/feed_type_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/following_page_view.dart';
@@ -114,46 +115,35 @@ class _HomeWrapperState extends State<HomeWrapper> {
                 overlayColor: Colors.black.withOpacity(0.8),
                 child: Scaffold(
                   resizeToAvoidBottomInset: false,
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
                   appBar: PreferredSize(
                     preferredSize: Size.fromHeight(kToolbarHeight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     color: Colors.black26,
-                          //     offset: Offset(0, 0),
-                          //     blurRadius: 5,
-                          //   )
-                          // ],
-                          ),
-                      child: Stack(
-                        alignment: Alignment.bottomLeft,
-                        children: [
-                          Consumer<PageViewProvider>(
-                            builder: (context, pageViewProvider, _) {
-                              return GestureDetector(
-                                onTap: () async {
-                                  if (_feedTypeProvider.currentFeedType ==
-                                      FeedType.following) {
-                                    await _followingController.animateTo(0.0,
-                                        curve: Curves.fastLinearToSlowEaseIn,
-                                        duration: Duration(milliseconds: 1200));
-                                  } else {
-                                    await _forYouController.animateTo(0.0,
-                                        curve: Curves.fastLinearToSlowEaseIn,
-                                        duration: Duration(milliseconds: 1200));
-                                  }
-                                },
-                                child: pageViewProvider.pageIndex == 1
-                                    ? FeedListAppBar()
-                                    : HomeAppBar(
-                                        pageViewProvider: pageViewProvider),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                    child: Stack(
+                      alignment: Alignment.bottomLeft,
+                      children: [
+                        Consumer<PageViewProvider>(
+                          builder: (context, pageViewProvider, _) {
+                            return GestureDetector(
+                              onTap: () async {
+                                if (_feedTypeProvider.currentFeedType ==
+                                    FeedType.following) {
+                                  await _followingController.animateTo(0.0,
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      duration: Duration(milliseconds: 1200));
+                                } else {
+                                  await _forYouController.animateTo(0.0,
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      duration: Duration(milliseconds: 1200));
+                                }
+                              },
+                              child: pageViewProvider.pageIndex == 1
+                                  ? FeedListAppBar()
+                                  : HomeAppBar(
+                                      pageViewProvider: pageViewProvider),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                   body: Stack(
@@ -163,7 +153,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
                       Container(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(15),
                             bottomLeft: Radius.circular(15),
@@ -247,6 +237,8 @@ class HomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthService _authService =
         Provider.of<AuthService>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     print('HomeApp Bar BUILT with _authService uid: ' +
         _authService.myUser.userUID);
@@ -254,7 +246,7 @@ class HomeAppBar extends StatelessWidget {
     return AppBar(
       elevation: 1,
       centerTitle: pageViewProvider.pageIndex == 2 ? false : true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).canvasColor,
       title: GestureDetector(
         onTap: () => {},
         child: Consumer<EditProfileProvider>(
@@ -268,7 +260,7 @@ class HomeAppBar extends StatelessWidget {
               fontFamily: 'Nunito',
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: Color(0xff050000),
+              color: _themeProvider.primaryTextColor,
             ),
           ),
         ),
@@ -295,7 +287,7 @@ class HomeAppBar extends StatelessWidget {
                 },
                 icon: Icon(
                   FontAwesomeIcons.ellipsisV,
-                  color: Colors.black,
+                  color: _themeProvider.primaryTextColor,
                   size: 18,
                 ),
                 label: Text(''))
@@ -320,6 +312,8 @@ class FeedListAppBar extends StatelessWidget {
         Provider.of<ForYouPageView>(context, listen: false);
     final FollowingPageView followingPageView =
         Provider.of<FollowingPageView>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Consumer<FeedTypeProvider>(
       builder: (context, state, __) {
@@ -327,7 +321,7 @@ class FeedListAppBar extends StatelessWidget {
         return AppBar(
           centerTitle: true,
           elevation: 0.5,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).canvasColor,
           title: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -342,24 +336,23 @@ class FeedListAppBar extends StatelessWidget {
                   child: Text(
                     'Following',
                     style: TextStyle(
-                        letterSpacing:
-                            _feedType == FeedType.following ? -0.3 : 1,
-                        fontSize: _feedType == FeedType.following ? 17.5 : 14,
-                        color: Colors.black,
-                        fontWeight: _feedType == FeedType.following
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                        fontFamily: 'Nunito'),
+                      letterSpacing: _feedType == FeedType.following ? -0.3 : 1,
+                      fontSize: _feedType == FeedType.following ? 17.5 : 14,
+                      color: _themeProvider.primaryTextColor,
+                      fontWeight: _feedType == FeedType.following
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                    ),
                   ),
                 ),
                 Text(
                   ' | ',
                   style: TextStyle(
-                      letterSpacing: 1.0,
-                      fontSize: 10,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Nunito'),
+                    letterSpacing: 1.0,
+                    fontSize: 10,
+                    color: _themeProvider.primaryTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -374,14 +367,13 @@ class FeedListAppBar extends StatelessWidget {
                     child: Text(
                       'For You',
                       style: TextStyle(
-                          letterSpacing:
-                              _feedType == FeedType.forYou ? -0.3 : 1,
-                          fontSize: _feedType == FeedType.forYou ? 17.5 : 14,
-                          color: Colors.black,
-                          fontWeight: _feedType == FeedType.forYou
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          fontFamily: 'Nunito'),
+                        letterSpacing: _feedType == FeedType.forYou ? -0.3 : 1,
+                        fontSize: _feedType == FeedType.forYou ? 17.5 : 14,
+                        color: _themeProvider.primaryTextColor,
+                        fontWeight: _feedType == FeedType.forYou
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
@@ -392,7 +384,8 @@ class FeedListAppBar extends StatelessWidget {
                 backgroundColor: Colors.transparent,
               ),
               clipBehavior: Clip.none,
-              icon: Icon(Icons.view_day_outlined, color: Colors.black),
+              icon: Icon(Icons.view_day_outlined,
+                  color: _themeProvider.primaryTextColor),
               label: Text(''),
               onPressed: () {
                 // allforYouPageView.onClick(index);
@@ -417,13 +410,15 @@ class FeedListAppBar extends StatelessWidget {
             TextButton.icon(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
               ),
-              onPressed: () {},
+              onPressed: () {
+                _themeProvider.switchTheme();
+              },
               clipBehavior: Clip.none,
               icon: Icon(
                 Icons.notifications_none_rounded,
-                color: Colors.black,
+                color: _themeProvider.primaryTextColor,
                 size: 26,
               ),
               label: Text(''),

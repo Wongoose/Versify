@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/badges_folder/badges_tab_display.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/blog_list2.dart';
 import 'package:versify/screens/profile_screen/widgets/follow_action_bar.dart';
@@ -129,6 +130,8 @@ class _MainProfilePageState extends State<MainProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     print('Profile Main is rebuilt');
     _authService = Provider.of<AuthService>(context);
     _profileDBService = Provider.of<ProfileDBService>(context);
@@ -171,7 +174,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
           ],
           child: _userProfile != null
               ? Scaffold(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
                   body: Container(
                     margin: EdgeInsets.fromLTRB(
                         0, 0, 0, !widget.bottomNavVisible ? 0 : 55),
@@ -234,7 +237,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
                               child: Container(
                                 padding: EdgeInsets.all(0),
                                 margin: EdgeInsets.all(0),
-                                color: Colors.white,
+                                color: Colors.transparent,
                                 // height: 400,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -272,10 +275,12 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                         return Text(
                                           '@${_userProfile.username}',
                                           style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Nunito',
-                                              color: Colors.black),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Nunito',
+                                            color:
+                                                _themeProvider.primaryTextColor,
+                                          ),
                                         );
                                       },
                                     ),
@@ -304,10 +309,13 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                           style: TextStyle(
                                               fontSize: 12.5,
                                               fontWeight: FontWeight.normal,
-                                              color: _userProfile
-                                                      .description.isEmpty
-                                                  ? Colors.black54
-                                                  : Colors.black),
+                                              color:
+                                                  _userProfile
+                                                          .description.isEmpty
+                                                      ? _themeProvider
+                                                          .secondaryTextColor
+                                                      : _themeProvider
+                                                          .primaryTextColor),
                                         ),
                                       ),
                                     ),

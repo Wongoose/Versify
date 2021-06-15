@@ -4,6 +4,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/providers/feeds/feed_type_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/following_page_view.dart';
@@ -203,6 +204,8 @@ class PostFeedWidget extends StatelessWidget {
     final ThemeData _theme = Theme.of(context);
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     FeedTypeProvider _feedTypeProvider =
         Provider.of<FeedTypeProvider>(context, listen: false);
@@ -252,7 +255,7 @@ class PostFeedWidget extends StatelessWidget {
               child: Shimmer(
                 duration: Duration(milliseconds: 1000),
                 interval: Duration(milliseconds: 1000),
-                color: Colors.pink,
+                color: _themeProvider.isDark ? Colors.white : Colors.pink,
                 direction: ShimmerDirection.fromLTRB(),
                 enabled: isWelcome,
                 child: Container(
@@ -301,7 +304,7 @@ class PostFeedWidget extends StatelessWidget {
                                     padding: EdgeInsets.all(1),
                                     height: 32,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: Theme.of(context).backgroundColor,
                                       shape: BoxShape.circle,
                                     ),
                                     child: ClipRRect(
@@ -328,7 +331,9 @@ class PostFeedWidget extends StatelessWidget {
                                         // },
                                         errorWidget: (context, url, error) =>
                                             Icon(FontAwesomeIcons.userAltSlash,
-                                                size: 5, color: Colors.black54),
+                                                size: 5,
+                                                color: _themeProvider
+                                                    .secondaryTextColor),
                                       ),
                                     ),
                                   ),
@@ -338,8 +343,10 @@ class PostFeedWidget extends StatelessWidget {
                                   child: Text(
                                     feed.username,
                                     style: TextStyle(
-                                      color:
-                                          isGrey ? Colors.grey : Colors.black87,
+                                      color: isGrey
+                                          ? Colors.grey
+                                          : _themeProvider.primaryTextColor
+                                              .withOpacity(0.87),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'Nunito',
@@ -443,7 +450,8 @@ class PostFeedWidget extends StatelessWidget {
                                                   .fontFamily,
                                           fontSize: 12,
                                           fontWeight: FontWeight.normal,
-                                          color: Colors.black26,
+                                          color: _themeProvider.primaryTextColor
+                                              .withOpacity(0.26),
                                           fontStyle: FontStyle.italic,
                                         ),
                                       ),
@@ -459,7 +467,9 @@ class PostFeedWidget extends StatelessWidget {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: isGrey ? Colors.grey : Colors.black,
+                                    color: isGrey
+                                        ? Colors.grey
+                                        : _themeProvider.primaryTextColor,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'Nunito',
                                     fontSize: 17.5,
@@ -476,7 +486,9 @@ class PostFeedWidget extends StatelessWidget {
                                     fontFamily:
                                         GoogleFonts.getFont('Nunito Sans')
                                             .fontFamily,
-                                    color: isGrey ? Colors.grey : Colors.black,
+                                    color: isGrey
+                                        ? Colors.grey
+                                        : _themeProvider.primaryTextColor,
                                     fontSize: 13,
                                     height: 1.4,
                                     fontWeight: FontWeight.w400,

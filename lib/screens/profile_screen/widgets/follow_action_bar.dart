@@ -2,6 +2,7 @@ import 'package:share/share.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.dart';
 import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/services/auth.dart';
@@ -59,6 +60,8 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
 
     final VisitProfileProvider _visitProfileProvider =
         Provider.of<VisitProfileProvider>(context, listen: true);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     if (!widget.visitProfile) {
       //userIsMe
@@ -117,23 +120,26 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                       enabled: _profileDetailsIsEmpty,
                       duration: Duration(milliseconds: 500),
                       interval: Duration(milliseconds: 500),
-                      color: Colors.pink,
+                      color: _themeProvider.isDark ? Colors.white : Colors.pink,
                       direction: ShimmerDirection.fromLTRB(),
                       child: Container(
                         height: 40,
                         alignment: Alignment.center,
                         padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).backgroundColor,
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(3),
-                          border: Border.all(color: Colors.black54, width: 0.5),
+                          border: Border.all(
+                              color: _themeProvider.secondaryTextColor,
+                              width: 0.5),
                         ),
                         child: Text(
                           widget.visitProfile ? 'Share' : 'Edit profile',
                           style: TextStyle(
                             fontSize: 15,
-                            color: Colors.black87,
+                            color: _themeProvider.primaryTextColor
+                                .withOpacity(0.87),
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.w600,
                           ),
@@ -182,18 +188,20 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                           alignment: Alignment.center,
                           margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).backgroundColor,
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(3),
-                            border:
-                                Border.all(color: Colors.black54, width: 0.5),
+                            border: Border.all(
+                                color: _themeProvider.secondaryTextColor,
+                                width: 0.5),
                           ),
                           child: Visibility(
                             visible: !_followLoading,
                             child: Icon(
                               FontAwesomeIcons.userCheck,
                               size: 18,
-                              color: Colors.black87,
+                              color: _themeProvider.primaryTextColor
+                                  .withOpacity(0.87),
                             ),
                             replacement: SizedBox(
                               height: 15,
@@ -242,11 +250,15 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
               alignment: Alignment.center,
               padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
               decoration: BoxDecoration(
-                color: _followLoading ? Colors.white : Color(0xffff548e),
+                color: _followLoading
+                    ? Theme.of(context).backgroundColor
+                    : Theme.of(context).primaryColor,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(3),
                 border: Border.all(
-                    color: _followLoading ? Colors.black54 : Color(0xffff548e),
+                    color: _followLoading
+                        ? _themeProvider.secondaryTextColor
+                        : Theme.of(context).primaryColor,
                     width: 0.5),
               ),
               child: Visibility(
@@ -255,7 +267,7 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                   'Follow',
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.white,
+                    color: _themeProvider.primaryTextColor,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
                   ),
@@ -279,15 +291,16 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
               alignment: Alignment.center,
               margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(3),
-                border: Border.all(color: Colors.black54, width: 0.5),
+                border: Border.all(
+                    color: _themeProvider.secondaryTextColor, width: 0.5),
               ),
               child: Icon(
                 FontAwesomeIcons.instagram,
                 size: 20,
-                color: Colors.black87,
+                color: _themeProvider.primaryTextColor.withOpacity(0.87),
               )),
         ),
         GestureDetector(
@@ -299,15 +312,16 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
               alignment: Alignment.center,
               margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(3),
-                border: Border.all(color: Colors.black54, width: 0.5),
+                border: Border.all(
+                    color: _themeProvider.secondaryTextColor, width: 0.5),
               ),
               child: Icon(
                 FontAwesomeIcons.tiktok,
                 size: 18,
-                color: Colors.black87,
+                color: _themeProvider.primaryTextColor.withOpacity(0.87),
               )),
         ),
         Container(
@@ -317,15 +331,16 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
             alignment: Alignment.center,
             margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(3),
-              border: Border.all(color: Colors.black54, width: 0.5),
+              border: Border.all(
+                  color: _themeProvider.secondaryTextColor, width: 0.5),
             ),
             child: Icon(
               Icons.arrow_drop_down,
               size: 22,
-              color: Colors.black87,
+              color: _themeProvider.primaryTextColor.withOpacity(0.87),
             )),
       ],
     );

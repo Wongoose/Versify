@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 
 class TabBarSliver extends StatefulWidget {
   final Function changeTab;
@@ -15,6 +17,8 @@ class _TabBarSliverState extends State<TabBarSliver> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return SliverPersistentHeader(
       delegate: _SliverAppBarDelegate(
@@ -30,18 +34,10 @@ class _TabBarSliverState extends State<TabBarSliver> {
           },
           indicatorColor: _theme.primaryColor,
           labelPadding: EdgeInsets.symmetric(horizontal: 0),
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.black54,
-          labelStyle: TextStyle(
-              fontSize: 15,
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Nunito'),
-          unselectedLabelStyle: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: Colors.black54,
-              fontFamily: 'Nunito'),
+          // labelColor: Colors.black,
+          // unselectedLabelColor: Colors.black54,
+          labelStyle: TextStyle(fontFamily: 'Nunito'),
+          unselectedLabelStyle: TextStyle(fontFamily: 'Nunito'),
           tabs: [
             Tab(
               child: Column(children: [
@@ -50,12 +46,12 @@ class _TabBarSliverState extends State<TabBarSliver> {
                   style: TextStyle(
                       color: _tabIndex == 0
                           ? _theme.primaryColor
-                          : Colors.black54),
+                          : _themeProvider.secondaryTextColor),
                 ),
                 Text(
                   'Blogs',
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: _themeProvider.primaryTextColor,
                     fontSize: 15,
                     fontWeight:
                         _tabIndex == 0 ? FontWeight.bold : FontWeight.w500,
@@ -70,7 +66,7 @@ class _TabBarSliverState extends State<TabBarSliver> {
                   style: TextStyle(
                       color: _tabIndex == 1
                           ? _theme.primaryColor
-                          : Colors.black54),
+                          : _themeProvider.secondaryTextColor),
                 ),
                 Text(
                   'Saved',
@@ -78,7 +74,7 @@ class _TabBarSliverState extends State<TabBarSliver> {
                       fontSize: 15,
                       fontWeight:
                           _tabIndex == 1 ? FontWeight.bold : FontWeight.w500,
-                      color: Colors.black),
+                      color: _themeProvider.primaryTextColor),
                 ),
               ]),
             ),
@@ -90,13 +86,13 @@ class _TabBarSliverState extends State<TabBarSliver> {
                     style: TextStyle(
                         color: _tabIndex == 2
                             ? _theme.primaryColor
-                            : Colors.black54),
+                            : _themeProvider.secondaryTextColor),
                   ),
                   Text(
                     'Badges',
                     style: TextStyle(
                       fontSize: 15,
-                      color: Colors.black87,
+                      color: _themeProvider.primaryTextColor,
                       fontWeight:
                           _tabIndex == 2 ? FontWeight.bold : FontWeight.w500,
                     ),
@@ -135,12 +131,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     // }
     return BottomAppBar(
       elevation: shrinkOffset == 0 ? 0.3 : 1,
+      color: Theme.of(context).backgroundColor,
       child: new Container(
         height: _tabBar.preferredSize.height + 10,
+
         // decoration: BoxDecoration(
         //     border: Border(top: BorderSide(color: Colors.black38, width: 0.5))),
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-        color: Colors.white,
+        color: Colors.transparent,
         child: _tabBar,
       ),
     );

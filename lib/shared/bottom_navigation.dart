@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:versify/providers/home/bottom_nav_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/create_screen/sub_screens/create_topics.dart';
 import 'package:versify/screens/create_screen/sub_screens/create_wrapper.dart';
@@ -30,6 +31,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final ThemeData _theme = Theme.of(context);
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: true);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     print('BOTTOM Nav BAR Rebuilt!');
     PageViewProvider pageViewProvider =
@@ -107,6 +110,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               builder: (context, child) {
                 return AnimatedContainer(
                     decoration: BoxDecoration(
+                      // color: _theme.canvasColor,
                       boxShadow: [
                         BoxShadow(
                             color: Colors.black12,
@@ -126,11 +130,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       enabled: _tutorialProvider.signUpProfileNotif,
                       duration: Duration(milliseconds: 500),
                       interval: Duration(milliseconds: 500),
-                      color: Colors.pink,
+                      color: _themeProvider.isDark ? Colors.white : Colors.pink,
                       direction: ShimmerDirection.fromLTRB(),
                       child: BottomAppBar(
                         elevation: 1,
-                        color: Colors.white,
+                        color: _theme.backgroundColor,
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(40, 2, 40, 2),
                           child: Row(
@@ -167,9 +171,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                               Expanded(
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                    primary: Colors.white,
+                                    primary: _theme.canvasColor,
                                     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    backgroundColor: Colors.white,
                                   ),
                                   onPressed: () => {
                                     controller.animateToPage(
@@ -185,7 +188,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                                               EdgeInsets.fromLTRB(0, 0, 0, 5),
                                           child: Icon(
                                             AntDesign.home,
-                                            color: Colors.black87,
+                                            color:
+                                                _themeProvider.primaryTextColor,
                                             size: 27,
                                           ),
                                         )
@@ -208,10 +212,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
                                         theme: _theme)
                                     : TextButton.icon(
                                         style: TextButton.styleFrom(
-                                          primary: Colors.white,
+                                          primary: _theme.canvasColor,
                                           padding:
                                               EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                          backgroundColor: Colors.white,
                                         ),
                                         label: Text(''),
                                         onPressed: () => {
@@ -227,7 +230,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                                               ? Icons.person_outline_rounded
                                               : Icons.person_rounded,
                                           color: pageViewProvider.pageIndex != 2
-                                              ? Colors.black87
+                                              ? _themeProvider.primaryTextColor
                                               : _theme.primaryColor,
                                           size: 34,
                                         ),
@@ -322,11 +325,12 @@ class _BouncingProfileState extends State<BouncingProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     return TextButton.icon(
       style: TextButton.styleFrom(
-        primary: Colors.white,
+        primary: Theme.of(context).backgroundColor,
         padding: EdgeInsets.fromLTRB(10, 0, 0, 3),
-        backgroundColor: Colors.white,
       ),
       label: Text(''),
       onPressed: () => {
@@ -345,12 +349,11 @@ class _BouncingProfileState extends State<BouncingProfile> {
                   ? Icons.person_outline_rounded
                   : Icons.person_rounded,
               color: widget.pageViewProvider.pageIndex != 2
-                  ? Colors.black87
+                  ? _themeProvider.primaryTextColor.withOpacity(0.87)
                   : widget._theme.primaryColor,
               size: 34,
             ),
             Positioned(
-              
               right: 0,
               child: Icon(
                 Icons.circle,

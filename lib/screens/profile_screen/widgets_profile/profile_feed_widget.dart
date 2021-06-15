@@ -1,4 +1,5 @@
 import 'package:versify/models/feed_model.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/profile_page_view.dart';
 import 'package:versify/providers/home/profile_pageview_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -92,6 +93,8 @@ class ProfileFeedWidget extends StatelessWidget {
         Provider.of<ProfilePageView>(context, listen: false);
     ProfileAllPostsView _profileAllPostsView =
         Provider.of<ProfileAllPostsView>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     print('New feed widget built!');
     int _colorIndex = 0;
@@ -123,6 +126,7 @@ class ProfileFeedWidget extends StatelessWidget {
                 margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 decoration: BoxDecoration(
+                  color: Colors.transparent,
                   border: Border(
                     left: BorderSide(
                         width: 2, color: _colorScheme[_colorIndex]['primary']),
@@ -191,6 +195,7 @@ class ProfileFeedWidget extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             fontFamily: 'Nunito',
                             fontSize: 17.5,
+                            color: _themeProvider.primaryTextColor,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -204,6 +209,7 @@ class ProfileFeedWidget extends StatelessWidget {
                             fontFamily: 'Nunito',
                             fontSize: 13,
                             height: 1.4,
+                            color: _themeProvider.primaryTextColor,
                             fontWeight: FontWeight.w400,
                           ),
                           maxLines: 3,

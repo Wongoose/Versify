@@ -32,6 +32,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/shared/splash_loading.dart';
 import 'models/user_model.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,18 +74,22 @@ class VersifyApp extends StatelessWidget {
     precacheImage(
         AssetImage("assets/images/backgrounds/r-love_background.jpg"), context);
     precacheImage(
-        AssetImage("assets/images/backgrounds/r-faith_background.jpg"), context);
+        AssetImage("assets/images/backgrounds/r-faith_background.jpg"),
+        context);
     precacheImage(
-        AssetImage("assets/images/backgrounds/r-grief_background.jpg"), context);
+        AssetImage("assets/images/backgrounds/r-grief_background.jpg"),
+        context);
     precacheImage(
         AssetImage("assets/images/backgrounds/r-healing_background.jpg"),
         context);
     precacheImage(
         AssetImage("assets/images/backgrounds/r-joy_background.jpg"), context);
     precacheImage(
-        AssetImage("assets/images/backgrounds/r-peace_background.jpg"), context);
+        AssetImage("assets/images/backgrounds/r-peace_background.jpg"),
+        context);
     precacheImage(
-        AssetImage("assets/images/backgrounds/r-prayer_background.jpg"), context);
+        AssetImage("assets/images/backgrounds/r-prayer_background.jpg"),
+        context);
 
     return FutureBuilder(
         future: _initialization,
@@ -125,6 +130,8 @@ class VersifyApp extends StatelessWidget {
                 JsonFollowingStorage();
 
             final TutorialProvider _tutorialProvider = TutorialProvider();
+
+            final ThemeProvider _themeProvider = ThemeProvider();
 
             JsonAllBadgesStorage _jsonAllBadgesStorage;
 
@@ -187,6 +194,8 @@ class VersifyApp extends StatelessWidget {
                     Provider<JsonAllBadgesStorage>.value(
                         value: _jsonAllBadgesStorage),
 
+                    ChangeNotifierProvider<ThemeProvider>.value(
+                        value: _themeProvider),
                     ChangeNotifierProvider<TutorialProvider>.value(
                         value: _tutorialProvider),
                     ChangeNotifierProvider<ProfileDataProvider>.value(
@@ -220,31 +229,48 @@ class VersifyApp extends StatelessWidget {
                     // FutureProvider<List<Feed>>.value(value: _getFeedDataMain()),
                   ],
                   child: OverlaySupport.global(
-                    child: MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      title: 'Versify',
-                      theme: ThemeData(
-                        // colorScheme: ColorScheme.fromSwatch(),
-                        canvasColor: Colors.white,
-                        primaryColor: Color(0xFFff699F),
-                        accentColor: Color(0xFF61c0bf),
-                        splashColor: Color(0xFFffdee9),
-                        fontFamily:
-                            GoogleFonts.getFont('Nunito Sans').fontFamily,
-                        backgroundColor: Colors.white,
-                      ),
-                      builder: (context, child) {
-                        return MediaQuery(
-                          child: child,
-                          data: MediaQuery.of(context)
-                              .copyWith(textScaleFactor: 1.0),
+                    child: Consumer<ThemeProvider>(
+                      builder: (context, state, _) {
+                        return MaterialApp(
+                          debugShowCheckedModeBanner: false,
+                          title: 'Versify',
+                          themeMode: state.currentTheme(),
+                          darkTheme: ThemeData(
+                            primaryColor: Color(0xFFff699F),
+                            accentColor: Color(0xFF61c0bf),
+                            splashColor: Color(0xFFffdee9),
+                            textTheme: TextTheme(
+                                bodyText1: TextStyle(color: Colors.white),
+                                bodyText2: TextStyle(color: Colors.white)),
+                            fontFamily:
+                                GoogleFonts.getFont('Nunito Sans').fontFamily,
+                            canvasColor: Color(0xFF0a050a),
+                            backgroundColor: Color(0xFF0d0a0c),
+                          ),
+                          theme: ThemeData(
+                            // colorScheme: ColorScheme.fromSwatch(),
+                            primaryColor: Color(0xFFff699F),
+                            accentColor: Color(0xFF61c0bf),
+                            splashColor: Color(0xFFffdee9),
+                            fontFamily:
+                                GoogleFonts.getFont('Nunito Sans').fontFamily,
+                            canvasColor: Colors.white,
+                            backgroundColor: Colors.white,
+                          ),
+                          builder: (context, child) {
+                            return MediaQuery(
+                              child: child,
+                              data: MediaQuery.of(context)
+                                  .copyWith(textScaleFactor: 1.0),
+                            );
+                          },
+                          home: VersifyHome(
+                              authService: _authService,
+                              dynamicLinkService: _dynamicLinkService),
+                          routes: {
+                            '/accountSettings': (context) => AccountSettings(),
+                          },
                         );
-                      },
-                      home: VersifyHome(
-                          authService: _authService,
-                          dynamicLinkService: _dynamicLinkService),
-                      routes: {
-                        '/accountSettings': (context) => AccountSettings(),
                       },
                     ),
                   ),

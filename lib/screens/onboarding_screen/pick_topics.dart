@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
@@ -38,6 +39,9 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
   @override
   Widget build(BuildContext context) {
     final AuthService _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     _dbService = Provider.of<DatabaseService>(context);
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 
@@ -47,9 +51,9 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
     print('dbUser is: ' + _dbService.uid.toString());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).canvasColor,
         elevation: 0.5,
         centerTitle: true,
         title: Text(
@@ -57,7 +61,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
           style: TextStyle(
             fontSize: 17.5,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: _themeProvider.primaryTextColor,
           ),
         ),
         actions: [
@@ -66,7 +70,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
             child: TextButton.icon(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).canvasColor,
               ),
               onPressed: () async {
                 setState(() => _loading = true);
@@ -133,7 +137,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                       TextSpan(
                         text: ' would\nyou like to find?',
                         style: TextStyle(
-                            color: Colors.black,
+                            color: _themeProvider.primaryTextColor,
                             fontSize: 38,
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.bold,
@@ -150,7 +154,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                   'PICK TOP 3 TOPICS',
                   style: TextStyle(
                     fontSize: 15.5,
-                    color: Colors.black45,
+                    color: _themeProvider.secondaryTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -242,6 +246,8 @@ class SingleTopicWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     print('Individual Topic rebuild');
     return GestureDetector(
@@ -298,7 +304,11 @@ class SingleTopicWidget extends StatelessWidget {
                       Visibility(
                         visible: true,
                         child: Opacity(
-                          opacity: _isSelected ? 0.95 : 0.7,
+                          opacity: _isSelected
+                              ? _themeProvider.isDark
+                                  ? 0.7
+                                  : 0.95
+                              : 0.7,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.black,
