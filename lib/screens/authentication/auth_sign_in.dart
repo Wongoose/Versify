@@ -61,7 +61,7 @@ class _SignInAuthState extends State<SignInAuth> {
                         TextSpan(
                           text: 'Welcome',
                           style: TextStyle(
-                              color: Color(0xffff548e),
+                              color: Theme.of(context).primaryColor,
                               fontSize: 37,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Nunito',
@@ -220,7 +220,7 @@ class _SignInAuthState extends State<SignInAuth> {
                       ),
                       SizedBox(height: 20),
                       // RaisedButton(
-                      //   color: Color(0xffff548e),
+                      //   color: Theme.of(context).primaryColor,
                       //   child: Text(
                       //     'Log In',
                       //     style: TextStyle(
@@ -267,7 +267,7 @@ class _SignInAuthState extends State<SignInAuth> {
                   // margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xffff548e),
+                        primary: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),

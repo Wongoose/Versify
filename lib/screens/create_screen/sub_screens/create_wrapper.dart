@@ -102,7 +102,7 @@ class _CreateWrapperState extends State<CreateWrapper> {
               icon: Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 25,
-                color: Color(0xffff548e),
+                color: Theme.of(context).primaryColor,
               ),
             )
           ],
@@ -124,7 +124,7 @@ class _CreateWrapperState extends State<CreateWrapper> {
                       TextSpan(
                         text: 'Already',
                         style: TextStyle(
-                            color: Color(0xffff548e),
+                            color: Theme.of(context).primaryColor,
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Nunito',
@@ -310,7 +310,7 @@ class _CreateWrapperState extends State<CreateWrapper> {
                     Icon(
                       FontAwesomeIcons.pencilAlt,
                       size: 15,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(

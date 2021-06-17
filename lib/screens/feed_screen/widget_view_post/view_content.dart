@@ -79,7 +79,7 @@ class ViewPostContent extends StatelessWidget {
                   margin: EdgeInsets.fromLTRB(0, 2, 26, 2),
                   decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(width: 2, color: Color(0xffff548e)),
+                      left: BorderSide(width: 2, color: Theme.of(context).primaryColor),
                     ),
                   ),
                   padding: EdgeInsets.fromLTRB(8, 0, 0, 2),

@@ -90,7 +90,7 @@ class _ReviewPostOptionsState extends State<ReviewPostOptions> {
                                 'Edit',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Color(0xffff548e),
+                                  color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
@@ -115,7 +115,7 @@ class _ReviewPostOptionsState extends State<ReviewPostOptions> {
                                             decoration: BoxDecoration(
                                               border: Border.fromBorderSide(
                                                   BorderSide(
-                                                      color: Color(0xffff548e)
+                                                      color: Theme.of(context).primaryColor
                                                           .withOpacity(0.9))),
                                               borderRadius:
                                                   BorderRadius.circular(5),
@@ -142,7 +142,7 @@ class _ReviewPostOptionsState extends State<ReviewPostOptions> {
                                                   fontFamily: 'Nunito',
                                                   fontSize: 11,
                                                   // color: Colors.white,
-                                                  color: Color(0xffff548e)
+                                                  color: Theme.of(context).primaryColor
                                                       .withOpacity(0.9)),
                                             ),
                                           ),

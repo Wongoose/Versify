@@ -98,7 +98,7 @@ class _TutorialFeedListState extends State<TutorialFeedList> {
                     TextSpan(
                       text: 'Blogs',
                       style: TextStyle(
-                          color: Color(0xffff548e),
+                          color: Theme.of(context).primaryColor,
                           fontSize: 35,
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w600,

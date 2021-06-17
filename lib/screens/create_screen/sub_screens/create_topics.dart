@@ -188,7 +188,7 @@ class _CreateTopicsState extends State<CreateTopics> {
                 icon: Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 25,
-                  color: Color(0xffff548e),
+                  color: Theme.of(context).primaryColor,
                 ),
               )
             ],
@@ -216,7 +216,7 @@ class _CreateTopicsState extends State<CreateTopics> {
                         TextSpan(
                           text: 'What',
                           style: TextStyle(
-                              color: Color(0xffff548e),
+                              color: Theme.of(context).primaryColor,
                               fontSize: 35,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Nunito',
@@ -248,7 +248,7 @@ class _CreateTopicsState extends State<CreateTopics> {
                               (chipData) => FilterChip(
                                   selected: chipData.checked,
                                   checkmarkColor: Colors.white,
-                                  selectedColor: Color(0xffff548e),
+                                  selectedColor: Theme.of(context).primaryColor,
                                   showCheckmark: true,
                                   onSelected: ((onSelected) {
                                     chipData.checked = onSelected;
@@ -256,7 +256,7 @@ class _CreateTopicsState extends State<CreateTopics> {
                                   }),
                                   shape: StadiumBorder(
                                     side: BorderSide(
-                                      color: Color(0xffff548e),
+                                      color: Theme.of(context).primaryColor,
                                       width: 1.0,
                                     ),
                                   ),
@@ -267,7 +267,7 @@ class _CreateTopicsState extends State<CreateTopics> {
                                       fontWeight: FontWeight.w600,
                                       color: chipData.checked
                                           ? Colors.white
-                                          : Color(0xffff548e))),
+                                          : Theme.of(context).primaryColor)),
                             )
                             .toList()
                             .cast<Widget>(),

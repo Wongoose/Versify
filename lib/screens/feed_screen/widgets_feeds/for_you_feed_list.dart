@@ -44,18 +44,18 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
     {
       //red
       'primary': Color(0xFFff699F),
-      'secondary': Color(0xFFff89B2),
+      'secondary': Color(0xFFFFD6E6),
     },
     {
-      //blue
-      'primary': Color(0xFFa15ce2),
-      'secondary': Color(0xFFa15ce2),
+      //biege
+      'primary': Color(0xFFe8ab92),
+      'secondary': Color(0xFFFAE3D9),
     },
     {
       //green
       'primary': Color(0xFF61C0BF),
-      'secondary': Color(0xFF61C0BF),
-    }
+      'secondary': Color(0xFFBBDED6),
+    },
   ];
   // FeedTypeProvider _feedTypeProvider;
   // double _localExtent = 0;

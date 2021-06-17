@@ -276,7 +276,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
                             ],
-                            cursorColor: Color(0xffff548e),
+                            cursorColor: Theme.of(context).primaryColor,
                             validator: (text) {
                               return text.contains(' ') ? '' : text;
                             },
@@ -370,7 +370,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                       replacement: SizedBox(
                         height: 15,
                         width: 15,
-                        child: CircularProgressIndicator(
+                        child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                           strokeWidth: 0.5,
                         ),
                       ),

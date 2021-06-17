@@ -53,7 +53,7 @@ class CreateTagsBottomSheet extends StatelessWidget {
                         (chipData) => FilterChip(
                             selected: chipData.checked,
                             checkmarkColor: Colors.white,
-                            selectedColor: Color(0xffff548e),
+                            selectedColor: Theme.of(context).primaryColor,
                             showCheckmark: true,
                             onSelected: ((onSelected) {
                               chipData.checked = onSelected;
@@ -61,7 +61,7 @@ class CreateTagsBottomSheet extends StatelessWidget {
                             }),
                             shape: StadiumBorder(
                               side: BorderSide(
-                                color: Color(0xffff548e),
+                                color: Theme.of(context).primaryColor,
                                 width: 1.0,
                               ),
                             ),
@@ -73,7 +73,7 @@ class CreateTagsBottomSheet extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                                 color: chipData.checked
                                     ? Colors.white
-                                    : Color(0xffff548e))),
+                                    : Theme.of(context).primaryColor)),
                       )
                       .toList()
                       .cast<Widget>(),

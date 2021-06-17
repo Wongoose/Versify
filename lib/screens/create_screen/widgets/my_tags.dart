@@ -76,14 +76,14 @@ class _MyTagsState extends State<MyTags> {
                   'Edit',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xffff548e),
+                    color: Theme.of(context).primaryColor,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.normal,
                   ),
                 ),
                 icon: Icon(
                   Icons.edit,
-                  color: Color(0xffff548e),
+                  color: Theme.of(context).primaryColor,
                   size: 14,
                 ),
               ),
@@ -148,7 +148,7 @@ class _MyTagsState extends State<MyTags> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               border: Border.fromBorderSide(
-                                  BorderSide(color: Color(0xffff548e))),
+                                  BorderSide(color: Theme.of(context).primaryColor)),
                               borderRadius: BorderRadius.circular(5),
                               // color: _colorScheme[_colorIndex]['secondary']
                               //     .withOpacity(0.3),
@@ -161,7 +161,7 @@ class _MyTagsState extends State<MyTags> {
                                   fontFamily: 'Nunito',
                                   fontSize: 11,
                                   // color: Colors.white,
-                                  color: Color(0xffff548e)),
+                                  color: Theme.of(context).primaryColor),
                             ),
                           ),
                         ),
@@ -180,7 +180,7 @@ class _MyTagsState extends State<MyTags> {
 //       ExpansionTile(
 //         trailing: Icon(
 //           expansionProvider.isExpanded ? Icons.expand_less : Icons.expand_more,
-//           color: Color(0xffff548e),
+//           color: Theme.of(context).primaryColor,
 //         ),
 //         expansionProvider: expansionProvider,
 //         initiallyExpanded: false,
@@ -218,7 +218,7 @@ class _MyTagsState extends State<MyTags> {
 //                             child: FilterChip(
 //                                 selected: chipData.checked,
 //                                 checkmarkColor: Colors.white,
-//                                 selectedColor: Color(0xffff548e),
+//                                 selectedColor: Theme.of(context).primaryColor,
 //                                 showCheckmark: false,
 //                                 onSelected: ((onSelected) {
 //                                   chipData.checked = onSelected;
@@ -226,7 +226,7 @@ class _MyTagsState extends State<MyTags> {
 //                                 }),
 //                                 shape: StadiumBorder(
 //                                   side: BorderSide(
-//                                     color: Color(0xffff548e),
+//                                     color: Theme.of(context).primaryColor,
 //                                     width: 0.2,
 //                                   ),
 //                                 ),
@@ -237,7 +237,7 @@ class _MyTagsState extends State<MyTags> {
 //                                     fontFamily: 'Nunito',
 //                                     color: chipData.checked
 //                                         ? Colors.white
-//                                         : Color(0xffff548e))),
+//                                         : Theme.of(context).primaryColor)),
 //                           ),
 //                         ),
 //                       )
@@ -257,13 +257,13 @@ class _MyTagsState extends State<MyTags> {
 //                     (chipData) => FilterChip(
 //                         selected: chipData.checked,
 //                         checkmarkColor: Colors.white,
-//                         selectedColor: Color(0xffff548e),
+//                         selectedColor: Theme.of(context).primaryColor,
 //                         showCheckmark: true,
 //                         onSelected: ((onSelected) =>
 //                             chipData.checked = onSelected),
 //                         shape: StadiumBorder(
 //                           side: BorderSide(
-//                             color: Color(0xffff548e),
+//                             color: Theme.of(context).primaryColor,
 //                             width: 1.0,
 //                           ),
 //                         ),
@@ -273,7 +273,7 @@ class _MyTagsState extends State<MyTags> {
 //                             fontFamily: 'Nunito',
 //                             color: chipData.checked
 //                                 ? Colors.white
-//                                 : Color(0xffff548e))),
+//                                 : Theme.of(context).primaryColor)),
 //                   )
 //                   .toList()
 //                   .cast<Widget>(),

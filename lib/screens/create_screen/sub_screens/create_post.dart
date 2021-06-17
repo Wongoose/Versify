@@ -95,7 +95,7 @@ class _CreatePostState extends State<CreatePost> {
                   icon: Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 28,
-                    color: Color(0xffff548e),
+                    color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () async {
                     // setState(() => _loading = true);

@@ -23,8 +23,8 @@ class ContentBody extends StatelessWidget {
           children: [
             ProfilePic(
               userProfile: _authService.myUser,
-              primary: Color(0xffff548e),
-              secondary: Color(0xffff548e),
+              primary: Theme.of(context).primaryColor,
+              secondary: Theme.of(context).primaryColor,
               size: 1,
             ),
             SizedBox(width: 8),
@@ -43,7 +43,7 @@ class ContentBody extends StatelessWidget {
                         fontFamily: 'Nunito',
                         fontSize: 12,
                         fontStyle: FontStyle.italic,
-                        color: Color(0xffff548e),
+                        color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -74,7 +74,7 @@ class ContentBody extends StatelessWidget {
             'Write',
             softWrap: true,
             style: TextStyle(
-              color: Color(0xffff548e),
+              color: Theme.of(context).primaryColor,
               letterSpacing: 0,
               fontSize: 20,
               fontWeight: FontWeight.w700,

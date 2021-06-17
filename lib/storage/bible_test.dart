@@ -63,7 +63,7 @@ class BibleTest extends StatelessWidget {
       imageUrl:
           "https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d",
       progressIndicatorBuilder: (context, url, downloadProgress) =>
-          CircularProgressIndicator(value: downloadProgress.progress),
+          CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),value: downloadProgress.progress),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
 

@@ -184,7 +184,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                 icon: Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 25,
-                  color: Color(0xffff548e),
+                  color: Theme.of(context).primaryColor,
                 ),
               )
             ],
@@ -231,7 +231,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                           TextSpan(
                             text: 'Popular',
                             style: TextStyle(
-                                color: Color(0xffff548e),
+                                color: Theme.of(context).primaryColor,
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Nunito',
@@ -275,7 +275,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                 (chipData) => FilterChip(
                                     selected: chipData.checked,
                                     checkmarkColor: Colors.white,
-                                    selectedColor: Color(0xffff548e),
+                                    selectedColor: Theme.of(context).primaryColor,
                                     showCheckmark: false,
                                     onSelected: ((onSelected) {
                                       topicsProvider.uncheckAll();
@@ -289,7 +289,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                     shape: StadiumBorder(
                                       side: BorderSide(
                                         color: chipData.checked
-                                            ? Color(0xffff548e)
+                                            ? Theme.of(context).primaryColor
                                             : Colors.black38,
                                         width: chipData.checked ? 1 : 0,
                                       ),
@@ -344,7 +344,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                 (chipData) => FilterChip(
                                     selected: chipData.checked,
                                     checkmarkColor: Colors.white,
-                                    selectedColor: Color(0xffff548e),
+                                    selectedColor: Theme.of(context).primaryColor,
                                     showCheckmark: false,
                                     onSelected: ((onSelected) {
                                       topicsProvider.uncheckAll();
@@ -357,7 +357,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                     shape: StadiumBorder(
                                       side: BorderSide(
                                         color: chipData.checked
-                                            ? Color(0xffff548e)
+                                            ? Theme.of(context).primaryColor
                                             : Colors.black38,
                                         width: chipData.checked ? 1 : 0,
                                       ),

@@ -178,7 +178,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         Icons.phone,
                         size: 16.5,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -224,7 +224,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         Icons.email_rounded,
                         size: 16.5,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -270,7 +270,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         FontAwesomeIcons.key,
                         size: 15,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       //hide this widget if using Google/Facebook
@@ -317,7 +317,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         FontAwesomeIcons.lock,
                         size: 15,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -383,7 +383,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         Icons.border_color,
                         size: 16.5,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -416,7 +416,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         Icons.help,
                         size: 16.5,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -454,7 +454,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                     Icon(
                       Icons.group,
                       size: 16.5,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -478,7 +478,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                     Icon(
                       Icons.book,
                       size: 16.5,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -502,7 +502,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                     Icon(
                       Icons.privacy_tip,
                       size: 16.5,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -549,7 +549,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       Icon(
                         Icons.logout,
                         size: 16.5,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(

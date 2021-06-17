@@ -151,8 +151,8 @@ class _AccountVerificationState extends State<AccountVerification> {
                 fontSize: 14,
                 color: _verificationId != null ||
                         widget.accEditType == AccountEditType.email
-                    ? Color(0xffff548e)
-                    : Color(0xffff548e).withOpacity(0.4),
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).primaryColor.withOpacity(0.4),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -207,7 +207,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
-                    cursorColor: Color(0xffff548e),
+                    cursorColor: Theme.of(context).primaryColor,
                     // validator: (text) {
                     //   return text.contains(' ') ? '' : text;
                     // },

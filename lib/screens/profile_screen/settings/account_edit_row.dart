@@ -120,8 +120,8 @@ class _AccountEditRowState extends State<AccountEditRow> {
                   style: TextStyle(
                     fontSize: 14,
                     color: state.hasChanges
-                        ? Color(0xffff548e)
-                        : Color(0xffff548e).withOpacity(0.4),
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).primaryColor.withOpacity(0.4),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -197,7 +197,7 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 // inputFormatters: [
                 //   FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
                 // ],
-                cursorColor: Color(0xffff548e),
+                cursorColor: Theme.of(context).primaryColor,
                 validator: (text) {
                   return text.contains(' ') ? '' : text;
                 },

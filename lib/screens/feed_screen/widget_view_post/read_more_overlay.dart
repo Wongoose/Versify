@@ -59,7 +59,7 @@ class ReadMoreOverlay extends StatelessWidget {
                 style: ButtonStyle(),
                 icon: Icon(
                   Icons.touch_app,
-                  color: Color(0xffff548e).withOpacity(0.8),
+                  color: Theme.of(context).primaryColor.withOpacity(0.8),
                 ),
               ),
             ),

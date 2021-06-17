@@ -105,7 +105,7 @@ class _ReviewPostState extends State<ReviewPost> {
                       icon: Icon(
                         Icons.check_rounded,
                         size: 28,
-                        color: Color(0xffff548e),
+                        color: Theme.of(context).primaryColor,
                       ),
                       onPressed: () async {
                         setState(() => _loading = true);

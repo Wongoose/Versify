@@ -90,7 +90,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                         TextSpan(
                           text: 'Create',
                           style: TextStyle(
-                              color: Color(0xffff548e),
+                              color: Theme.of(context).primaryColor,
                               fontSize: 37,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Nunito',
@@ -263,7 +263,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                   // margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xffff548e),
+                        primary: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
@@ -392,7 +392,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       ? SizedBox(
                           height: 15,
                           width: 15,
-                          child: CircularProgressIndicator(
+                          child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                             strokeWidth: 0.5,
                           ),
                         )

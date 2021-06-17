@@ -116,7 +116,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                 'Next',
                 style: TextStyle(
                   fontSize: 14,
-                  color: _validUsername ? Color(0xffff548e) : Colors.black26,
+                  color: _validUsername ? Theme.of(context).primaryColor : Colors.black26,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -160,7 +160,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                   new FilteringTextInputFormatter.allow(
                       RegExp("[a-z0-9|\\_|\\.]")),
                 ],
-                cursorColor: Color(0xffff548e),
+                cursorColor: Theme.of(context).primaryColor,
                 // onSaved: (newValue) => ,
                 autovalidateMode: AutovalidateMode.always,
                 onChanged: (newVal) {
@@ -218,7 +218,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                     replacement: SizedBox(
                       height: 15,
                       width: 15,
-                      child: CircularProgressIndicator(
+                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                         strokeWidth: 0.5,
                       ),
                     ),

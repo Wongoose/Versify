@@ -545,7 +545,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                     //       'Read',
                     //       softWrap: true,
                     //       style: TextStyle(
-                    //         color: Color(0xffff548e),
+                    //         color: Theme.of(context).primaryColor,
                     //         letterSpacing: 0,
                     //         fontSize: 22,
                     //         fontWeight: FontWeight.w700,
@@ -608,7 +608,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                             //     'View all...',
                                             //     style: TextStyle(
                                             //       fontSize: 12,
-                                            //       color: Color(0xffff548e),
+                                            //       color: Theme.of(context).primaryColor,
                                             //       fontWeight: FontWeight.w400,
                                             //     ),
                                             //   ),
@@ -632,7 +632,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                               // value: widget.feed.giftLove,
                                               giftType: GiftType.love,
                                               text: 'Great love',
-                                              color: Color(0xffff548e),
+                                              color: Theme.of(context).primaryColor,
                                               image: 'assets/images/love.png',
                                             ),
                                             ViewGiftWidget(
@@ -644,7 +644,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                             ),
                                             // GiftWidget(
                                             //   text: 'Magic unicorn',
-                                            //   color: Color(0xffff548e),
+                                            //   color: Theme.of(context).primaryColor,
                                             //   image: 'assets/images/shy.png',
                                             // ),
                                             // GiftWidget(
@@ -774,7 +774,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                         // Icon(
                         //   Icons.keyboard_arrow_up_rounded,
                         //   size: 70,
-                        //   color: Color(0xffff548e),
+                        //   color: Theme.of(context).primaryColor,
                         // ),
                         // SizedBox(height: 30),
                       ],

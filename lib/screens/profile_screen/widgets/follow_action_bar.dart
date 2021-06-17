@@ -206,7 +206,7 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                             replacement: SizedBox(
                               height: 15,
                               width: 15,
-                              child: CircularProgressIndicator(
+                              child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                 strokeWidth: 0.5,
                               ),
                             ),
@@ -275,7 +275,7 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                 replacement: SizedBox(
                     height: 15,
                     width: 15,
-                    child: CircularProgressIndicator(
+                    child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                       strokeWidth: 0.5,
                     )),
               ),

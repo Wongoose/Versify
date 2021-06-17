@@ -18,7 +18,7 @@ class TextContent extends StatelessWidget {
         border: Border(
           left: BorderSide(
             width: 2,
-            color: Color(0xffff548e),
+            color: Theme.of(context).primaryColor,
           ),
         ),
       ),

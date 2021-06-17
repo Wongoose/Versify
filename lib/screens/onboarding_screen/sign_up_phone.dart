@@ -114,7 +114,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                 'Done',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xffff548e),
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -242,7 +242,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                                   child: SizedBox(
                                     height: 15,
                                     width: 15,
-                                    child: CircularProgressIndicator(
+                                    child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                       strokeWidth: 0.5,
                                     ),
                                   ),
@@ -269,7 +269,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
               //   keyboardType: TextInputType.phone,
               //   maxLength: 20,
               //   maxLines: 1,
-              //   cursorColor: Color(0xffff548e),
+              //   cursorColor: Theme.of(context).primaryColor,
               //   validator: (text) {
               //     return text.contains(' ') ? 'Cannot have spaces' : null;
               //   },

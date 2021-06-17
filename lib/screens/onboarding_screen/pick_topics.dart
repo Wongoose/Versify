@@ -99,14 +99,17 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
               icon: Icon(
                 Icons.check_rounded,
                 size: 25,
-                color: Color(0xffff548e),
+                color: Theme.of(context).primaryColor,
               ),
             ),
             replacement: Container(
               child: SizedBox(
                 height: 20,
                 width: 20,
-                child: CircularProgressIndicator(strokeWidth: 0.5),
+                child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor),
+                    strokeWidth: 0.5),
               ),
             ),
           ),
@@ -128,7 +131,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                       TextSpan(
                         text: 'What',
                         style: TextStyle(
-                            color: Color(0xffff548e),
+                            color: Theme.of(context).primaryColor,
                             fontSize: 38,
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.bold,

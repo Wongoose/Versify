@@ -150,8 +150,8 @@ class _EditProfileState extends State<EditProfile> {
                 Icons.check_rounded,
                 size: 28,
                 color: _editProfileProvider.hasChanges
-                    ? Color(0xffff548e)
-                    : Color(0xffff548e).withOpacity(0.4),
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).primaryColor.withOpacity(0.4),
               ),
               onPressed: () {
                 if (_editProfileProvider.hasChanges) {
@@ -222,7 +222,7 @@ class _EditProfileState extends State<EditProfile> {
                   'Change photo',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xffff548e),
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -255,7 +255,7 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         FontAwesomeIcons.user,
                         size: 15,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -301,7 +301,7 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         FontAwesomeIcons.pencilAlt,
                         size: 15,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -353,7 +353,7 @@ class _EditProfileState extends State<EditProfile> {
               //         Icon(
               //           Icons.phone,
               //           size: 16.5,
-              //           color: Color(0xffff548e).withOpacity(0.6),
+              //           color: Theme.of(context).primaryColor.withOpacity(0.6),
               //         ),
               //         SizedBox(width: 10),
               //         Text(
@@ -400,7 +400,7 @@ class _EditProfileState extends State<EditProfile> {
               //         Icon(
               //           Icons.email_outlined,
               //           size: 16.5,
-              //           color: Color(0xffff548e).withOpacity(0.6),
+              //           color: Theme.of(context).primaryColor.withOpacity(0.6),
               //         ),
               //         SizedBox(width: 10),
               //         Text(
@@ -459,7 +459,7 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         FontAwesomeIcons.instagram,
                         size: 15,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -511,7 +511,7 @@ class _EditProfileState extends State<EditProfile> {
                       Icon(
                         FontAwesomeIcons.tiktok,
                         size: 15,
-                        color: Color(0xffff548e).withOpacity(0.6),
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -555,7 +555,7 @@ class _EditProfileState extends State<EditProfile> {
                     Icon(
                       FontAwesomeIcons.youtube,
                       size: 15,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -598,7 +598,7 @@ class _EditProfileState extends State<EditProfile> {
                     Icon(
                       FontAwesomeIcons.link,
                       size: 15,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -652,7 +652,7 @@ class _EditProfileState extends State<EditProfile> {
                     Icon(
                       FontAwesomeIcons.shoppingBag,
                       size: 15,
-                      color: Color(0xffff548e).withOpacity(0.6),
+                      color: Theme.of(context).primaryColor.withOpacity(0.6),
                     ),
                     SizedBox(width: 10),
                     Text(

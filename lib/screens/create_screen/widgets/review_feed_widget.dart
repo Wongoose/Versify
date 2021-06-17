@@ -31,23 +31,23 @@ class _ReviewFeedWidgetState extends State<ReviewFeedWidget> {
   final List<Map<String, Color>> _colorScheme = [
     {
       //red
-      'primary': Color(0xffff548e),
-      'secondary': Color(0xffff548e),
+      'primary': Color(0xFFff699F),
+      'secondary': Color(0xFFFFD6E6),
     },
     {
-      //orange
-      'primary': Colors.amber[700],
-      'secondary': Colors.amber[700],
+      //biege
+      'primary': Color(0xFFe8ab92),
+      'secondary': Color(0xFFFAE3D9),
     },
     {
       //green
-      'primary': Colors.teal[300],
-      'secondary': Colors.teal[300],
+      'primary': Color(0xFF61C0BF),
+      'secondary': Color(0xFFBBDED6),
     },
     {
-      //blue
-      'primary': Colors.blueAccent,
-      'secondary': Colors.blueAccent,
+      //orange
+      'primary': Color(0xFF61C0BF),
+      'secondary': Colors.amber[700],
     },
     {
       //purple
@@ -149,6 +149,8 @@ class _ReviewFeedWidgetState extends State<ReviewFeedWidget> {
                               height: 5,
                               width: 5,
                               child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
                                 strokeWidth: 0.5,
                                 value: downloadProgress.progress,
                               ),

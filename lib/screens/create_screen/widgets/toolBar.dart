@@ -104,7 +104,7 @@ class _CreateToolBarState extends State<CreateToolBar> {
                   child: Icon(Icons.text_fields_rounded,
                       color:
                           _contentBodyProvider.selectedTool == WidgetType.text
-                              ? Color(0xffff548e)
+                              ? Theme.of(context).primaryColor
                               : Colors.black54),
                 ),
               ),

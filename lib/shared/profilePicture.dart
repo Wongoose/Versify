@@ -21,7 +21,7 @@ class ProfilePic extends StatelessWidget {
     //     imageUrl:
     //         'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Flaugh.png?alt=media&token=dc9a65e8-d2a0-44bd-aa61-7156d20fc335',
     //     progressIndicatorBuilder: (context, url, downloadProgress) =>
-    //         CircularProgressIndicator(value: downloadProgress.progress),
+    //         CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),value: downloadProgress.progress),
     //     errorWidget: (context, url, error) => Icon(Icons.error),
     //   );
     // }
@@ -30,7 +30,7 @@ class ProfilePic extends StatelessWidget {
         ? SizedBox(
             height: 15,
             width: 15,
-            child: CircularProgressIndicator(
+            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               strokeWidth: 0.5,
             ),
           )
@@ -40,8 +40,8 @@ class ProfilePic extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: LinearGradient(
                 colors: [
-                  primary ?? Color(0xffff548e),
-                  secondary ?? Color(0xffff548e)
+                  primary ?? Theme.of(context).primaryColor,
+                  secondary ?? Theme.of(context).primaryColor
                 ],
                 stops: [0, 0.6],
               ),
@@ -65,7 +65,7 @@ class ProfilePic extends StatelessWidget {
                     return SizedBox(
                       height: 5,
                       width: 5,
-                      child: CircularProgressIndicator(
+                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                         strokeWidth: 0.5,
                         value: downloadProgress.progress,
                       ),

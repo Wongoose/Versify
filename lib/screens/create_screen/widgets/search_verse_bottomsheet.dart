@@ -181,7 +181,7 @@ class _QuoteBottomSheetState extends State<QuoteBottomSheet> {
                                           // getSearchKeywordUrl(searchText);
                                         }
                                       },
-                                      cursorColor: Color(0xffff548e),
+                                      cursorColor: Theme.of(context).primaryColor,
                                       validator: (text) {
                                         return text.contains(' ') ? '' : text;
                                       },
@@ -247,7 +247,7 @@ class _QuoteBottomSheetState extends State<QuoteBottomSheet> {
                                     },
                                     child: Icon(Icons.search,
                                         color: _searchNode.hasFocus
-                                            ? Color(0xffff548e)
+                                            ? Theme.of(context).primaryColor
                                             : Colors.black45),
                                   ),
                                 ],
@@ -283,7 +283,7 @@ class _QuoteBottomSheetState extends State<QuoteBottomSheet> {
                           ? SliverToBoxAdapter(
                               child: Align(
                                   alignment: Alignment.center,
-                                  child: CircularProgressIndicator(
+                                  child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                       strokeWidth: 0.5)))
                           : _listResultsMap.isEmpty
                               ? SliverToBoxAdapter(
@@ -322,7 +322,7 @@ class _QuoteBottomSheetState extends State<QuoteBottomSheet> {
                     //   child: _listResultsMap.isEmpty
                     //       ? Align(
                     //           alignment: Alignment.center,
-                    //           child: CircularProgressIndicator(
+                    //           child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                     //             strokeWidth: 0.5,
                     //           ))
                     //       : Expanded(

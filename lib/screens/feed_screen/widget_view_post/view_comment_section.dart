@@ -88,7 +88,7 @@ class ViewPostComments extends StatelessWidget {
                       'View all...',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xffff548e),
+                        color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w400,
                       ),
                     ),

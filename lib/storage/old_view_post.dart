@@ -427,7 +427,7 @@
 //               itemCount: 20,
 //               itemBuilder: (context, index) {
 //                 return Comment(
-//                   primaryColor: Color(0xffff548e),
+//                   primaryColor: Theme.of(context).primaryColor,
 //                   secondaryColor: Colors.pink[200],
 //                   comment: ([
 //                     'Hello, that\'s an amazing sharing mate! ❤️',
@@ -526,7 +526,7 @@
 //             itemCount: 20,
 //             itemBuilder: (context, index) {
 //               return Comment(
-//                 primaryColor: Color(0xffff548e),
+//                 primaryColor: Theme.of(context).primaryColor,
 //                 secondaryColor: Colors.pink[200],
 //                 comment: ([
 //                   'Hello, that\'s an amazing sharing mate! ❤️',

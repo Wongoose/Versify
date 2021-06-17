@@ -16,17 +16,17 @@ class ProfileFeedWidget extends StatelessWidget {
     {
       //red
       'primary': Color(0xFFff699F),
-      'secondary': Color(0xFFff89B2),
+      'secondary': Color(0xFFFFD6E6),
     },
     {
-      //blue
-      'primary': Color(0xFFa15ce2),
-      'secondary': Color(0xFFa15ce2),
+      //biege
+      'primary': Color(0xFFe8ab92),
+      'secondary': Color(0xFFFAE3D9),
     },
     {
       //green
       'primary': Color(0xFF61C0BF),
-      'secondary': Color(0xFF61c0bf),
+      'secondary': Color(0xFFBBDED6),
     },
     {
       //orange
@@ -43,7 +43,7 @@ class ProfileFeedWidget extends StatelessWidget {
   //   {
   //     //red
   //     'primary': Colors.pink,
-  //     'secondary': Color(0xffff548e),
+  //     'secondary': Theme.of(context).primaryColor,
   //   },
   //   {
   //     //orange
@@ -152,7 +152,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: _colorScheme[_colorIndex]['primary'],
+                                  color: _colorScheme[_colorIndex]['secondary'],
                                 ),
                                 child: Text(
                                   feed.featuredTopic ?? 'Blog singles',
@@ -160,7 +160,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                     fontFamily: 'Nunito',
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xfffffcfe),
+                                    color: Colors.black.withOpacity(0.8),
                                   ),
                                 ),
                               ),

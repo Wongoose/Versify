@@ -27,17 +27,17 @@ class PostFeedWidget extends StatelessWidget {
     {
       //red
       'primary': Color(0xFFff699F),
-      'secondary': Color(0xFFff89B2),
+      'secondary': Color(0xFFFFD6E6),
     },
     {
-      //blue
-      'primary': Color(0xFFa15ce2),
-      'secondary': Color(0xFFa15ce2),
+      //biege
+      'primary': Color(0xFFe8ab92),
+      'secondary': Color(0xFFFAE3D9),
     },
     {
       //green
       'primary': Color(0xFF61C0BF),
-      'secondary': Color(0xFF61c0bf),
+      'secondary': Color(0xFFBBDED6),
     },
     {
       //orange
@@ -74,7 +74,7 @@ class PostFeedWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: _colorScheme[colorIndex]['primary'],
+                          color: _colorScheme[colorIndex]['secondary'],
                         ),
                         child: Text(
                           feed.featuredTopic ?? 'Featured',
@@ -83,7 +83,7 @@ class PostFeedWidget extends StatelessWidget {
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
-                            color: Color(0xfffffcfe),
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -297,7 +297,7 @@ class PostFeedWidget extends StatelessWidget {
                                             : _colorScheme[_colorIndex]
                                                 ['secondary'],
                                       ],
-                                      stops: [0, 0.6],
+                                      stops: [0, 0.9],
                                     ),
                                   ),
                                   child: Container(
@@ -323,7 +323,7 @@ class PostFeedWidget extends StatelessWidget {
                                         //   return SizedBox(
                                         //     height: 5,
                                         //     width: 5,
-                                        //     child: CircularProgressIndicator(
+                                        //     child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                         //       strokeWidth: 0.5,
                                         //       value: downloadProgress.progress,
                                         //     ),
@@ -404,7 +404,7 @@ class PostFeedWidget extends StatelessWidget {
                                               color: isGrey || isWelcome
                                                   ? Colors.transparent
                                                   : _colorScheme[_colorIndex]
-                                                      ['primary'],
+                                                      ['secondary'],
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               border: Border.all(
@@ -412,7 +412,7 @@ class PostFeedWidget extends StatelessWidget {
                                                 color: isGrey
                                                     ? Colors.grey
                                                     : _colorScheme[_colorIndex]
-                                                        ['primary'],
+                                                        ['secondary'],
                                               ),
                                             ),
                                             child: Text(
@@ -429,8 +429,8 @@ class PostFeedWidget extends StatelessWidget {
                                                     : isWelcome
                                                         ? _colorScheme[
                                                                 _colorIndex]
-                                                            ['primary']
-                                                        : Colors.white,
+                                                            ['secondary']
+                                                        : Colors.black.withOpacity(0.8),
                                               ),
                                             ),
                                           ),

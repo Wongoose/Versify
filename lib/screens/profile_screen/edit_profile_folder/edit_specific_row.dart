@@ -114,7 +114,7 @@ class _EditRowPageState extends State<EditRowPage> {
                 'Save',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xffff548e),
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -172,7 +172,7 @@ class _EditRowPageState extends State<EditRowPage> {
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
                 ],
-                cursorColor: Color(0xffff548e),
+                cursorColor: Theme.of(context).primaryColor,
                 validator: (text) {
                   return text.contains(' ') ? '' : text;
                 },

@@ -176,7 +176,7 @@ class InteractionBar extends StatelessWidget {
                         SizedBox(
                             height: 15,
                             width: 15,
-                            child: CircularProgressIndicator(strokeWidth: 0.5)),
+                            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),strokeWidth: 0.5)),
                         SizedBox(width: 15),
                         Text(
                           'Preparing shareable link...',
@@ -272,13 +272,13 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                       GiftWidget(
                         giftType: GiftType.love,
                         text: 'Great love',
-                        color: Color(0xffff548e),
+                        color: Theme.of(context).primaryColor,
                         image: 'assets/images/love.png',
                       ),
                       // GiftWidget(
                       //   giftType: GiftType.love,
                       //   text: 'Great love',
-                      //   color: Color(0xffff548e),
+                      //   color: Theme.of(context).primaryColor,
                       //   image: 'assets/images/love.png',
                       // ),
                       GiftWidget(
@@ -300,7 +300,7 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                 //       GiftWidget(
                 //         giftType: GiftType.love,
                 //         text: 'Great love',
-                //         color: Color(0xffff548e),
+                //         color: Theme.of(context).primaryColor,
                 //         image: 'assets/images/love.png',
                 //       ),
                 //       GiftWidget(
@@ -312,7 +312,7 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                 //       GiftWidget(
                 //         giftType: GiftType.love,
                 //         text: 'Great love',
-                //         color: Color(0xffff548e),
+                //         color: Theme.of(context).primaryColor,
                 //         image: 'assets/images/love.png',
                 //       ),
                 //     ],
@@ -353,7 +353,7 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                   margin: EdgeInsets.all(0),
                   width: MediaQuery.of(context).size.width,
                   height: 60,
-                  color: _loading ? Colors.white : Color(0xffff548e),
+                  color: _loading ? Colors.white : Theme.of(context).primaryColor,
                   child: FlatButton(
                     materialTapTargetSize: MaterialTapTargetSize.padded,
                     onPressed: () {
@@ -383,7 +383,7 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                       replacement: SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(
+                        child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                           strokeWidth: 1,
                         ),
                       ),
