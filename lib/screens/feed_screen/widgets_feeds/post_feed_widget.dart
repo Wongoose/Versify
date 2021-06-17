@@ -218,6 +218,9 @@ class PostFeedWidget extends StatelessWidget {
 
     contentFromMap();
 
+    final Color newGrey =
+        _themeProvider.isDark ? Colors.white12 : Colors.grey[400];
+
     print('New feed widget built!');
     int _colorIndex = 0;
     if (index > 2) {
@@ -266,7 +269,7 @@ class PostFeedWidget extends StatelessWidget {
                       left: BorderSide(
                           width: 2,
                           color: isGrey
-                              ? Colors.grey
+                              ? newGrey
                               : _colorScheme[_colorIndex]['primary']),
                     ),
                   ),
@@ -289,13 +292,15 @@ class PostFeedWidget extends StatelessWidget {
                                     gradient: LinearGradient(
                                       colors: [
                                         isGrey
-                                            ? Colors.grey
+                                            ? newGrey
                                             : _colorScheme[_colorIndex]
                                                 ['primary'],
                                         isGrey
-                                            ? Colors.grey
-                                            : _colorScheme[_colorIndex]
-                                                ['secondary'],
+                                            ? newGrey
+                                            : _colorScheme[_colorIndex][
+                                                _themeProvider.isDark
+                                                    ? 'secondary'
+                                                    : 'primary'],
                                       ],
                                       stops: [0, 0.9],
                                     ),
@@ -310,7 +315,9 @@ class PostFeedWidget extends StatelessWidget {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: CachedNetworkImage(
-                                        color: isGrey ? Colors.grey : null,
+                                        color: isGrey
+                                            ? Theme.of(context).backgroundColor
+                                            : null,
                                         colorBlendMode: BlendMode.color,
                                         height: 32,
                                         fit: BoxFit.cover,
@@ -344,7 +351,7 @@ class PostFeedWidget extends StatelessWidget {
                                     feed.username,
                                     style: TextStyle(
                                       color: isGrey
-                                          ? Colors.grey
+                                          ? newGrey
                                           : _themeProvider.primaryTextColor
                                               .withOpacity(0.87),
                                       fontSize: 14,
@@ -360,7 +367,7 @@ class PostFeedWidget extends StatelessWidget {
                               child: Icon(
                                 Icons.verified_user,
                                 color: isGrey
-                                    ? Colors.grey
+                                    ? newGrey
                                     : _colorScheme[_colorIndex]['primary'],
                                 size: 15,
                               ),
@@ -391,7 +398,9 @@ class PostFeedWidget extends StatelessWidget {
                                       child: Shimmer(
                                         duration: Duration(milliseconds: 500),
                                         interval: Duration(milliseconds: 500),
-                                        color: Colors.pink,
+                                        color: _themeProvider.isDark
+                                            ? Colors.white
+                                            : Colors.pink,
                                         enabled: isWelcome,
                                         direction: ShimmerDirection.fromLTRB(),
                                         child: FittedBox(
@@ -410,9 +419,11 @@ class PostFeedWidget extends StatelessWidget {
                                               border: Border.all(
                                                 // color: _theme.primaryColor,
                                                 color: isGrey
-                                                    ? Colors.grey
-                                                    : _colorScheme[_colorIndex]
-                                                        ['secondary'],
+                                                    ? newGrey
+                                                    : _colorScheme[_colorIndex][
+                                                        isWelcome
+                                                            ? 'primary'
+                                                            : 'secondary'],
                                               ),
                                             ),
                                             child: Text(
@@ -425,12 +436,13 @@ class PostFeedWidget extends StatelessWidget {
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w400,
                                                 color: isGrey
-                                                    ? Colors.grey
+                                                    ? newGrey
                                                     : isWelcome
                                                         ? _colorScheme[
                                                                 _colorIndex]
-                                                            ['secondary']
-                                                        : Colors.black.withOpacity(0.8),
+                                                            ['primary']
+                                                        : Colors.black
+                                                            .withOpacity(0.8),
                                               ),
                                             ),
                                           ),
@@ -468,16 +480,16 @@ class PostFeedWidget extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: isGrey
-                                        ? Colors.grey
+                                        ? newGrey
                                         : _themeProvider.primaryTextColor,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'Nunito',
-                                    fontSize: 17.5,
+                                    fontSize: 18,
                                     letterSpacing: -0.3,
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 0),
+                              SizedBox(height: 3),
                               Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: Text(
@@ -487,7 +499,7 @@ class PostFeedWidget extends StatelessWidget {
                                         GoogleFonts.getFont('Nunito Sans')
                                             .fontFamily,
                                     color: isGrey
-                                        ? Colors.grey
+                                        ? newGrey
                                         : _themeProvider.primaryTextColor,
                                     fontSize: 13,
                                     height: 1.4,
@@ -506,9 +518,11 @@ class PostFeedWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w200,
                                     fontSize: 12,
                                     color: isGrey
-                                        ? Colors.grey
-                                        : _colorScheme[_colorIndex]
-                                            ['secondary'],
+                                        ? newGrey
+                                        : _colorScheme[_colorIndex][
+                                            _themeProvider.isDark
+                                                ? 'secondary'
+                                                : 'primary'],
                                   ),
                                 ),
                               ),

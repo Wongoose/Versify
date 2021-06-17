@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/notification.dart';
+import 'package:versify/shared/image_dialog.dart';
 
 //New ViePost
 
@@ -202,6 +203,17 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
           if (_tutorialProvider.viewFirstPost) {
             _tutorialProvider
                 .updateProgress(TutorialProgress.viewFirstPostDone);
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return NormalImageDialog(
+                    body: 'Wohoo! You\'ve completed your first post. What\'s next?',
+                    buttonText: null,
+                    clickFunc: null,
+                    imagePath: 'assets/images/copywriting.png',
+                    title: 'Congrats!',
+                  );
+                });
           }
 
           if (readyForSwipeUp == 0) {
@@ -632,7 +644,8 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                               // value: widget.feed.giftLove,
                                               giftType: GiftType.love,
                                               text: 'Great love',
-                                              color: Theme.of(context).primaryColor,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                               image: 'assets/images/love.png',
                                             ),
                                             ViewGiftWidget(

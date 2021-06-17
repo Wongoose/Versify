@@ -65,14 +65,13 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
           ),
         ),
         actions: [
-          Visibility(
-            visible: !_loading,
-            child: TextButton.icon(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                backgroundColor: Theme.of(context).canvasColor,
-              ),
-              onPressed: () async {
+          TextButton.icon(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              primary: Theme.of(context).backgroundColor,
+            ),
+            onPressed: () async {
+              if (!_loading) {
                 setState(() => _loading = true);
                 List<String> _listOfTopicInterests =
                     _tutorialProvider.listOfSelectedTopics;
@@ -94,24 +93,25 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                 } else {
                   updateSelectionTopics(_listOfTopicInterests);
                 }
-              },
-              label: Text(''),
-              icon: Icon(
-                Icons.check_rounded,
-                size: 25,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            replacement: Container(
-              child: SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor),
-                    strokeWidth: 0.5),
-              ),
-            ),
+              }
+            },
+            label: Text(''),
+            icon: !_loading
+                ? Icon(
+                    Icons.check_rounded,
+                    size: 25,
+                    color: Theme.of(context).primaryColor,
+                  )
+                : Center(
+                    child: SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
+                          strokeWidth: 0.5),
+                    ),
+                  ),
           ),
         ],
       ),

@@ -244,7 +244,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                         border: Border.fromBorderSide(
                                             BorderSide(
                                                 color: _colorScheme[_colorIndex]
-                                                        ['primary']
+                                                        ['secondary']
                                                     .withOpacity(0.7))),
                                         borderRadius: BorderRadius.circular(5),
                                         // color: _colorScheme[_colorIndex]['secondary']
@@ -269,7 +269,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                             fontSize: 11,
                                             // color: Colors.white,
                                             color: _colorScheme[_colorIndex]
-                                                    ['primary']
+                                                    ['secondary']
                                                 .withOpacity(0.7)),
                                       ),
                                     ),

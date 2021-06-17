@@ -7,6 +7,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:versify/providers/create_post/create_topics_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
+import 'package:versify/shared/image_dialog.dart';
 
 class TutorialFeedList extends StatefulWidget {
   @override
@@ -23,7 +24,8 @@ class _TutorialFeedListState extends State<TutorialFeedList> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(seconds: 1)).then((_) => onInitShowDialog());
+      Future.delayed(Duration(milliseconds: 500))
+          .then((_) => onInitShowDialog());
     });
   }
 
@@ -31,7 +33,14 @@ class _TutorialFeedListState extends State<TutorialFeedList> {
     showDialog(
         context: context,
         builder: (context) {
-          return WelcomeDialog();
+          return NormalImageDialog(
+            body:
+                'Welcome to your blogs feed. Take a look around, I\'ll see you soon!',
+            clickFunc: null,
+            imagePath: 'assets/images/laugh.png',
+            title: 'Hi, I\'m Vicky!',
+            buttonText: null,
+          );
         });
   }
 
@@ -215,17 +224,18 @@ class WelcomeDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 35),
+                  SizedBox(height: 30),
                   // Divider(
                   //   thickness: 3,
                   // ),
                   GestureDetector(
-                    onTap: () => {Navigator.pop(context)},
+                    onTap: () => Navigator.pop(context),
                     child: Text(
                       'Explore',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -237,11 +247,11 @@ class WelcomeDialog extends StatelessWidget {
           Positioned(
             top: -20,
             child: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).splashColor,
               child: Icon(
                 FontAwesomeIcons.check,
                 size: 16,
-                color: Colors.white,
+                color: Theme.of(context).dialogBackgroundColor,
               ),
             ),
           )
