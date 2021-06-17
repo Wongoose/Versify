@@ -6,9 +6,13 @@ class ThemeProvider extends ChangeNotifier {
   Color primaryTextColor;
   Color secondaryTextColor;
 
+  Color dialogColor;
+
   ThemeMode currentTheme() {
     primaryTextColor = isDark ? Colors.white.withOpacity(0.8) : Colors.black;
     secondaryTextColor = isDark ? Colors.white54 : Colors.black54;
+    dialogColor = isDark ? Colors.grey[900] : Colors.white;
+    
     return isDark ? ThemeMode.dark : ThemeMode.light;
   }
 

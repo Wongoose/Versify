@@ -1,34 +1,54 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:overlay_tutorial/overlay_tutorial.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:versify/providers/create_post/create_topics_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 
-class TutorialFeedList extends StatelessWidget {
+class TutorialFeedList extends StatefulWidget {
+  @override
+  _TutorialFeedListState createState() => _TutorialFeedListState();
+}
+
+class _TutorialFeedListState extends State<TutorialFeedList> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  final CreateTopicsProvider _topicsProvider = CreateTopicsProvider();
+
+  TutorialProvider _tutorialProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(Duration(seconds: 1)).then((_) => onInitShowDialog());
+    });
+  }
+
+  void onInitShowDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return WelcomeDialog();
+        });
+  }
+
+  void _onRefresh() {
+    Future.delayed(Duration(seconds: 1)).then((value) {
+      _tutorialProvider
+          .updateProgress(TutorialProgress.refreshTutorialFeedDone);
+      _refreshController.refreshCompleted();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
-    final TutorialProvider _tutorialProvider =
-        Provider.of<TutorialProvider>(context, listen: false);
+    _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
-
-    void _onRefresh() {
-      Future.delayed(Duration(seconds: 1)).then((value) {
-        _tutorialProvider
-            .updateProgress(TutorialProgress.refreshTutorialFeedDone);
-        _refreshController.refreshCompleted();
-      });
-    }
 
     return Scaffold(
       backgroundColor: _theme.backgroundColor,
@@ -57,15 +77,18 @@ class TutorialFeedList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 30),
-              BouncingRefresh(),
+              SizedBox(height: 100, child: BouncingRefresh()),
 
               Expanded(child: Container()),
-              Image.asset(
-                'assets/images/laugh.png',
-                height: 160,
-                width: 160,
+              GestureDetector(
+                onTap: () => onInitShowDialog(),
+                child: Image.asset(
+                  'assets/images/copywriting.png',
+                  height: 160,
+                  width: 160,
+                ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 40),
               SizedBox(
                 width: 260,
                 child: RichText(
@@ -73,43 +96,156 @@ class TutorialFeedList extends StatelessWidget {
                   textAlign: TextAlign.center,
                   text: TextSpan(children: [
                     TextSpan(
-                      text: 'Welcome',
+                      text: 'Blogs',
                       style: TextStyle(
                           color: Color(0xffff548e),
-                          fontSize: 30,
+                          fontSize: 35,
                           fontFamily: 'Nunito',
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           height: 1.1),
                     ),
                     TextSpan(
-                      text: ' to your\nblogs feed',
+                      text: ' feed',
                       style: TextStyle(
                           color: _themeProvider.primaryTextColor,
-                          fontSize: 30,
+                          fontSize: 35,
                           fontFamily: 'Nunito',
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           height: 1.1),
                     )
                   ]),
                 ),
               ),
               // Expanded(flex: 1, child: Container()),
-              SizedBox(height: 120),
+              SizedBox(height: 30),
               SizedBox(
                 width: 280,
                 child: Text(
-                  '"For God so loved the world, he sent his only begotten son."',
+                  'Feed is empty. Refresh to find more!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: _themeProvider.secondaryTextColor,
                   ),
                 ),
               ),
-              // Expanded(flex: 1, child: Container()),
               SizedBox(height: 80),
+              Expanded(flex: 1, child: Container()),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class WelcomeDialog extends StatelessWidget {
+  const WelcomeDialog({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+    return Dialog(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0)), //this right here
+      backgroundColor: _themeProvider.dialogColor,
+
+      child: Stack(
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
+        children: [
+          FittedBox(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+              // color: Theme.of(context).backgroundColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  // Text(
+                  //   'Visitor Arrived',
+                  //   style: TextStyle(
+                  //     color: Colors.black,
+                  //     fontWeight: FontWeight.bold,
+                  //     fontFamily: 'Nunito',
+                  //     fontSize: 22,
+                  //   ),
+                  // ),
+                  SizedBox(height: 15),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100)),
+                    clipBehavior: Clip.antiAlias,
+                    color: _themeProvider.dialogColor,
+                    elevation: 0,
+                    child: Image(
+                      image: AssetImage('assets/images/laugh.png'),
+                      height: 100,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Text(
+                        'Hi, I\'m Vicky!',
+                        maxLines: null,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: SizedBox(
+                      width: 220,
+                      child: Text(
+                        'Welcome to your blogs feed. Take a look around, I\'ll see you soon!',
+                        maxLines: null,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 35),
+                  // Divider(
+                  //   thickness: 3,
+                  // ),
+                  GestureDetector(
+                    onTap: () => {Navigator.pop(context)},
+                    child: Text(
+                      'Explore',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            top: -20,
+            child: CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor,
+              child: Icon(
+                FontAwesomeIcons.check,
+                size: 16,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
