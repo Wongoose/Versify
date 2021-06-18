@@ -59,7 +59,7 @@ class NormalImageDialog extends StatelessWidget {
                     height: 100,
                     width: 100,
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 20),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40),
@@ -112,7 +112,7 @@ class NormalImageDialog extends StatelessWidget {
               child: Icon(
                 FontAwesomeIcons.check,
                 size: 16,
-                color: Theme.of(context).dialogBackgroundColor,
+                color: Colors.black87,
               ),
             ),
           )
