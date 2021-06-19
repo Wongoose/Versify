@@ -12,6 +12,7 @@ import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/services/dynamic_links.dart';
 import 'package:versify/services/profile_database.dart';
+import 'package:versify/shared/image_dialog.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:versify/shared/report_post_dialog.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,20 @@ class _ForYouPageViewState extends State<ForYouPageView> {
     if (_tutorialProvider.viewFirstPost) {
       _tutorialProvider.updateProgress(TutorialProgress.viewFirstPostDone);
     } else if (_tutorialProvider.viewSecondPost) {
-      _tutorialProvider.updateProgress(TutorialProgress.viewSecondPostDone);
+      Future.delayed(Duration(seconds: 1)).then((_) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return NormalImageDialog(
+                body: "Getting the hang of it? Let's explore more at Versify!",
+                buttonText: null,
+                clickFunc: null,
+                imagePath: 'assets/images/sprout.png',
+                title: 'Check-in',
+              );
+            });
+        _tutorialProvider.updateProgress(TutorialProgress.viewSecondPostDone);
+      });
     }
 
     Navigator.pop(context);
@@ -475,7 +489,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                           replacement: SizedBox(
                             height: 15,
                             width: 15,
-                            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                            child: CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).primaryColor),
                               strokeWidth: 0.5,
                             ),
                           ),
@@ -535,7 +551,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                             replacement: SizedBox(
                               height: 15,
                               width: 15,
-                              child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                              child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
                                 strokeWidth: 0.5,
                               ),
                             ),

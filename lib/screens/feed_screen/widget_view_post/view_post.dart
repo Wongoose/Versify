@@ -207,13 +207,17 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                 context: context,
                 builder: (context) {
                   return NormalImageDialog(
-                    body: 'Wohoo! You\'ve completed your first post. What\'s next?',
+                    body:
+                        'Wohoo! You\'ve completed your first post. What\'s next?',
                     buttonText: null,
                     clickFunc: null,
                     imagePath: 'assets/images/copywriting.png',
                     title: 'Congrats!',
                   );
                 });
+          } else if (_tutorialProvider.viewSecondPost) {
+            //follow spotlight
+
           }
 
           if (readyForSwipeUp == 0) {
