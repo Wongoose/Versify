@@ -10,6 +10,7 @@ import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart
 import 'package:versify/screens/feed_screen/widgets_feeds/following_page_view.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/for_you_page_view.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.dart';
+import 'package:versify/screens/profile_screen/new_user_profile/anon_profile.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/main_profile.dart';
 import 'package:versify/providers/home/profile_blogs_provider.dart';
 import 'package:versify/providers/home/profile_pageview_provider.dart';
@@ -179,9 +180,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
                                   forYouController: _forYouController,
                                 ),
                                 _authService.isUserAnonymous
-                                    ? Container(
-                                        child: Text('User is Anon'),
-                                      )
+                                    ? AnonUserProfile()
                                     : Padding(
                                         padding:
                                             EdgeInsets.fromLTRB(0, 0, 0, 0),

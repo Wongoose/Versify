@@ -2,6 +2,7 @@ import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/providers/home/profile_blogs_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/profile_feed_widget.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/profile_page_view.dart';
 import 'package:versify/providers/home/profile_pageview_provider.dart';
@@ -14,11 +15,15 @@ import 'package:provider/provider.dart';
 
 class ProfileBlogList2 extends StatefulWidget {
   final MyUser userProfile;
+  final bool visitProfile;
   final bool isFromPageView;
   final ScrollController nestedViewController;
 
   ProfileBlogList2(
-      {this.userProfile, this.isFromPageView, this.nestedViewController});
+      {this.userProfile,
+      this.isFromPageView,
+      this.nestedViewController,
+      this.visitProfile});
 
   @override
   _ProfileBlogList2State createState() => _ProfileBlogList2State();
@@ -72,6 +77,9 @@ class _ProfileBlogList2State extends State<ProfileBlogList2> {
     // if (widget.isFromPageView) {
     final VisitProfileProvider _visitProfileProvider =
         Provider.of<VisitProfileProvider>(context, listen: false);
+
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     // }
     _profileDataProvider.setVisitProfileProvider(_visitProfileProvider);
 
@@ -92,10 +100,29 @@ class _ProfileBlogList2State extends State<ProfileBlogList2> {
     );
     // _visitProfileProvider.setUserProfile(widget.userProfile);
 
-    return false
-        ? Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 55),
-            child: Loading(),
+    return _profileBlogsProvider.noData
+        ? Container(
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                Expanded(child: Container()),
+                Image.asset('assets/images/copywriting.png'),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: 280,
+                  child: Text(
+                    widget.visitProfile
+                        ? 'No blogs. Stay tuned!'
+                        : 'Oops! You haven\'t written any blogs yet.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: _themeProvider.secondaryTextColor,
+                    ),
+                  ),
+                ),
+                Expanded(child: Container()),
+              ],
+            ),
           )
         : Provider<ProfilePageView>.value(
             value: _postsView,
@@ -126,8 +153,6 @@ class _ProfileBlogList2State extends State<ProfileBlogList2> {
                       .toList()
                       .cast<Widget>(),
                 );
-
-              
               },
             ),
           );

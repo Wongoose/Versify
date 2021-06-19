@@ -334,6 +334,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                     builder: (context, state, _) =>
                                         ProfileBlogList2(
                                       // nestedViewController: _nestedMasterController,
+                                      visitProfile: widget.visitProfile,
                                       userProfile: _userProfile,
                                       isFromPageView: !widget.bottomNavVisible,
                                     ),
