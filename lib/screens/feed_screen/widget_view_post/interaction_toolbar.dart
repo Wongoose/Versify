@@ -499,6 +499,27 @@ class GiftComingSoon extends StatelessWidget {
         ),
       ),
       Expanded(flex: 1, child: Container()),
+      Container(
+        margin: EdgeInsets.all(0),
+        width: MediaQuery.of(context).size.width,
+        height: 60,
+        color: Colors.transparent,
+        child: FlatButton(
+          materialTapTargetSize: MaterialTapTargetSize.padded,
+          color: Colors.transparent,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'Close',
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
     ]);
   }
 }
