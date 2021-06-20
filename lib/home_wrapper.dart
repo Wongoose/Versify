@@ -111,10 +111,22 @@ class _HomeWrapperState extends State<HomeWrapper> {
               Provider<FollowingPageView>.value(value: followingPageView),
             ],
             child: Consumer<TutorialProvider>(
-              builder: (context, state, child) => OverlayTutorialScope(
-                enabled: false,
-                overlayColor: Colors.black.withOpacity(0.8),
-                child: Scaffold(
+              builder: (context, state, child) {
+                if (state.checkInDialog) {
+                  void clickFunc() {
+                    state.updateProgress(TutorialProgress.checkInDialogDone);
+                  }
+
+                  NotificationOverlay().showNormalImageDialog(context,
+                      body:
+                          "Getting the hang of it? Let's explore more at Versify!",
+                      buttonText: null,
+                      clickFunc: clickFunc,
+                      delay: Duration(seconds: 1),
+                      imagePath: 'assets/images/sprout.png',
+                      title: 'Checking-in');
+                }
+                return Scaffold(
                   resizeToAvoidBottomInset: false,
                   backgroundColor: Theme.of(context).backgroundColor,
                   appBar: PreferredSize(
@@ -179,27 +191,28 @@ class _HomeWrapperState extends State<HomeWrapper> {
                                   followingController: _followingController,
                                   forYouController: _forYouController,
                                 ),
-                                _authService.isUserAnonymous
-                                    ? AnonUserProfile()
-                                    : Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                        child: ChangeNotifierProvider<
-                                            VisitProfileProvider>(
-                                          create: (_) => VisitProfileProvider(),
-                                          child: MainProfilePage(
-                                            bottomNavController:
-                                                bottomNavController,
-                                            visitProfile: false,
-                                            userID: _authService.myUser.userUID,
-                                            profileBlogsProvider:
-                                                _profileBlogsProvider,
-                                            profileAllPostsView:
-                                                _profileAllPostsView,
-                                            bottomNavVisible: true,
-                                          ),
-                                        ),
-                                      ),
+                                AnonUserProfile(),
+                                // _authService.isUserAnonymous
+                                //     ? AnonUserProfile()
+                                //     : Padding(
+                                //         padding:
+                                //             EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                //         child: ChangeNotifierProvider<
+                                //             VisitProfileProvider>(
+                                //           create: (_) => VisitProfileProvider(),
+                                //           child: MainProfilePage(
+                                //             bottomNavController:
+                                //                 bottomNavController,
+                                //             visitProfile: false,
+                                //             userID: _authService.myUser.userUID,
+                                //             profileBlogsProvider:
+                                //                 _profileBlogsProvider,
+                                //             profileAllPostsView:
+                                //                 _profileAllPostsView,
+                                //             bottomNavVisible: true,
+                                //           ),
+                                //         ),
+                                //       ),
                               ],
                             );
                           },
@@ -214,8 +227,8 @@ class _HomeWrapperState extends State<HomeWrapper> {
                     ],
                   ),
                   // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-                ),
-              ),
+                );
+              },
             ),
           );
         }

@@ -2,6 +2,7 @@ import 'package:share/share.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/view_post_gift_provider.dart';
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/gift_widget.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
@@ -106,7 +107,7 @@ class InteractionBar extends StatelessWidget {
               return GestureDetector(
                 onTap: () => {
                   showModalBottomSheet(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).backgroundColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
@@ -119,10 +120,13 @@ class InteractionBar extends StatelessWidget {
                       builder: (context) {
                         print('state is in bottomSheet: ' +
                             state.giftLove.toString());
-                        return ChangeNotifierProvider<GiftProvider>.value(
-                          value: state,
-                          child: GiftsBottomSheet(feed: feed),
-                        );
+
+                        return GiftComingSoon();
+
+                        // return ChangeNotifierProvider<GiftProvider>.value(
+                        //   value: state,
+                        //   child: GiftsBottomSheet(feed: feed),
+                        // );
                       }),
                   // Navigator.push(
                   //     context,
@@ -176,7 +180,10 @@ class InteractionBar extends StatelessWidget {
                         SizedBox(
                             height: 15,
                             width: 15,
-                            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),strokeWidth: 0.5)),
+                            child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
+                                strokeWidth: 0.5)),
                         SizedBox(width: 15),
                         Text(
                           'Preparing shareable link...',
@@ -353,7 +360,8 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                   margin: EdgeInsets.all(0),
                   width: MediaQuery.of(context).size.width,
                   height: 60,
-                  color: _loading ? Colors.white : Theme.of(context).primaryColor,
+                  color:
+                      _loading ? Colors.white : Theme.of(context).primaryColor,
                   child: FlatButton(
                     materialTapTargetSize: MaterialTapTargetSize.padded,
                     onPressed: () {
@@ -383,7 +391,9 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
                       replacement: SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
                           strokeWidth: 1,
                         ),
                       ),
@@ -433,6 +443,63 @@ class _GiftsBottomSheetState extends State<GiftsBottomSheet> {
         ],
       ),
     );
+  }
+}
+
+class GiftComingSoon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
+    return Column(children: [
+      Expanded(child: Container()),
+      Image.asset(
+        'assets/images/copywriting.png',
+        height: 120,
+        width: 120,
+      ),
+      SizedBox(height: 40),
+      SizedBox(
+        width: 260,
+        child: RichText(
+          maxLines: 2,
+          textAlign: TextAlign.center,
+          text: TextSpan(children: [
+            TextSpan(
+              text: 'Gift',
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 35,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w600,
+                  height: 1.1),
+            ),
+            TextSpan(
+              text: ' support',
+              style: TextStyle(
+                  color: _themeProvider.primaryTextColor,
+                  fontSize: 35,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w600,
+                  height: 1.1),
+            )
+          ]),
+        ),
+      ),
+      SizedBox(height: 30),
+      SizedBox(
+        width: 280,
+        child: Text(
+          'New feature coming soon! Stay tuned.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: _themeProvider.secondaryTextColor,
+          ),
+        ),
+      ),
+      Expanded(flex: 1, child: Container()),
+    ]);
   }
 }
 //Save widget

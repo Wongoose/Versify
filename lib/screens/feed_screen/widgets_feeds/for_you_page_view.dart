@@ -11,6 +11,7 @@ import 'package:versify/screens/feed_screen/widget_view_post/input_comment.dart'
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/services/dynamic_links.dart';
+import 'package:versify/services/notification.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/image_dialog.dart';
 import 'package:versify/shared/loading.dart';
@@ -55,20 +56,7 @@ class _ForYouPageViewState extends State<ForYouPageView> {
     if (_tutorialProvider.viewFirstPost) {
       _tutorialProvider.updateProgress(TutorialProgress.viewFirstPostDone);
     } else if (_tutorialProvider.viewSecondPost) {
-      Future.delayed(Duration(seconds: 1)).then((_) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return NormalImageDialog(
-                body: "Getting the hang of it? Let's explore more at Versify!",
-                buttonText: null,
-                clickFunc: null,
-                imagePath: 'assets/images/sprout.png',
-                title: 'Check-in',
-              );
-            });
-        _tutorialProvider.updateProgress(TutorialProgress.viewSecondPostDone);
-      });
+      _tutorialProvider.updateProgress(TutorialProgress.viewSecondPostDone);
     }
 
     Navigator.pop(context);

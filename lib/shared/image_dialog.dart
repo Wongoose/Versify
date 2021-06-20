@@ -31,92 +31,108 @@ class NormalImageDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0)), //this right here
       backgroundColor: _themeProvider.dialogColor,
 
-      child: Stack(
-        alignment: Alignment.topCenter,
-        clipBehavior: Clip.none,
-        children: [
-          FittedBox(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
-              // color: Theme.of(context).backgroundColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20),
-                  // Text(
-                  //   'Visitor Arrived',
-                  //   style: TextStyle(
-                  //     color: Colors.black,
-                  //     fontWeight: FontWeight.bold,
-                  //     fontFamily: 'Nunito',
-                  //     fontSize: 22,
-                  //   ),
-                  // ),
-                  SizedBox(height: 15),
-                  Image(
-                    image: AssetImage(imagePath),
-                    height: 100,
-                    width: 100,
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(
-                        title,
-                        maxLines: null,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color:
-                              _themeProvider.primaryTextColor.withOpacity(0.7),
+      child: WillPopScope(
+        onWillPop: () async {
+          if (clickFunc != null) {
+            clickFunc();
+            Navigator.pop(context);
+          } else {
+            Navigator.pop(context);
+          }
+          return false;
+        },
+        child: Stack(
+          alignment: Alignment.topCenter,
+          clipBehavior: Clip.none,
+          children: [
+            FittedBox(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                // color: Theme.of(context).backgroundColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20),
+                    // Text(
+                    //   'Visitor Arrived',
+                    //   style: TextStyle(
+                    //     color: Colors.black,
+                    //     fontWeight: FontWeight.bold,
+                    //     fontFamily: 'Nunito',
+                    //     fontSize: 22,
+                    //   ),
+                    // ),
+                    SizedBox(height: 15),
+                    Image(
+                      image: AssetImage(imagePath),
+                      height: 100,
+                      width: 100,
+                    ),
+                    SizedBox(height: 20),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(
+                          title,
+                          maxLines: null,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: _themeProvider.primaryTextColor
+                                .withOpacity(0.7),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 15),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: SizedBox(
-                      width: 200,
-                      child: Text(
-                        body,
-                        maxLines: null,
-                        textAlign: TextAlign.center,
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: SizedBox(
+                        width: 200,
+                        child: Text(
+                          body,
+                          maxLines: null,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 30),
+                    SizedBox(height: 30),
 
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Text(
-                      'Close',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).primaryColor,
+                    GestureDetector(
+                      onTap: () {
+                        if (clickFunc != null) {
+                          clickFunc();
+                        }
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        buttonText ?? 'Close',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: -20,
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).splashColor,
-              child: Icon(
-                FontAwesomeIcons.check,
-                size: 16,
-                color: Colors.black87,
+            Positioned(
+              top: -20,
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).splashColor,
+                child: Icon(
+                  FontAwesomeIcons.check,
+                  size: 16,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

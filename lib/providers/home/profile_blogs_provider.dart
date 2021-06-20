@@ -5,12 +5,15 @@ import 'package:flutter/cupertino.dart';
 class ProfileBlogsProvider extends ChangeNotifier {
   List<Feed> data = [];
   int previousLength = 0;
-  bool noData = false;
+  bool _noData = false;
   ProfileAllPostsView viewsProvider;
 
   // String currentProfileUID = '';
 
   bool initialOpen = true;
+
+  //getters
+  bool get noData => data.isEmpty;
 
   ProfileBlogsProvider({this.viewsProvider});
 
@@ -25,10 +28,10 @@ class ProfileBlogsProvider extends ChangeNotifier {
       viewsProvider.addView(feed, insertFirst: false);
     });
     if (data.length == previousLength) {
-      noData = true;
+      _noData = true;
     } else {
       previousLength = data.length;
-      noData = false;
+      _noData = false;
     }
     print('ChangeNotifier: ' + data.toString());
   }

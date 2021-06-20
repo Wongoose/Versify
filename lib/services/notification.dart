@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:versify/shared/image_dialog.dart';
 
 class NotificationOverlay {
   void welcomePostNotification() {
@@ -89,6 +90,29 @@ class NotificationOverlay {
         foreground: Colors.transparent,
         slideDismissDirection: DismissDirection.horizontal,
       );
+    });
+  }
+
+  void showNormalImageDialog(BuildContext context,
+      {@required String body,
+      @required String buttonText,
+      @required Function clickFunc,
+      @required String imagePath,
+      @required String title,
+      @required Duration delay}) {
+    Future.delayed(delay).then((_) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return NormalImageDialog(
+              body: body,
+              buttonText: buttonText,
+              clickFunc: clickFunc,
+              imagePath: imagePath,
+              title: title,
+            );
+          });
     });
   }
 }

@@ -9,6 +9,7 @@ enum TutorialProgress {
   refreshTutorialFeedDone,
   viewFirstPostDone,
   viewSecondPostDone,
+  checkInDialogDone,
   signUpProfileNotifDone,
 }
 
@@ -19,6 +20,7 @@ class TutorialProvider extends ChangeNotifier {
   bool refreshFeedList = false;
   bool viewFirstPost = false;
   bool viewSecondPost = false;
+  bool checkInDialog = false;
   bool signUpProfileNotif = false;
 
   //----
@@ -61,8 +63,13 @@ class TutorialProvider extends ChangeNotifier {
         viewFirstPost = false;
         break;
       case TutorialProgress.viewSecondPostDone:
+        checkInDialog = true;
         viewSecondPost = false;
+
+        break;
+      case TutorialProgress.checkInDialogDone:
         signUpProfileNotif = true;
+        checkInDialog = false;
         NotificationOverlay().simpleNotification(
             body: 'Sign-up now to unlock more features!',
             imagePath: 'assets/images/relatable.png',
@@ -71,6 +78,7 @@ class TutorialProvider extends ChangeNotifier {
         break;
       case TutorialProgress.signUpProfileNotifDone:
         signUpProfileNotif = false;
+        //next
         break;
     }
     notifyListeners();
