@@ -109,7 +109,14 @@ class ProfileDBService {
       {MyUser profileUser, ProfileBlogsProvider provider, bool isFirst}) async {
     List<Feed> tempList = [];
 
-    DateTime _newestFeedTs = provider.data.first.postedTimestamp;
+    // DateTime _newestFeedTs =
+    //     provider.data.first.postedTimestamp ?? profileUser.lastBlogsUpdated;
+    // DateTime _newestFeedTs = profileUser.lastBlogsUpdated;
+    DateTime _newestFeedTs = provider.data.isNotEmpty
+        ? provider.data.first.postedTimestamp
+        : profileUser.lastBlogsUpdated;
+    print('getNewProfileBlogs | with TS: ' + _newestFeedTs.toString());
+
     await _allPostsCollection
         .where('userID', isEqualTo: profileUser.userUID)
         .where('postedTimeStamp', isGreaterThan: _newestFeedTs)
@@ -147,6 +154,7 @@ class ProfileDBService {
     }).catchError((e) => print('Failed getNewProfileBlogs: $e'));
 
     print('getNewProfileBlogs: ' + tempList.toString());
+    profileUser.lastBlogsUpdated = DateTime.now();
     await provider.insertNewData(tempList);
   }
 
@@ -201,6 +209,7 @@ class ProfileDBService {
     }).catchError((e) => print('Failed getProfileBlogs: $e'));
 
     print('getProfileBlogs: ' + tempList.toString());
+    profileUser.lastBlogsUpdated = DateTime.now();
     await provider.updateData(tempList);
   }
 

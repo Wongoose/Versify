@@ -191,28 +191,28 @@ class _HomeWrapperState extends State<HomeWrapper> {
                                   followingController: _followingController,
                                   forYouController: _forYouController,
                                 ),
-                                AnonUserProfile(),
-                                // _authService.isUserAnonymous
-                                //     ? AnonUserProfile()
-                                //     : Padding(
-                                //         padding:
-                                //             EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                //         child: ChangeNotifierProvider<
-                                //             VisitProfileProvider>(
-                                //           create: (_) => VisitProfileProvider(),
-                                //           child: MainProfilePage(
-                                //             bottomNavController:
-                                //                 bottomNavController,
-                                //             visitProfile: false,
-                                //             userID: _authService.myUser.userUID,
-                                //             profileBlogsProvider:
-                                //                 _profileBlogsProvider,
-                                //             profileAllPostsView:
-                                //                 _profileAllPostsView,
-                                //             bottomNavVisible: true,
-                                //           ),
-                                //         ),
-                                //       ),
+                                // AnonUserProfile(),
+                                _authService.isUserAnonymous
+                                    ? AnonUserProfile()
+                                    : Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                        child: ChangeNotifierProvider<
+                                            VisitProfileProvider>(
+                                          create: (_) => VisitProfileProvider(),
+                                          child: MainProfilePage(
+                                            bottomNavController:
+                                                bottomNavController,
+                                            visitProfile: false,
+                                            userID: _authService.myUser.userUID,
+                                            profileBlogsProvider:
+                                                _profileBlogsProvider,
+                                            profileAllPostsView:
+                                                _profileAllPostsView,
+                                            bottomNavVisible: true,
+                                          ),
+                                        ),
+                                      ),
                               ],
                             );
                           },

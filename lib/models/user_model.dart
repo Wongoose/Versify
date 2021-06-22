@@ -15,6 +15,7 @@ class MyUser {
   bool isFollowing;
   String usersPublicFollowID;
   DateTime lastUpdated;
+  DateTime lastBlogsUpdated;
 
   MyUser({
     this.completeLogin,
@@ -30,5 +31,6 @@ class MyUser {
     this.isFollowing,
     this.usersPublicFollowID,
     this.lastUpdated,
+    this.lastBlogsUpdated,
   });
 }

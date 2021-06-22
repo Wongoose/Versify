@@ -11,6 +11,7 @@ class ProfileBlogsProvider extends ChangeNotifier {
   // String currentProfileUID = '';
 
   bool initialOpen = true;
+  bool doneLoading = false;
 
   //getters
   bool get noData => data.isEmpty;

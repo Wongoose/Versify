@@ -252,6 +252,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                             BorderRadius.circular(300),
                                         side: BorderSide(color: Colors.black12),
                                       ),
+                                      color: Theme.of(context).backgroundColor,
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(300),
@@ -327,20 +328,20 @@ class _MainProfilePageState extends State<MainProfilePage> {
                               ),
                             ),
                             TabBarSliver(changeTab: changeTab),
-                            SliverToBoxAdapter(
-                              child: Builder(builder: (context) {
-                                if (tabIndex == 0) {
-                                  return Consumer<EditProfileProvider>(
-                                    builder: (context, state, _) =>
-                                        ProfileBlogList2(
-                                      // nestedViewController: _nestedMasterController,
-                                      visitProfile: widget.visitProfile,
-                                      userProfile: _userProfile,
-                                      isFromPageView: !widget.bottomNavVisible,
-                                    ),
-                                  );
-                                } else if (tabIndex == 1) {
-                                  return SingleChildScrollView(
+                            Builder(builder: (context) {
+                              if (tabIndex == 0) {
+                                return Consumer<EditProfileProvider>(
+                                  builder: (context, state, _) =>
+                                      ProfileBlogList2(
+                                    // nestedViewController: _nestedMasterController,
+                                    visitProfile: widget.visitProfile,
+                                    userProfile: _userProfile,
+                                    isFromPageView: !widget.bottomNavVisible,
+                                  ),
+                                );
+                              } else if (tabIndex == 1) {
+                                return SliverToBoxAdapter(
+                                  child: SingleChildScrollView(
                                       key: PageStorageKey<String>('Saved'),
                                       child: Table(
                                         defaultColumnWidth:
@@ -382,12 +383,13 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                             SavedCard(),
                                           ]),
                                         ],
-                                      ));
-                                } else {
-                                  return BadgesTabDisplay();
-                                }
-                              }),
-                            ),
+                                      )),
+                                );
+                              } else {
+                                return SliverToBoxAdapter(
+                                    child: BadgesTabDisplay());
+                              }
+                            }),
                           ],
                         ),
                       ),
@@ -463,6 +465,8 @@ class _MainProfilePageState extends State<MainProfilePage> {
         profileUser: _userProfile,
         provider: widget.profileBlogsProvider,
         isFirst: true);
+
+    widget.profileBlogsProvider.doneLoading = true;
 
     widget.profileBlogsProvider.callFuture();
     return widget.profileBlogsProvider.data;

@@ -100,62 +100,72 @@ class _ProfileBlogList2State extends State<ProfileBlogList2> {
     );
     // _visitProfileProvider.setUserProfile(widget.userProfile);
 
-    return _profileBlogsProvider.noData
-        ? Container(
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                Expanded(child: Container()),
-                Image.asset('assets/images/copywriting.png'),
-                SizedBox(height: 20),
-                SizedBox(
-                  width: 280,
-                  child: Text(
-                    widget.visitProfile
-                        ? 'No blogs. Stay tuned!'
-                        : 'Oops! You haven\'t written any blogs yet.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: _themeProvider.secondaryTextColor,
+    return _profileBlogsProvider.doneLoading
+        ? _profileBlogsProvider.noData
+            ? SliverFillRemaining(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: Container()),
+                    Image.asset(
+                      'assets/images/copywriting.png',
+                      height: 130,
+                      width: 130,
                     ),
-                  ),
+                    SizedBox(height: 30),
+                    SizedBox(
+                      width: 280,
+                      child: Text(
+                        widget.visitProfile
+                            ? 'Nothing here. No blogs written yet!'
+                            : 'Hmm... you haven\'t written any blogs yet.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: _themeProvider.secondaryTextColor,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Container()),
+                  ],
                 ),
-                Expanded(child: Container()),
-              ],
-            ),
-          )
-        : Provider<ProfilePageView>.value(
-            value: _postsView,
-            child: Consumer<ProfileAllPostsView>(
-              builder: (context, value, child) {
-                // if (_profileBlogController.hasClients == true &&
-                //     _prevIndexFromPageView != value.currentIndex) {
-                //   scrollPositionAfterView(value.currentIndex);
-                //   _prevIndexFromPageView = value.currentIndex;
-                // }
-                return Column(
-                  key: PageStorageKey<String>('Blogs'),
-                  children: _profileBlogsProvider.data
-                      .map((Feed feed) {
-                        int index = _profileBlogsProvider.data.indexOf(feed);
-                        return SizeProviderWidget(
-                          onChildSize: (size) {
-                            print('Feed Widget height is: ' +
-                                size.height.toString());
-                            _dynamicItemExtentList[index] = size.height;
-                            // print(_dynamicItemExtentList);
-                          },
-                          child: ProfileFeedWidget(
-                              index: index,
-                              feed: _profileBlogsProvider.data[index]),
-                        );
-                      })
-                      .toList()
-                      .cast<Widget>(),
-                );
-              },
-            ),
-          );
+              )
+            : Provider<ProfilePageView>.value(
+                value: _postsView,
+                child: Consumer<ProfileAllPostsView>(
+                  builder: (context, value, child) {
+                    // if (_profileBlogController.hasClients == true &&
+                    //     _prevIndexFromPageView != value.currentIndex) {
+                    //   scrollPositionAfterView(value.currentIndex);
+                    //   _prevIndexFromPageView = value.currentIndex;
+                    // }
+                    return SliverToBoxAdapter(
+                      child: Column(
+                        key: PageStorageKey<String>('Blogs'),
+                        children: _profileBlogsProvider.data
+                            .map((Feed feed) {
+                              int index =
+                                  _profileBlogsProvider.data.indexOf(feed);
+                              return SizeProviderWidget(
+                                onChildSize: (size) {
+                                  print('Feed Widget height is: ' +
+                                      size.height.toString());
+                                  _dynamicItemExtentList[index] = size.height;
+                                  // print(_dynamicItemExtentList);
+                                },
+                                child: ProfileFeedWidget(
+                                    index: index,
+                                    feed: _profileBlogsProvider.data[index]),
+                              );
+                            })
+                            .toList()
+                            .cast<Widget>(),
+                      ),
+                    );
+                  },
+                ),
+              )
+        : SliverFillRemaining(child: Loading());
   }
 
   // Future<void> _onRefresh() async {
