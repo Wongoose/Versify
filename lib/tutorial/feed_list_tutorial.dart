@@ -71,7 +71,7 @@ class _TutorialFeedListState extends State<TutorialFeedList> {
         header: WaterDropHeader(
           complete: Icon(
             Icons.done_rounded,
-            color: Colors.black54,
+            color: _themeProvider.secondaryTextColor,
           ),
           waterDropColor: Colors.pink[300],
           // backgroundColor: Colors.white,

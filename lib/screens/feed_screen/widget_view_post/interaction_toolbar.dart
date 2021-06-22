@@ -200,11 +200,11 @@ class InteractionBar extends StatelessWidget {
                     .createPostDynamicLink(feed.documentID)
                     .then((res) async {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  Share.share(
+                Share.share(
                     _isVisitProfile
-                        ? 'Check out this amazing blog on the Versify app!\n$res'
-                        : 'Check out the blog that I wrote on the Versify app!\n$res',
-                    subject: 'Versify Blogs',
+                        ? 'I have been using Versify for awhile now. Come and check out this amazing blog post on the Versify app!\n\nBlog link:\n$res'
+                        : 'I am a writer at Versify! Read one of my blogs on the Versify app!\n\nBlog link:\n$res',
+                    subject: 'Check out this blogs on the Versify App!',
                   );
                 });
               },
