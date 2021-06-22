@@ -500,13 +500,14 @@ class GiftComingSoon extends StatelessWidget {
       ),
       Expanded(flex: 1, child: Container()),
       Container(
-        margin: EdgeInsets.all(0), 
+        margin: EdgeInsets.all(0),
         width: MediaQuery.of(context).size.width,
         height: 60,
         color: Colors.transparent,
         child: FlatButton(
           materialTapTargetSize: MaterialTapTargetSize.padded,
-          color: Colors.transparent,
+          color: Theme.of(context).backgroundColor,
+          splashColor: Theme.of(context).backgroundColor,
           onPressed: () {
             Navigator.pop(context);
           },
