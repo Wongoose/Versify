@@ -1,5 +1,6 @@
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_normal_text.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_quote_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,19 +15,19 @@ class ViewPostContent extends StatelessWidget {
   final String content;
   final List listMapContent;
   final bool readMoreVisible;
-  final Function() readMoreTap;
 
   ViewPostContent(
       {@required this.likeProvider,
       @required this.content,
       @required this.listMapContent,
       @required this.readMoreVisible,
-      @required this.readMoreTap,
       this.feed});
 
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -79,7 +80,8 @@ class ViewPostContent extends StatelessWidget {
                   margin: EdgeInsets.fromLTRB(0, 2, 26, 2),
                   decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(width: 2, color: Theme.of(context).primaryColor),
+                      left: BorderSide(
+                          width: 2, color: Theme.of(context).primaryColor),
                     ),
                   ),
                   padding: EdgeInsets.fromLTRB(8, 0, 0, 2),
@@ -94,7 +96,7 @@ class ViewPostContent extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.5,
                           height: 1.5,
-                          color: Colors.black,
+                          color: _themeProvider.primaryTextColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -130,8 +132,9 @@ class ViewPostContent extends StatelessWidget {
                         children: [
                           Text(
                             feed.numberOfLikes.toString(),
-                            style:
-                                TextStyle(fontSize: 11, color: Colors.black87),
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: _themeProvider.primaryTextColor),
                           ),
                           SizedBox(width: 3),
                           Icon(
@@ -155,12 +158,13 @@ class ViewPostContent extends StatelessWidget {
                   children: [
                     Text(
                       feed.numberOfViews.toString(),
-                      style: TextStyle(fontSize: 11, color: Colors.black87),
+                      style: TextStyle(
+                          fontSize: 11, color: _themeProvider.primaryTextColor),
                     ),
                     SizedBox(width: 3),
                     Icon(
                       AntDesign.eyeo,
-                      color: Colors.black.withOpacity(0.8),
+                      color: _themeProvider.primaryTextColor.withOpacity(0.8),
                       size: 20,
                     ),
                   ],
@@ -176,12 +180,14 @@ class ViewPostContent extends StatelessWidget {
                     children: [
                       Text(
                         '3',
-                        style: TextStyle(fontSize: 11, color: Colors.black87),
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: _themeProvider.primaryTextColor),
                       ),
                       SizedBox(width: 3),
                       Icon(
                         Icons.near_me_outlined,
-                        color: Colors.black.withOpacity(0.8),
+                        color: _themeProvider.primaryTextColor.withOpacity(0.8),
                         size: 20,
                       ),
                     ],

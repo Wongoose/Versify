@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 
 class ViewPostText extends StatelessWidget {
   final bool isFirst;
@@ -9,6 +11,8 @@ class ViewPostText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Container(
       padding: EdgeInsets.fromLTRB(8, isFirst ? 2 : 8, 0, 8),
@@ -25,7 +29,7 @@ class ViewPostText extends StatelessWidget {
         value,
         style: TextStyle(
             fontSize: 16,
-            color: Colors.black,
+            color: _themeProvider.primaryTextColor,
             fontWeight: FontWeight.w400,
             height: 1.5),
       ),

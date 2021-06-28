@@ -1,3 +1,4 @@
+import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post.dart';
@@ -13,16 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class VisitProfileWrapper extends StatelessWidget {
-  final ViewPostWidget widget;
   final MyUser userProfile;
   final ProfileBlogsProvider profileBlogsProvider;
   final ProfileAllPostsView profileAllPostsView;
+  final Feed feed;
 
   VisitProfileWrapper({
-    this.widget,
     this.profileBlogsProvider,
     this.profileAllPostsView,
     this.userProfile,
+    this.feed,
   });
 
   @override
@@ -90,7 +91,7 @@ class VisitProfileWrapper extends StatelessWidget {
                       return BottomSheetActions(
                         profileProvider: _visitProfileProvider,
                         visitProfile:
-                            widget.feed.userID != _authService.myUser.userUID,
+                            feed.userID != _authService.myUser.userUID,
                       );
                     });
               },
@@ -99,9 +100,9 @@ class VisitProfileWrapper extends StatelessWidget {
           automaticallyImplyLeading: false,
         ),
         body: MainProfilePage(
-          visitProfile: widget.feed.userID != _authService.myUser.userUID,
+          visitProfile: feed.userID != _authService.myUser.userUID,
           userProfile: userProfile,
-          userID: widget.feed.userID,
+          userID: feed.userID,
           profileBlogsProvider: profileBlogsProvider,
           profileAllPostsView: profileAllPostsView,
           bottomNavVisible: false,
@@ -244,7 +245,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     replacement: SizedBox(
                       height: 15,
                       width: 15,
-                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor),
                         strokeWidth: 0.5,
                       ),
                     ),

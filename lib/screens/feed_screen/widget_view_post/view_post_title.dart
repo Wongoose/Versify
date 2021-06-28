@@ -1,4 +1,6 @@
+import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post.dart';
 import 'package:versify/screens/feed_screen/visit_profile_sub/visit_profile_wrapper.dart';
 import 'package:versify/providers/home/profile_blogs_provider.dart';
@@ -16,18 +18,18 @@ class ViewPostTitle extends StatefulWidget {
   final bool postFrameDone;
   final PageViewType pageViewType;
 
-  final int _daysAgo;
-  final ViewPostWidget viewPostWidget;
+  final Feed feed;
+
+  final int daysAgo;
 
   const ViewPostTitle({
     Key key,
     this.isProfileViewPost,
-    @required int daysAgo,
-    @required this.viewPostWidget,
+    @required this.daysAgo,
+    @required this.feed,
     this.postFrameDone,
     this.pageViewType,
-  })  : _daysAgo = daysAgo,
-        super(key: key);
+  });
 
   @override
   _ViewPostTitleState createState() => _ViewPostTitleState();
@@ -50,7 +52,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
       //ViewPostWidget postframe is done -- execute code below
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         await _profileDBService
-            .getProfileData(profileUID: widget.viewPostWidget.feed.userID)
+            .getProfileData(profileUID: widget.feed.userID)
             .then((userProfile) {
           if (widget.pageViewType == PageViewType.allPosts) {
             _allPostsView.newViewPostUser(userProfile);
@@ -64,7 +66,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
           _visitprofileWrapper = VisitProfileWrapper(
             // allPostsView: _allPostsView,
             userProfile: userProfile,
-            widget: widget.viewPostWidget,
+            feed: widget.feed,
             profileBlogsProvider: _profileBlogsProvider,
             profileAllPostsView: _profileAllPostsView,
           );
@@ -78,14 +80,12 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
   void profileTapped() {
     print('Profile tapped');
     if (_titlePostFrameDone) {
-      if (_profileDataProvider.currentProfileUID ==
-              widget.viewPostWidget.feed.userID &&
+      if (_profileDataProvider.currentProfileUID == widget.feed.userID &&
           widget.isProfileViewPost) {
         _profileDataProvider.popFunc();
         // Navigator.pop(context);
       } else {
-        _profileDataProvider.currentProfileUID =
-            widget.viewPostWidget.feed.userID;
+        _profileDataProvider.currentProfileUID = widget.feed.userID;
         print('Updated Profile UID: ' + _profileDataProvider.currentProfileUID);
 
         Navigator.push(
@@ -105,6 +105,8 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
     final AuthService _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     _profileDataProvider =
         Provider.of<ProfileDataProvider>(context, listen: false);
@@ -156,7 +158,9 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                               child: SizedBox(
                                 height: 15,
                                 width: 15,
-                                child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor),
                                   strokeWidth: 0.5,
                                 ),
                               ),
@@ -174,11 +178,11 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: Text(
-                      widget._daysAgo == 0
+                      widget.daysAgo == 0
                           ? 'New today!'
-                          : widget._daysAgo == 1
-                              ? widget._daysAgo.toString() + ' day ago'
-                              : widget._daysAgo.toString() + ' days ago',
+                          : widget.daysAgo == 1
+                              ? widget.daysAgo.toString() + ' day ago'
+                              : widget.daysAgo.toString() + ' days ago',
 
                       // ' Posted on ${lastUpdated.toString().split(' ')[0]}',
 
@@ -192,7 +196,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                     ),
                   ),
                   Text(
-                    'by ' + widget.viewPostWidget.name,
+                    'by ' + widget.feed.username,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -200,7 +204,7 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.italic,
-                      color: Colors.black54,
+                      color: _themeProvider.secondaryTextColor,
                     ),
                   ),
                 ],
@@ -251,13 +255,15 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                             fontSize: 12,
                             color: !state.currentUserIsFollowing
                                 ? Theme.of(context).accentColor
-                                : Colors.black54,
+                                : _themeProvider.secondaryTextColor,
                           ),
                         ),
                         replacement: SizedBox(
                           height: 15,
                           width: 15,
-                          child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor),
                             strokeWidth: 0.5,
                           ),
                         ),
@@ -318,13 +324,15 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                             color: !state.visitProfileProvider.userProfile
                                     .isFollowing
                                 ? Theme.of(context).accentColor
-                                : Colors.black54,
+                                : _themeProvider.secondaryTextColor,
                           ),
                         ),
                         replacement: SizedBox(
                           height: 15,
                           width: 15,
-                          child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor),
                             strokeWidth: 0.5,
                           ),
                         ),

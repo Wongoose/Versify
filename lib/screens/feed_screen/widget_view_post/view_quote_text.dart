@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 
 class ViewPostQuote extends StatelessWidget {
   final String value;
@@ -10,6 +12,8 @@ class ViewPostQuote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Container(
       padding: EdgeInsets.fromLTRB(2, 0, 26, 0),
@@ -37,7 +41,7 @@ class ViewPostQuote extends StatelessWidget {
                   child: Text(
                     value,
                     style: TextStyle(
-                      color: Colors.black.withOpacity(0.7),
+                      color: _themeProvider.primaryTextColor.withOpacity(0.7),
                       fontSize: 15.5,
                       fontFamily: GoogleFonts.getFont('Philosopher').fontFamily,
                       fontWeight: FontWeight.w300,

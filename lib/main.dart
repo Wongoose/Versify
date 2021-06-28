@@ -34,6 +34,8 @@ import 'models/user_model.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 
+import 'z-dynamic_link/post_dynamic_link.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -366,9 +368,7 @@ class _VersifyHomeState extends State<VersifyHome> {
   Widget build(BuildContext context) {
     //tutorialProvider
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
-    // _dynamicLinkService.addContext(context);
 
-    // if (_hasDynamicLink != null) {
     if (_completedBoarding != null) {
       if (_completedBoarding == true) {
         return Wrapper(completePickTutorials: completePickTutorials);

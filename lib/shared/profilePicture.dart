@@ -30,7 +30,9 @@ class ProfilePic extends StatelessWidget {
         ? SizedBox(
             height: 15,
             width: 15,
-            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).primaryColor),
               strokeWidth: 0.5,
             ),
           )
@@ -49,7 +51,7 @@ class ProfilePic extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(1),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
                 shape: BoxShape.circle,
               ),
               height: size == null ? 30 : 30 * size,
@@ -65,7 +67,9 @@ class ProfilePic extends StatelessWidget {
                     return SizedBox(
                       height: 5,
                       width: 5,
-                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor),
                         strokeWidth: 0.5,
                         value: downloadProgress.progress,
                       ),

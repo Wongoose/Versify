@@ -49,6 +49,8 @@ class InteractionBar extends StatelessWidget {
 
     final ViewPostLikeProvider _likeProvider =
         Provider.of<ViewPostLikeProvider>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     // getSavePostLocal(feed.documentID).then((res) {
     //   _likeProvider.initialSave(res);
@@ -58,12 +60,13 @@ class InteractionBar extends StatelessWidget {
 
     return BottomAppBar(
       elevation: 5,
+      color: Theme.of(context).backgroundColor,
       child: Container(
         height: 55,
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).backgroundColor,
           // boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15)],
         ),
         child: Row(
@@ -139,7 +142,7 @@ class InteractionBar extends StatelessWidget {
                   width: 80,
                   child: Icon(
                     AntDesign.gift,
-                    color: Colors.black.withOpacity(0.8),
+                    color: _themeProvider.primaryTextColor.withOpacity(0.8),
                     size: 24,
                   ),
                 ),
@@ -172,6 +175,7 @@ class InteractionBar extends StatelessWidget {
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: Theme.of(context).dialogBackgroundColor,
                   content: Padding(
                     padding: EdgeInsets.all(8),
                     child: Row(
@@ -189,6 +193,7 @@ class InteractionBar extends StatelessWidget {
                           'Preparing shareable link...',
                           style: TextStyle(
                             fontFamily: 'Nunito',
+                            color: _themeProvider.primaryTextColor,
                           ),
                         ),
                       ],
@@ -200,7 +205,7 @@ class InteractionBar extends StatelessWidget {
                     .createPostDynamicLink(feed.documentID)
                     .then((res) async {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                Share.share(
+                  Share.share(
                     _isVisitProfile
                         ? 'I have been using Versify for awhile now. Come and check out this amazing blog post on the Versify app!\n\nBlog link:\n$res'
                         : 'I am a writer at Versify! Read one of my blogs on the Versify app!\n\nBlog link:\n$res',
@@ -213,7 +218,7 @@ class InteractionBar extends StatelessWidget {
                 width: 80,
                 child: Icon(
                   Icons.near_me_outlined,
-                  color: Colors.black.withOpacity(0.8),
+                  color: _themeProvider.primaryTextColor.withOpacity(0.8),
                   size: 28,
                 ),
               ),

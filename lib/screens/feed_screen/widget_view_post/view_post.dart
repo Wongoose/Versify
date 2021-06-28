@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/post_swipe_up_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/providers/feeds/view_post_gift_provider.dart';
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
@@ -287,6 +288,8 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     _swipeUpProvider = Provider.of<PostSwipeUpProvider>(context, listen: false);
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 
@@ -331,7 +334,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
         child: Stack(children: [
           SafeArea(
             child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
               body: Padding(
                 // padding: EdgeInsets.fromLTRB(15, 8, 15, 60),
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -356,12 +359,14 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                   Text(
                                     'swipe to previous post',
                                     style: TextStyle(
-                                        color: Colors.black54, fontSize: 11),
+                                        color:
+                                            _themeProvider.secondaryTextColor,
+                                        fontSize: 11),
                                   ),
                                   SizedBox(height: 5),
                                   Icon(
                                     Icons.arrow_downward_rounded,
-                                    color: Colors.black54,
+                                    color: _themeProvider.secondaryTextColor,
                                     size: 15,
                                   ),
                                   SizedBox(height: 10),
@@ -377,7 +382,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                     fontWeight: FontWeight.normal,
                                     fontFamily: 'Libre',
                                     fontStyle: FontStyle.normal,
-                                    color: Colors.black,
+                                    color: _themeProvider.primaryTextColor,
                                     fontSize: 27,
                                     height: 1.4,
                                     letterSpacing: -0.3),
@@ -396,7 +401,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                           postFrameDone: postFrameDone,
                           pageViewType: widget.pageViewType,
                           daysAgo: _daysAgo,
-                          viewPostWidget: widget,
+                          feed: widget.feed,
                           isProfileViewPost: isProfileViewPost,
                         ),
                       ),
@@ -540,7 +545,8 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                         '${(widget.feed.contentLength / 5 / 1000 * 5.65 + 0.5).round()}min',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Colors.black.withOpacity(0.5),
+                                          color: _themeProvider.primaryTextColor
+                                              .withOpacity(0.5),
                                         ),
                                       ),
                                     ],
@@ -583,7 +589,6 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                 content: widget.content,
                                 listMapContent: widget.listMapContent,
                                 readMoreVisible: readMoreVisible,
-                                readMoreTap: _readMoreTap,
                               ),
                             ),
                             SizedBox(height: 10),
@@ -609,7 +614,8 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                                 letterSpacing: 0,
                                                 fontSize: 22,
                                                 fontWeight: FontWeight.w700,
-                                                color: Colors.black87,
+                                                color: _themeProvider
+                                                    .primaryTextColor,
                                               ),
                                             ),
                                             // TextButton(
@@ -695,14 +701,15 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                     SizedBox(height: 0),
                                     Icon(
                                       Icons.arrow_upward_rounded,
-                                      color: Colors.black54,
+                                      color: _themeProvider.secondaryTextColor,
                                       size: 15,
                                     ),
                                     SizedBox(height: 5),
                                     Text(
                                       'swipe to next post',
                                       style: TextStyle(
-                                        color: Colors.black54,
+                                        color:
+                                            _themeProvider.secondaryTextColor,
                                         fontSize: 11,
                                       ),
                                     ),
@@ -731,8 +738,9 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                           elevation: 0.5,
                           mini: true,
                           child: Icon(Icons.upgrade_rounded,
-                              color: Colors.black.withOpacity(0.7)),
-                          backgroundColor: Colors.white,
+                              color: _themeProvider.primaryTextColor
+                                  .withOpacity(0.7)),
+                          backgroundColor: Theme.of(context).backgroundColor,
                         )
                       : Container(
                           height: 10,
@@ -819,14 +827,17 @@ class _SliverTitleBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     return BottomAppBar(
       elevation: shrinkOffset == 0 ? 0 : 0.5,
+      color: Theme.of(context).backgroundColor,
       child: new Container(
         alignment: Alignment.centerLeft,
         // decoration: BoxDecoration(
         //     border: Border(top: BorderSide(color: Colors.black38, width: 0.5))),
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        color: Colors.white,
+        color: Theme.of(context).backgroundColor,
         child: _title,
       ),
     );

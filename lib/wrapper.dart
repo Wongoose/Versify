@@ -16,6 +16,7 @@ import 'package:versify/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/shared/splash_loading.dart';
+import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {
@@ -78,7 +79,11 @@ class Wrapper extends StatelessWidget {
                       _jsonFollowingStorage.jsonInit(); //diff accounts
                       _jsonAllBadgesStorage.jsonInit();
 
-                      return new HomeWrapper();
+                      return DynamicLinkPost(
+                        postId: '5ACsnQ8gciM6nO85qCCp',
+                        onPopExitApp: false,
+                      );
+                      // return new HomeWrapper();
                     } else {
                       //not complete login
                       return SignUpDetails();
