@@ -1,6 +1,7 @@
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post.dart';
 import 'package:versify/screens/profile_screen/widgets_profile/main_profile.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
@@ -38,6 +39,9 @@ class VisitProfileWrapper extends StatelessWidget {
     final VisitProfileProvider _visitProfileProvider = VisitProfileProvider(
         allPostsView: _allPostsView, profileDataProvider: _profileDataProvider);
 
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     _visitProfileProvider.setUserProfile(userProfile);
     print('VisitProfileWrapper setUserProfile: ' +
         userProfile.username +
@@ -46,15 +50,16 @@ class VisitProfileWrapper extends StatelessWidget {
     return ChangeNotifierProvider<VisitProfileProvider>(
       create: (_) => _visitProfileProvider,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           titleSpacing: 5,
           elevation: 0.5,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).canvasColor,
           title: Text(
             userProfile.username,
             style: TextStyle(
                 fontSize: 22,
-                color: Colors.black,
+                color: _themeProvider.primaryTextColor,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Nunito'),
           ),
@@ -64,7 +69,10 @@ class VisitProfileWrapper extends StatelessWidget {
               backgroundColor: Colors.transparent,
             ),
             clipBehavior: Clip.none,
-            icon: Icon(Icons.arrow_back_rounded, color: Colors.black),
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: _themeProvider.primaryTextColor,
+            ),
             label: Text(''),
             onPressed: () => Navigator.pop(context),
           ),
@@ -72,10 +80,13 @@ class VisitProfileWrapper extends StatelessWidget {
             TextButton.icon(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).canvasColor,
               ),
               clipBehavior: Clip.none,
-              icon: Icon(Icons.more_vert_rounded, color: Colors.black),
+              icon: Icon(
+                Icons.more_vert_rounded,
+                color: _themeProvider.primaryTextColor,
+              ),
               label: Text(''),
               onPressed: () {
                 showModalBottomSheet(

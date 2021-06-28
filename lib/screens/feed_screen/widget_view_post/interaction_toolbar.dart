@@ -121,8 +121,7 @@ class InteractionBar extends StatelessWidget {
                       enableDrag: false,
                       context: context,
                       builder: (context) {
-                        print('state is in bottomSheet: ' +
-                            state.giftLove.toString());
+                      ;
 
                         return GiftComingSoon();
 
@@ -481,7 +480,7 @@ class GiftComingSoon extends StatelessWidget {
                   height: 1.1),
             ),
             TextSpan(
-              text: ' support',
+              text: ' feature',
               style: TextStyle(
                   color: _themeProvider.primaryTextColor,
                   fontSize: 35,

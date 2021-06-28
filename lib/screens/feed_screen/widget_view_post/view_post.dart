@@ -591,99 +591,99 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                 readMoreVisible: readMoreVisible,
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Divider(thickness: 0.5),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Gifts',
-                                              style: TextStyle(
-                                                letterSpacing: 0,
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.w700,
-                                                color: _themeProvider
-                                                    .primaryTextColor,
-                                              ),
-                                            ),
-                                            // TextButton(
-                                            //   style: TextButton.styleFrom(
-                                            //     primary: Colors.white,
-                                            //     padding: EdgeInsets.fromLTRB(
-                                            //         10, 0, 0, 0),
-                                            //     backgroundColor: Colors.white,
-                                            //   ),
-                                            //   onPressed: () => {},
-                                            //   child: Text(
-                                            //     'View all...',
-                                            //     style: TextStyle(
-                                            //       fontSize: 12,
-                                            //       color: Theme.of(context).primaryColor,
-                                            //       fontWeight: FontWeight.w400,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
-                                      SingleChildScrollView(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 8, 0, 10),
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            ViewGiftWidget(
-                                              // value: widget.feed.giftLove,
-                                              giftType: GiftType.love,
-                                              text: 'Great love',
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              image: 'assets/images/love.png',
-                                            ),
-                                            ViewGiftWidget(
-                                              // value: widget.feed.giftBird,
-                                              giftType: GiftType.bird,
-                                              text: 'Soaring bird',
-                                              color: Colors.amber[700],
-                                              image: 'assets/images/bird.png',
-                                            ),
-                                            // GiftWidget(
-                                            //   text: 'Magic unicorn',
-                                            //   color: Theme.of(context).primaryColor,
-                                            //   image: 'assets/images/shy.png',
-                                            // ),
-                                            // GiftWidget(
-                                            //   text:
-                                            //       'Growing sprout of the great',
-                                            //   color: Colors.teal[300],
-                                            //   image: 'assets/images/sprout.png',
-                                            // ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // SizedBox(height: 10),
+                            // Divider(thickness: 0.5),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: [
+                            //     Padding(
+                            //       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            //       child: Column(
+                            //         children: [
+                            //           Padding(
+                            //             padding:
+                            //                 EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            //             child: Row(
+                            //               mainAxisSize: MainAxisSize.max,
+                            //               mainAxisAlignment:
+                            //                   MainAxisAlignment.spaceBetween,
+                            //               children: [
+                            //                 Text(
+                            //                   'Gifts',
+                            //                   style: TextStyle(
+                            //                     letterSpacing: 0,
+                            //                     fontSize: 22,
+                            //                     fontWeight: FontWeight.w700,
+                            //                     color: _themeProvider
+                            //                         .primaryTextColor,
+                            //                   ),
+                            //                 ),
+                            //                 // TextButton(
+                            //                 //   style: TextButton.styleFrom(
+                            //                 //     primary: Colors.white,
+                            //                 //     padding: EdgeInsets.fromLTRB(
+                            //                 //         10, 0, 0, 0),
+                            //                 //     backgroundColor: Colors.white,
+                            //                 //   ),
+                            //                 //   onPressed: () => {},
+                            //                 //   child: Text(
+                            //                 //     'View all...',
+                            //                 //     style: TextStyle(
+                            //                 //       fontSize: 12,
+                            //                 //       color: Theme.of(context).primaryColor,
+                            //                 //       fontWeight: FontWeight.w400,
+                            //                 //     ),
+                            //                 //   ),
+                            //                 // ),
+                            //               ],
+                            //             ),
+                            //           ),
+                            //           SizedBox(height: 10),
+                            //           SingleChildScrollView(
+                            //             padding:
+                            //                 EdgeInsets.fromLTRB(10, 8, 0, 10),
+                            //             scrollDirection: Axis.horizontal,
+                            //             child: Row(
+                            //               mainAxisAlignment:
+                            //                   MainAxisAlignment.start,
+                            //               crossAxisAlignment:
+                            //                   CrossAxisAlignment.center,
+                            //               mainAxisSize: MainAxisSize.max,
+                            //               children: [
+                            //                 ViewGiftWidget(
+                            //                   // value: widget.feed.giftLove,
+                            //                   giftType: GiftType.love,
+                            //                   text: 'Great love',
+                            //                   color: Theme.of(context)
+                            //                       .primaryColor,
+                            //                   image: 'assets/images/love.png',
+                            //                 ),
+                            //                 ViewGiftWidget(
+                            //                   // value: widget.feed.giftBird,
+                            //                   giftType: GiftType.bird,
+                            //                   text: 'Soaring bird',
+                            //                   color: Colors.amber[700],
+                            //                   image: 'assets/images/bird.png',
+                            //                 ),
+                            //                 // GiftWidget(
+                            //                 //   text: 'Magic unicorn',
+                            //                 //   color: Theme.of(context).primaryColor,
+                            //                 //   image: 'assets/images/shy.png',
+                            //                 // ),
+                            //                 // GiftWidget(
+                            //                 //   text:
+                            //                 //       'Growing sprout of the great',
+                            //                 //   color: Colors.teal[300],
+                            //                 //   image: 'assets/images/sprout.png',
+                            //                 // ),
+                            //               ],
+                            //             ),
+                            //           )
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                             // ViewPostComments(
                             //   widget: widget,
                             //   bottomSheetComments: _bottomSheetComments,
@@ -738,10 +738,10 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                           elevation: 0.5,
                           mini: true,
                           child: Icon(Icons.upgrade_rounded,
-                              color: _themeProvider.primaryTextColor
+                              color: Theme.of(context)
+                                  .backgroundColor
                                   .withOpacity(0.7)),
-                          backgroundColor: Theme.of(context).backgroundColor,
-                        )
+                          backgroundColor: _themeProvider.primaryTextColor)
                       : Container(
                           height: 10,
                         )),

@@ -1,6 +1,7 @@
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/feeds/input_comments_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/input_comment.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/providers/home/profile_blogs_provider.dart';
@@ -81,6 +82,10 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   Widget build(BuildContext context) {
     // widget.profileAllPostsView =
     //     Provider.of<ProfileAllPostsView>(context, listen: false);
+
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     _databaseService = Provider.of<DatabaseService>(context);
     _profileDBService = Provider.of<ProfileDBService>(context);
     _profileDataProvider = Provider.of<ProfileDataProvider>(context);
@@ -108,7 +113,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
               value: widget.profileBlogsProvider)
         ],
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           extendBodyBehindAppBar: false,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
@@ -116,18 +121,14 @@ class _ProfilePageViewState extends State<ProfilePageView> {
               children: [
                 AppBar(
                   // centerTitle: true,
-
                   titleSpacing: 5,
-
                   elevation: 0.5,
-
-                  backgroundColor: Colors.white,
-
+                  backgroundColor: Theme.of(context).canvasColor,
                   title: Text(
                     'Blogs',
                     style: TextStyle(
                         fontSize: 22,
-                        color: Colors.black,
+                        color: _themeProvider.primaryTextColor,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Nunito'),
                   ),
@@ -145,7 +146,10 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                       // highlightColor: Color(0xfffffcfe),
                     ),
                     clipBehavior: Clip.none,
-                    icon: Icon(Icons.arrow_back_rounded, color: Colors.black),
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: _themeProvider.primaryTextColor,
+                    ),
                     label: Text(''),
                     onPressed: () => popScopeUpdateFeed(),
                   ),
@@ -155,14 +159,15 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
 
-                        backgroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).canvasColor,
 
                         // focusColor: Colors.white,
 
                         // highlightColor: Color(0xfffffcfe),
                       ),
                       clipBehavior: Clip.none,
-                      icon: Icon(Icons.more_vert_rounded, color: Colors.black),
+                      icon: Icon(Icons.more_vert_rounded,
+                          color: _themeProvider.primaryTextColor),
                       label: Text(''),
                       onPressed: () {
                         showModalBottomSheet(
@@ -393,7 +398,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                         widget.profileAllPostsView.currentFeed.documentID)
                     .then((res) async {
                   setState(() => _shareLoading = false);
-                Share.share(
+                  Share.share(
                     _isVisitProfile
                         ? 'I have been using Versify for awhile now. Come and check out this amazing blog post on the Versify app!\n\nBlog link:\n$res'
                         : 'I am a writer at Versify! Read one of my blogs on the Versify app!\n\nBlog link:\n$res',
@@ -417,7 +422,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   replacement: SizedBox(
                     height: 15,
                     width: 15,
-                    child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
                       strokeWidth: 0.5,
                     ),
                   ),
@@ -478,7 +485,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     replacement: SizedBox(
                       height: 15,
                       width: 15,
-                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor),
                         strokeWidth: 0.5,
                       ),
                     ),

@@ -1,5 +1,7 @@
+import 'package:provider/provider.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 
 class ReadMoreOverlay extends StatelessWidget {
   final Function readMoreTap;
@@ -8,6 +10,8 @@ class ReadMoreOverlay extends StatelessWidget {
   ReadMoreOverlay({this.readMoreTap, this.postsProvider});
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     return Visibility(
       replacement: SizedBox.shrink(),
       visible: postsProvider.readVisible,
@@ -30,8 +34,8 @@ class ReadMoreOverlay extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white10,
-                    Colors.white,
+                    Theme.of(context).backgroundColor.withOpacity(0.1),
+                    Theme.of(context).backgroundColor,
                   ],
                   stops: [0.0, 1.0],
                   begin: Alignment.topCenter,
@@ -44,7 +48,7 @@ class ReadMoreOverlay extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               height: 80,
               width: MediaQuery.of(context).size.width,
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               child: TextButton.icon(
                 onPressed: () {
                   readMoreTap();
@@ -53,7 +57,7 @@ class ReadMoreOverlay extends StatelessWidget {
                   'Tap to read more',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: Colors.black.withOpacity(0.8),
+                      color: _themeProvider.primaryTextColor.withOpacity(0.8),
                       fontFamily: 'Nunito'),
                 ),
                 style: ButtonStyle(),

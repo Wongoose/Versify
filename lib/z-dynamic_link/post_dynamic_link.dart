@@ -15,6 +15,7 @@ import 'package:versify/screens/feed_screen/widget_view_post/view_post_title.dar
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/shared/loading.dart';
+import 'package:versify/shared/splash_loading.dart';
 
 class DynamicLinkPost extends StatefulWidget {
   final String postId;
@@ -156,7 +157,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
     _authService = Provider.of<AuthService>(context);
 
     return feed == null
-        ? Loading()
+        ? SplashLoading()
         : WillPopScope(
             onWillPop: () {
               _onWillPop();
@@ -404,22 +405,6 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                               ),
                             ),
                           ),
-                          // SliverPersistentHeader(
-                          //   floating: false,
-                          //   pinned: true,
-                          //   delegate: _SliverAppBarDelegate(
-                          //     Text(
-                          //       'Read',
-                          //       softWrap: true,
-                          //       style: TextStyle(
-                          //         color: Theme.of(context).primaryColor,
-                          //         letterSpacing: 0,
-                          //         fontSize: 22,
-                          //         fontWeight: FontWeight.w700,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           SliverToBoxAdapter(
                             child: Container(
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -436,136 +421,6 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                                       readMoreVisible: false,
                                     ),
                                   ),
-                                  // Divider(thickness: 0.5),
-                                  // Column(
-                                  //   crossAxisAlignment:
-                                  //       CrossAxisAlignment.start,
-                                  //   children: [
-                                  //     Padding(
-                                  //       padding:
-                                  //           EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  //       child: Column(
-                                  //         children: [
-                                  //           Padding(
-                                  //             padding: EdgeInsets.fromLTRB(
-                                  //                 10, 0, 10, 0),
-                                  //             child: Row(
-                                  //               mainAxisSize: MainAxisSize.max,
-                                  //               mainAxisAlignment:
-                                  //                   MainAxisAlignment
-                                  //                       .spaceBetween,
-                                  //               children: [
-                                  //                 Text(
-                                  //                   'Gifts',
-                                  //                   style: TextStyle(
-                                  //                     letterSpacing: 0,
-                                  //                     fontSize: 22,
-                                  //                     fontWeight:
-                                  //                         FontWeight.w700,
-                                  //                     color: Colors.black87,
-                                  //                   ),
-                                  //                 ),
-                                  //                 // TextButton(
-                                  //                 //   style: TextButton.styleFrom(
-                                  //                 //     primary: Colors.white,
-                                  //                 //     padding: EdgeInsets.fromLTRB(
-                                  //                 //         10, 0, 0, 0),
-                                  //                 //     backgroundColor: Colors.white,
-                                  //                 //   ),
-                                  //                 //   onPressed: () => {},
-                                  //                 //   child: Text(
-                                  //                 //     'View all...',
-                                  //                 //     style: TextStyle(
-                                  //                 //       fontSize: 12,
-                                  //                 //       color: Theme.of(context).primaryColor,
-                                  //                 //       fontWeight: FontWeight.w400,
-                                  //                 //     ),
-                                  //                 //   ),
-                                  //                 // ),
-                                  //               ],
-                                  //             ),
-                                  //           ),
-                                  //           SizedBox(height: 10),
-                                  //           SingleChildScrollView(
-                                  //             padding: EdgeInsets.fromLTRB(
-                                  //                 10, 8, 0, 10),
-                                  //             scrollDirection: Axis.horizontal,
-                                  //             child: Row(
-                                  //               mainAxisAlignment:
-                                  //                   MainAxisAlignment.start,
-                                  //               crossAxisAlignment:
-                                  //                   CrossAxisAlignment.center,
-                                  //               mainAxisSize: MainAxisSize.max,
-                                  //               children: [
-                                  //                 ViewGiftWidget(
-                                  //                   // value: widget.feed.giftLove,
-                                  //                   giftType: GiftType.love,
-                                  //                   text: 'Great love',
-                                  //                   color: Theme.of(context)
-                                  //                       .primaryColor,
-                                  //                   image:
-                                  //                       'assets/images/love.png',
-                                  //                 ),
-                                  //                 ViewGiftWidget(
-                                  //                   // value: widget.feed.giftBird,
-                                  //                   giftType: GiftType.bird,
-                                  //                   text: 'Soaring bird',
-                                  //                   color: Colors.amber[700],
-                                  //                   image:
-                                  //                       'assets/images/bird.png',
-                                  //                 ),
-                                  //                 // GiftWidget(
-                                  //                 //   text: 'Magic unicorn',
-                                  //                 //   color: Theme.of(context).primaryColor,
-                                  //                 //   image: 'assets/images/shy.png',
-                                  //                 // ),
-                                  //                 // GiftWidget(
-                                  //                 //   text:
-                                  //                 //       'Growing sprout of the great',
-                                  //                 //   color: Colors.teal[300],
-                                  //                 //   image: 'assets/images/sprout.png',
-                                  //                 // ),
-                                  //               ],
-                                  //             ),
-                                  //           )
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // ViewPostComments(
-                                  //   widget: widget,
-                                  //   bottomSheetComments: _bottomSheetComments,
-                                  // ),
-                                  // AnimatedBuilder(
-                                  //   animation: _viewPostController,
-                                  //   builder: (context, child) => AnimatedContainer(
-                                  //     duration: Duration(milliseconds: 200),
-                                  //     alignment: Alignment.center,
-                                  //     height: 0,
-                                  //     width: MediaQuery.of(context).size.width,
-                                  //     child: Column(
-                                  //       mainAxisSize: MainAxisSize.min,
-                                  //       children: [
-                                  //         SizedBox(height: 0),
-                                  //         Icon(
-                                  //           Icons.arrow_upward_rounded,
-                                  //           color: Colors.black54,
-                                  //           size: 15,
-                                  //         ),
-                                  //         SizedBox(height: 5),
-                                  //         Text(
-                                  //           'swipe to next post',
-                                  //           style: TextStyle(
-                                  //             color: Colors.black54,
-                                  //             fontSize: 11,
-                                  //           ),
-                                  //         ),
-                                  //         SizedBox(height: 15),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),
