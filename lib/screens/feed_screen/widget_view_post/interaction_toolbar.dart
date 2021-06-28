@@ -13,13 +13,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/services/dynamic_links.dart';
+import 'package:versify/services/notification.dart';
 import 'package:vibration/vibration.dart';
 
 class InteractionBar extends StatelessWidget {
   final bool isLiked;
   final Feed feed;
+  final bool fromDynamicLink;
 
-  InteractionBar({this.isLiked, this.feed});
+  InteractionBar({this.isLiked, this.feed, this.fromDynamicLink});
 
   Future<void> updateSavePostLocal(String postID, {bool saved}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -51,6 +53,9 @@ class InteractionBar extends StatelessWidget {
         Provider.of<ViewPostLikeProvider>(context, listen: false);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
+
+    final DatabaseService _databaseService =
+        Provider.of<DatabaseService>(context);
 
     // getSavePostLocal(feed.documentID).then((res) {
     //   _likeProvider.initialSave(res);
@@ -121,7 +126,7 @@ class InteractionBar extends StatelessWidget {
                       enableDrag: false,
                       context: context,
                       builder: (context) {
-                      ;
+                        ;
 
                         return GiftComingSoon();
 
@@ -151,12 +156,23 @@ class InteractionBar extends StatelessWidget {
               builder: (context, likeProvider, _) {
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => {
-                    likeProvider.likeTrigger(),
-                    // setState(() {
-                    //   _likedPost = !_likedPost;
-                    // }),
-                    Vibration.vibrate(duration: 5),
+                  onTap: () {
+                    if (_authService.isUserAnonymous) {
+                      NotificationOverlay().showNormalImageDialog(context,
+                          body:
+                              'Did you enjoy reading this post? Sign up now to like this post!',
+                          buttonText: 'Sign-up',
+                          clickFunc: null,
+                          imagePath: 'assets/images/user.png',
+                          title: 'Create Account',
+                          delay: Duration(milliseconds: 0));
+                    } else {
+                      likeProvider.likeTrigger();
+                      Vibration.vibrate(duration: 5);
+                      if (fromDynamicLink) {
+                        _databaseService.updateFeedDynamicPost(feed: feed);
+                      }
+                    }
                   },
                   child: SizedBox(
                     height: 40,

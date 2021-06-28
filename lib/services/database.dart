@@ -664,6 +664,22 @@ class DatabaseService {
     }
   }
 
+  Future<void> updateFeedDynamicPost({Feed feed}) async {
+    if (feed.isLiked) {
+      await allPostsCollection.doc(feed.documentID).update({
+        'isLiked': FieldValue.arrayUnion([this.uid]),
+        'likes': FieldValue.increment(1),
+        'views': FieldValue.increment(feed.hasViewed ? 0 : 1),
+      });
+    } else {
+      await allPostsCollection.doc(feed.documentID).update({
+        'isLiked': FieldValue.arrayRemove([this.uid]),
+        'likes': FieldValue.increment(-1),
+        'views': FieldValue.increment(feed.hasViewed ? 0 : 1),
+      });
+    }
+  }
+
   List<String> reformatTags(List<String> tags) {
     List<String> tempList = [];
     tags.forEach((val) => {

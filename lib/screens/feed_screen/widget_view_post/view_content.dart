@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/services/database.dart';
 import 'package:vibration/vibration.dart';
 
 class ViewPostContent extends StatelessWidget {
@@ -15,19 +16,23 @@ class ViewPostContent extends StatelessWidget {
   final String content;
   final List listMapContent;
   final bool readMoreVisible;
+  final bool fromDynamicLink;
 
   ViewPostContent(
       {@required this.likeProvider,
       @required this.content,
       @required this.listMapContent,
       @required this.readMoreVisible,
-      this.feed});
+      this.feed,
+      this.fromDynamicLink});
 
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
+    final DatabaseService _databaseService =
+        Provider.of<DatabaseService>(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -48,8 +53,11 @@ class ViewPostContent extends StatelessWidget {
           behavior: HitTestBehavior.translucent,
           onDoubleTap: () {
             likeProvider.doubleTap();
-
             Vibration.vibrate(duration: 5);
+
+            if (fromDynamicLink) {
+              _databaseService.updateFeedDynamicPost(feed: feed);
+            }
           },
           child: listMapContent.isNotEmpty
               ? Column(

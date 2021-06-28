@@ -79,11 +79,11 @@ class Wrapper extends StatelessWidget {
                       _jsonFollowingStorage.jsonInit(); //diff accounts
                       _jsonAllBadgesStorage.jsonInit();
 
-                      return DynamicLinkPost(
-                        postId: '5ACsnQ8gciM6nO85qCCp',
-                        onPopExitApp: false,
-                      );
-                      // return new HomeWrapper();
+                      // return DynamicLinkPost(
+                      //   postId: '5ACsnQ8gciM6nO85qCCp',
+                      //   onPopExitApp: false,
+                      // );
+                      return new HomeWrapper();
                     } else {
                       //not complete login
                       return SignUpDetails();

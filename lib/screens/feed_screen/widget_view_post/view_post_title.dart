@@ -7,6 +7,7 @@ import 'package:versify/providers/home/profile_blogs_provider.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/providers/home/profile_pageview_provider.dart';
 import 'package:versify/services/auth.dart';
+import 'package:versify/services/notification.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/profilePicture.dart';
 import 'package:flutter/cupertino.dart';
@@ -218,7 +219,17 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                         state.currentUserUID != _authService.myUser.userUID;
                     return GestureDetector(
                       onTap: () async {
-                        if (_isOtherProfile && !state.currentUserIsFollowing) {
+                        if (_authService.isUserAnonymous) {
+                          //dialog cannot perform action - need sign up
+                          NotificationOverlay().showNormalImageDialog(context,
+                              body: 'You can\'t follow them without an account. Sign up now!',
+                              buttonText: 'Sign-up',
+                              clickFunc: null,
+                              imagePath: 'assets/images/user.png',
+                              title: 'Create Account',
+                              delay: Duration(milliseconds: 0));
+                        } else if (_isOtherProfile &&
+                            !state.currentUserIsFollowing) {
                           setState(() => _followLoading = true);
 
                           bool _isFollowing =

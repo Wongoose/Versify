@@ -51,7 +51,7 @@ class DynamicLinkService {
       print('isProfile | is: ${isProfile.toString()}');
       print('isPost | is: ${isPost.toString()}');
 
-      if (!authService.isUserSignedIn) {
+      if (!authService.isUserAuthenticated) {
         //not signed in
         await AuthService().signInAnon().then((res) async {
           if (res) {
@@ -91,7 +91,8 @@ class DynamicLinkService {
       if (postId != null) {
         //Navigate to post screen EXAMPLE
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DynamicLinkPost(postId: postId, onPopExitApp: onPopExitApp)));
+            builder: (context) =>
+                DynamicLinkPost(postId: postId, onPopExitApp: onPopExitApp)));
 
         print('isPost | Post ID is: $postId');
       }

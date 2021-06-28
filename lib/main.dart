@@ -185,6 +185,7 @@ class VersifyApp extends StatelessWidget {
                       JsonAllBadgesStorage(uid: _authService.userUID);
                 } else {
                   _firestoreDBService = DatabaseService();
+                  _profileDBService = ProfileDBService();
                 }
                 return MultiProvider(
                   providers: [
@@ -353,7 +354,7 @@ class _VersifyHomeState extends State<VersifyHome> {
       });
     });
 
-    // widget.authService.logout();
+    widget.authService.logout();
   }
 
   void completeBoarding() {

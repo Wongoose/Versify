@@ -419,6 +419,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                                       content: feed.content,
                                       listMapContent: feed.listMapContent,
                                       readMoreVisible: false,
+                                      fromDynamicLink: true,
                                     ),
                                   ),
                                 ],
@@ -454,6 +455,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                     bottomNavigationBar: InteractionBar(
                       feed: feed,
                       isLiked: feed.isLiked,
+                      fromDynamicLink: true,
                     ),
                   ),
                 ],

@@ -5,6 +5,7 @@ import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
+import 'package:versify/services/profile_database.dart';
 
 class IntroPickTopics extends StatefulWidget {
   final Function completePickTutorials;
@@ -41,6 +42,8 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
     final AuthService _authService = Provider.of<AuthService>(context);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
+    final ProfileDBService _profileDBService =
+        Provider.of<ProfileDBService>(context);
 
     _dbService = Provider.of<DatabaseService>(context);
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
@@ -76,7 +79,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                 List<String> _listOfTopicInterests =
                     _tutorialProvider.listOfSelectedTopics;
 
-                if (!_authService.isUserSignedIn) {
+                if (!_authService.isUserAuthenticated) {
                   //user not signed in
                   _authService.signInAnon().then((successSignIn) async {
                     if (successSignIn) {
@@ -91,7 +94,16 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                     }
                   });
                 } else {
-                  updateSelectionTopics(_listOfTopicInterests);
+                  await _profileDBService
+                      .whetherHasAccount(_authService.authUser.uid)
+                      .then((myUser) async {
+                    if (myUser == null) {
+                      await _dbService.firestoreCreateAccount(
+                          userUID: _authService.authUser.uid,
+                          username: _authService.authUser.uid);
+                    }
+                    updateSelectionTopics(_listOfTopicInterests);
+                  });
                 }
               }
             },

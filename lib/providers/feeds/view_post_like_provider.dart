@@ -32,7 +32,6 @@ class ViewPostLikeProvider extends ChangeNotifier {
 
   void initialSave(bool initSave) {
     _savedPost = initSave;
-    
   }
 
   void updateSave(bool save) {

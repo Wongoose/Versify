@@ -10,7 +10,7 @@ class AuthService {
   User authUser;
   String userUID;
 
-  bool get isUserSignedIn => _auth.currentUser != null;
+  bool get isUserAuthenticated => authUser != null;
   bool get isUserAnonymous {
     if (authUser != null) {
       return authUser.isAnonymous;

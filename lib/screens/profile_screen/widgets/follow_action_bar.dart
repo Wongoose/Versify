@@ -7,6 +7,7 @@ import 'package:versify/screens/profile_screen/edit_profile_folder/edit_profile.
 import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/dynamic_links.dart';
+import 'package:versify/services/notification.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -206,7 +207,9 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                             replacement: SizedBox(
                               height: 15,
                               width: 15,
-                              child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                              child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
                                 strokeWidth: 0.5,
                               ),
                             ),
@@ -216,7 +219,21 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
           ),
           replacement: GestureDetector(
             onTap: () async {
-              if (!_authService.isUserAnonymous) {
+              if (_authService.isUserAnonymous) {
+                NotificationOverlay().showNormalImageDialog(context,
+                    body: 'Sign up now to follow this user!',
+                    buttonText: 'Sign-up',
+                    clickFunc: null,
+                    imagePath: 'assets/images/user.png',
+                    title: 'Create Account',
+                    delay: Duration(milliseconds: 0));
+
+                // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //     content: Padding(
+                //   padding: EdgeInsets.all(8),
+                //   child: Text('Sign up to follow'),
+                // )));
+              } else {
                 if (!_followLoading) {
                   print('Follow onTap() with hash provider: ' +
                       widget.hashCode.toString());
@@ -236,12 +253,6 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                     // _isFollowing = true;
                   });
                 }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Text('Sign up to follow'),
-                )));
               }
             },
             child: Container(
@@ -275,7 +286,9 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
                 replacement: SizedBox(
                     height: 15,
                     width: 15,
-                    child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
                       strokeWidth: 0.5,
                     )),
               ),
