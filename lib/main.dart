@@ -184,6 +184,8 @@ class VersifyApp extends StatelessWidget {
                   _jsonAllBadgesStorage =
                       JsonAllBadgesStorage(uid: _authService.userUID);
                 } else {
+                  //not authenticated
+                  // initialize services for dynamicLink and tutorial
                   _firestoreDBService = DatabaseService();
                   _profileDBService = ProfileDBService();
                 }

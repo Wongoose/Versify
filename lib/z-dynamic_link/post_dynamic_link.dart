@@ -6,15 +6,12 @@ import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/view_post_gift_provider.dart';
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
-import 'package:versify/screens/feed_screen/widget_view_post/gift_widget.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/interaction_toolbar.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_content.dart';
-import 'package:versify/screens/feed_screen/widget_view_post/view_gift_widget.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post_title.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
-import 'package:versify/shared/loading.dart';
 import 'package:versify/shared/splash_loading.dart';
 
 class DynamicLinkPost extends StatefulWidget {
@@ -50,31 +47,31 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
         .doc(widget.postId)
         .get()
         .then((doc) {
-      feed = Feed(
-        documentID: doc.id,
-        userID: doc['userID'],
-        username: doc['username'],
-        profileImageUrl: doc['profileImageUrl'] ?? null,
-        hasViewed: false,
-
-        // content: doc['content'] ?? 'No Content',
-        contentLength: doc['contentLength'] ?? 0,
-
-        featuredTopic: doc['featuredTopic'] ?? null,
-        featuredValue: doc['featuredValue'] ?? ". . .",
-
-        giftLove: doc['giftLove'] ?? 0,
-        giftBird: doc['giftBird'] ?? 0,
-
-        title: doc['title'] ?? 'Just Me',
-        tags: doc['tags'] ?? [],
-        initLike: false,
-        numberOfLikes: doc['likes'],
-        numberOfViews: doc['views'],
-        listMapContent: doc['listMapContent'] ?? [],
-        postedTimestamp: doc['postedTimeStamp'].toDate(),
-      );
       setState(() {
+        feed = Feed(
+          documentID: doc.id,
+          userID: doc['userID'],
+          username: doc['username'],
+          profileImageUrl: doc['profileImageUrl'] ?? null,
+          hasViewed: false,
+
+          // content: doc['content'] ?? 'No Content',
+          contentLength: doc['contentLength'] ?? 0,
+
+          featuredTopic: doc['featuredTopic'] ?? null,
+          featuredValue: doc['featuredValue'] ?? ". . .",
+
+          giftLove: doc['giftLove'] ?? 0,
+          giftBird: doc['giftBird'] ?? 0,
+
+          title: doc['title'] ?? 'Just Me',
+          tags: doc['tags'] ?? [],
+          initLike: false,
+          numberOfLikes: doc['likes'],
+          numberOfViews: doc['views'],
+          listMapContent: doc['listMapContent'] ?? [],
+          postedTimestamp: doc['postedTimeStamp'].toDate(),
+        );
         _daysAgo = (DateTime.now().difference(feed.postedTimestamp)).inDays;
         _likeProvider = ViewPostLikeProvider(feed: feed);
         _likeProvider.initialLike();
@@ -156,14 +153,14 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
         Provider.of<ThemeProvider>(context, listen: false);
     _authService = Provider.of<AuthService>(context);
 
-    return feed == null
-        ? SplashLoading()
-        : WillPopScope(
-            onWillPop: () {
-              _onWillPop();
-              return null;
-            },
-            child: MultiProvider(
+    return WillPopScope(
+      onWillPop: () {
+        _onWillPop();
+        return null;
+      },
+      child: feed == null
+          ? SplashLoading()
+          : MultiProvider(
               providers: [
                 ChangeNotifierProvider<ViewPostLikeProvider>.value(
                     value: _likeProvider),
@@ -461,7 +458,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                 ],
               ),
             ),
-          );
+    );
   }
 }
 
