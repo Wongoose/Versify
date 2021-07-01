@@ -35,6 +35,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
 
   ViewPostLikeProvider _likeProvider;
   GiftProvider _giftProvider;
+  ThemeProvider _themeProvider;
 
   void initState() {
     super.initState();
@@ -86,30 +87,34 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
           builder: (c) => AlertDialog(
                 title: Text(
                   'Exit app',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: _themeProvider.primaryTextColor,
+                  ),
                 ),
                 content: Text('Do you really want to exit the app'),
                 actions: [
                   TextButton(
+                    child: Text('No'),
+                    onPressed: () => Navigator.pop(c, false),
+                  ),
+                  TextButton(
                     child: Text('Yes'),
                     onPressed: () async {
                       print('onPopExit is true | yes clicked');
-                      if (_authService.isUserAnonymous) {
+                      if (_authService.isUserAnonymous &&
+                          !_authService.hasFirestoreDocuments) {
                         print('onPopExit is true | user is anon!');
                         await FirebaseAuth.instance.currentUser.delete();
                       }
                       SystemNavigator.pop();
                     },
                   ),
-                  TextButton(
-                    child: Text('No'),
-                    onPressed: () => Navigator.pop(c, false),
-                  ),
                 ],
               ));
     } else {
       print('onPopExit is false');
-      if (_authService.isUserAnonymous) {
+      if (_authService.isUserAnonymous && !_authService.hasFirestoreDocuments) {
         print('onPopExit is false | user is anon!');
         await FirebaseAuth.instance.currentUser.delete().then((value) =>
             Navigator.popUntil(
@@ -149,8 +154,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
-    final ThemeProvider _themeProvider =
-        Provider.of<ThemeProvider>(context, listen: false);
+    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _authService = Provider.of<AuthService>(context);
 
     return WillPopScope(

@@ -10,6 +10,8 @@ class AuthService {
   User authUser;
   String userUID;
 
+  bool hasFirestoreDocuments;
+
   bool get isUserAuthenticated => authUser != null;
   bool get isUserAnonymous {
     if (authUser != null) {
@@ -28,6 +30,26 @@ class AuthService {
         if (result.user.uid != null) {
           print('User signed In Anon!');
           this.authUser = result.user;
+          MyUser _user = MyUser(
+            userUID: result.user.uid,
+            username: result.user.uid,
+            description: null,
+            profileImageUrl:
+                'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
+            phoneNumber: null,
+            email: null,
+            socialLinks: {
+              'instagram': null,
+              'tiktok': null,
+              'youtube': null,
+              'website': null,
+            },
+            totalFollowers: 0,
+            totalFollowing: 0,
+            isFollowing: false,
+            completeLogin: false,
+          );
+          myUser = _user;
           return true;
         } else {
           print('No User ID');

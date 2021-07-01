@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:versify/models/user_model.dart';
 import 'package:versify/services/auth.dart';
+import 'package:versify/services/profile_database.dart';
 import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
 import 'package:versify/z-dynamic_link/profile_dynamic_link.dart';
 import 'package:versify/z-dynamic_link/wrapper_dynamic_links.dart';
@@ -53,8 +55,10 @@ class DynamicLinkService {
 
       if (!authService.isUserAuthenticated) {
         //not signed in
-        await AuthService().signInAnon().then((res) async {
+        await authService.signInAnon().then((res) async {
           if (res) {
+            authService.hasFirestoreDocuments = false;
+
             _navigateAfterHandleLink(
               deepLink: deepLink,
               isPost: isPost,
@@ -65,13 +69,46 @@ class DynamicLinkService {
           }
         });
       } else {
-        _navigateAfterHandleLink(
-          deepLink: deepLink,
-          isPost: isPost,
-          isProfile: isProfile,
-          context: context,
-          onPopExitApp: onPopExitApp,
-        );
+        ProfileDBService()
+            .whetherHasAccount(authService.authUser.uid)
+            .then((newUser) async {
+          if (newUser != null) {
+            //hsa firestore documents (authenticated)
+            authService.myUser = newUser;
+            authService.hasFirestoreDocuments = true;
+          } else {
+            //no firestore documents (set authService.myUser before Wrapper())
+            authService.hasFirestoreDocuments = false;
+
+            MyUser _user = MyUser(
+              userUID: authService.authUser.uid,
+              username: authService.authUser.uid,
+              description: null,
+              profileImageUrl:
+                  'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
+              phoneNumber: null,
+              email: null,
+              socialLinks: {
+                'instagram': null,
+                'tiktok': null,
+                'youtube': null,
+                'website': null,
+              },
+              totalFollowers: 0,
+              totalFollowing: 0,
+              isFollowing: false,
+              completeLogin: false,
+            );
+            authService.myUser = _user;
+          }
+          _navigateAfterHandleLink(
+            deepLink: deepLink,
+            isPost: isPost,
+            isProfile: isProfile,
+            context: context,
+            onPopExitApp: onPopExitApp,
+          );
+        });
       }
 
       return true;

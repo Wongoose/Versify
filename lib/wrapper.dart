@@ -56,6 +56,7 @@ class Wrapper extends StatelessWidget {
               if (myUserSnap.connectionState == ConnectionState.done) {
                 if (myUserSnap.data != null) {
                   //has user document in firestore
+                  _authService.hasFirestoreDocuments = true;
 
                   if (_authService.isUserAnonymous) {
                     print(myUserSnap.data.userUID + "| is signInAnonymous");
@@ -91,6 +92,8 @@ class Wrapper extends StatelessWidget {
                   }
                 } else {
                   // no user document but authenticated
+                  _authService.hasFirestoreDocuments = false;
+
                   if (_authService.isUserAnonymous) {
                     //dynamic linking with new user (anonymous)
                     print('Anonymous User | DynamicLink');

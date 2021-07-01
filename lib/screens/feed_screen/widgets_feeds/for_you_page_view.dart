@@ -4,6 +4,7 @@ import 'package:versify/providers/feeds/feed_list_provider.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/providers/feeds/feed_type_provider.dart';
 import 'package:versify/providers/feeds/input_comments_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/providers/feeds/post_swipe_up_provider.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart';
@@ -79,6 +80,8 @@ class _ForYouPageViewState extends State<ForYouPageView> {
         Provider.of<FeedListProvider>(context);
     final InputCommentsProvider _inputCommentsProvider =
         Provider.of<InputCommentsProvider>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     print('For You PageView Build with allPostsView: ' +
         _allPostsViewProvider.toString());
@@ -91,7 +94,7 @@ class _ForYouPageViewState extends State<ForYouPageView> {
               return null;
             },
             child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
               extendBodyBehindAppBar: false,
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(kToolbarHeight),
@@ -104,7 +107,7 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                           centerTitle: false,
                           titleSpacing: 5,
                           elevation: 0.5,
-                          backgroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).backgroundColor,
                           title: Padding(
                             padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
                             child: Row(
@@ -125,7 +128,8 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                                       style: TextStyle(
                                           letterSpacing: -0.3,
                                           fontSize: 18,
-                                          color: Colors.black,
+                                          color:
+                                              _themeProvider.primaryTextColor,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'Nunito'),
                                     ),
@@ -135,7 +139,7 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                                     style: TextStyle(
                                         letterSpacing: 1.0,
                                         fontSize: 9,
-                                        color: Colors.black,
+                                        color: _themeProvider.primaryTextColor,
                                         fontWeight: FontWeight.w600,
                                         fontFamily: 'Nunito'),
                                   ),
@@ -160,7 +164,8 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                                         style: TextStyle(
                                             letterSpacing: 1,
                                             fontSize: 13,
-                                            color: Colors.black,
+                                            color:
+                                                _themeProvider.primaryTextColor,
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'Nunito'),
                                       ),
@@ -175,15 +180,18 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
 
-                              backgroundColor: Colors.transparent,
+                              backgroundColor:
+                                  Theme.of(context).backgroundColor,
 
                               // focusColor: Colors.white,
 
                               // highlightColor: Color(0xfffffcfe),
                             ),
                             clipBehavior: Clip.none,
-                            icon: Icon(Icons.arrow_back_rounded,
-                                color: Colors.black),
+                            icon: Icon(
+                              Icons.arrow_back_rounded,
+                              color: _themeProvider.primaryTextColor,
+                            ),
                             label: Text(''),
                             onPressed: () => popScopeUpdateFeed(),
                           ),
@@ -193,20 +201,24 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
 
-                                backgroundColor: Colors.white,
+                                backgroundColor:
+                                    Theme.of(context).backgroundColor,
 
                                 // focusColor: Colors.white,
 
                                 // highlightColor: Color(0xfffffcfe),
                               ),
                               clipBehavior: Clip.none,
-                              icon: Icon(Icons.more_vert_rounded,
-                                  color: Colors.black),
+                              icon: Icon(
+                                Icons.more_vert_rounded,
+                                color: _themeProvider.primaryTextColor,
+                              ),
                               label: Text(''),
                               onPressed: () {
                                 if (_allPostsViewProvider.hasSetNewuser) {
                                   showModalBottomSheet(
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: Theme.of(context)
+                                          .dialogBackgroundColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20),
@@ -390,6 +402,8 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
     _authService = Provider.of<AuthService>(context);
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     allPostsViewProvider = Provider.of<AllPostsView>(context, listen: true);
 
     print(
@@ -407,7 +421,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     height: 60,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                          padding: EdgeInsets.all(15), primary: Colors.white),
+                        padding: EdgeInsets.all(15),
+                        primary: Theme.of(context).dialogBackgroundColor,
+                        backgroundColor:
+                            Theme.of(context).dialogBackgroundColor,
+                      ),
                       onPressed: () {
                         if (_isVisitProfile) {
                           //report
@@ -445,7 +463,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     height: 60,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                          padding: EdgeInsets.all(15), primary: Colors.white),
+                        padding: EdgeInsets.all(15),
+                        primary: Theme.of(context).dialogBackgroundColor,
+                        backgroundColor:
+                            Theme.of(context).dialogBackgroundColor,
+                      ),
                       onPressed: () {
                         setState(() => _shareLoading = true);
                         DynamicLinkService()
@@ -468,7 +490,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                           child: Text(
                             'Share post',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: _themeProvider.primaryTextColor,
                               fontSize: 16,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.w600,
@@ -495,7 +517,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                       height: 60,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(15), primary: Colors.white),
+                          padding: EdgeInsets.all(15),
+                          primary: Theme.of(context).dialogBackgroundColor,
+                          backgroundColor:
+                              Theme.of(context).dialogBackgroundColor,
+                        ),
                         onPressed: () {
                           setState(() => _followLoading = true);
 
@@ -530,7 +556,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                                   ? 'Unfollow'
                                   : 'Follow',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: _themeProvider.primaryTextColor,
                                 fontSize: 16,
                                 fontFamily: 'Nunito',
                                 fontWeight: FontWeight.w600,
@@ -554,14 +580,18 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                       height: 60,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(15), primary: Colors.white),
+                          padding: EdgeInsets.all(15),
+                          primary: Theme.of(context).dialogBackgroundColor,
+                          backgroundColor:
+                              Theme.of(context).dialogBackgroundColor,
+                        ),
                         onPressed: () {},
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Edit post',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: _themeProvider.primaryTextColor,
                               fontSize: 16,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.w600,

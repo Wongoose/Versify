@@ -126,7 +126,7 @@ class InteractionBar extends StatelessWidget {
                       enableDrag: false,
                       context: context,
                       builder: (context) {
-                        ;
+                        
 
                         return GiftComingSoon();
 
