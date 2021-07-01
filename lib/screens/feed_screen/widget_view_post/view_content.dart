@@ -7,7 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
+import 'package:versify/services/notification.dart';
 import 'package:vibration/vibration.dart';
 
 class ViewPostContent extends StatelessWidget {
@@ -33,6 +35,7 @@ class ViewPostContent extends StatelessWidget {
         Provider.of<ThemeProvider>(context, listen: false);
     final DatabaseService _databaseService =
         Provider.of<DatabaseService>(context);
+    final AuthService _authService = Provider.of<AuthService>(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -52,11 +55,21 @@ class ViewPostContent extends StatelessWidget {
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           onDoubleTap: () {
-            likeProvider.doubleTap();
-            Vibration.vibrate(duration: 5);
-
-            if (fromDynamicLink) {
-              _databaseService.updateFeedDynamicPost(feed: feed);
+            if (_authService.isUserAnonymous) {
+              NotificationOverlay().showNormalImageDialog(context,
+                  body:
+                      'Did you enjoy reading this post? Sign up now to like this post!',
+                  buttonText: 'Sign-up',
+                  clickFunc: null,
+                  imagePath: 'assets/images/user.png',
+                  title: 'Create Account',
+                  delay: Duration(milliseconds: 0));
+            } else {
+              likeProvider.doubleTap();
+              Vibration.vibrate(duration: 5);
+              if (fromDynamicLink) {
+                _databaseService.updateFeedDynamicPost(feed: feed);
+              }
             }
           },
           child: listMapContent.isNotEmpty
