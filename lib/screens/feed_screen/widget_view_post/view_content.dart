@@ -65,11 +65,12 @@ class ViewPostContent extends StatelessWidget {
                   title: 'Create Account',
                   delay: Duration(milliseconds: 0));
             } else {
-              likeProvider.doubleTap();
-              Vibration.vibrate(duration: 5);
-              if (fromDynamicLink) {
+              if (fromDynamicLink && !likeProvider.isLiked) {
                 _databaseService.updateFeedDynamicPost(feed: feed);
               }
+              //call notifier after dynamicLink update
+              likeProvider.doubleTap();
+              Vibration.vibrate(duration: 5);
             }
           },
           child: listMapContent.isNotEmpty
