@@ -16,9 +16,10 @@ import 'package:versify/shared/splash_loading.dart';
 
 class DynamicLinkPost extends StatefulWidget {
   final String postId;
+  final String userUID;
   final bool onPopExitApp;
 
-  DynamicLinkPost({this.postId, this.onPopExitApp});
+  DynamicLinkPost({this.postId, this.onPopExitApp, this.userUID});
 
   @override
   _DynamicLinkPostState createState() => _DynamicLinkPostState();
@@ -67,7 +68,9 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
 
           title: doc['title'] ?? 'Just Me',
           tags: doc['tags'] ?? [],
-          initLike: false,
+          initLike: doc['isLiked'] != null
+              ? doc['isLiked'].contains(widget.userUID)
+              : false,
           numberOfLikes: doc['likes'],
           numberOfViews: doc['views'],
           listMapContent: doc['listMapContent'] ?? [],

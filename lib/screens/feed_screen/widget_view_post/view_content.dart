@@ -66,10 +66,12 @@ class ViewPostContent extends StatelessWidget {
                   delay: Duration(milliseconds: 0));
             } else {
               if (fromDynamicLink && !likeProvider.isLiked) {
+                //call doubleTap() only after check not liked
+                likeProvider.doubleTap();
                 _databaseService.updateFeedDynamicPost(feed: feed);
+              } else {
+                likeProvider.doubleTap();
               }
-              //call notifier after dynamicLink update
-              likeProvider.doubleTap();
               Vibration.vibrate(duration: 5);
             }
           },

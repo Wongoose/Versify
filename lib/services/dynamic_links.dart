@@ -117,19 +117,22 @@ class DynamicLinkService {
     }
   }
 
-  void _navigateAfterHandleLink(
-      {Uri deepLink,
-      bool isPost,
-      bool isProfile,
-      BuildContext context,
-      bool onPopExitApp}) {
+  void _navigateAfterHandleLink({
+    Uri deepLink,
+    bool isPost,
+    bool isProfile,
+    BuildContext context,
+    bool onPopExitApp,
+  }) {
     if (isPost) {
       String postId = deepLink.queryParameters['post-id'];
       if (postId != null) {
         //Navigate to post screen EXAMPLE
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                DynamicLinkPost(postId: postId, onPopExitApp: onPopExitApp)));
+            builder: (context) => DynamicLinkPost(
+                postId: postId,
+                onPopExitApp: onPopExitApp,
+                userUID: authService.authUser.uid)));
 
         print('isPost | Post ID is: $postId');
       }
