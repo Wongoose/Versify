@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:versify/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
+import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
+import 'package:versify/screens/profile_screen/settings/account_verification.dart';
 import 'package:versify/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -8,30 +10,31 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:versify/services/database.dart';
 import 'package:versify/services/profile_database.dart';
-import 'package:versify/home_wrapper.dart';
 import 'package:versify/wrapper.dart';
 
 // ignore: must_be_immutable
-class SignUpPhone extends StatefulWidget {
+class CreateNewPhone extends StatefulWidget {
   final TextEditingController usernameController;
-  final TextEditingController phoneController;
-  final String routeName;
 
-  SignUpPhone({
+  CreateNewPhone({
     this.usernameController,
-    this.routeName,
-    this.phoneController,
   });
 
   @override
-  _SignUpPhoneState createState() => _SignUpPhoneState();
+  _CreateNewPhoneState createState() => _CreateNewPhoneState();
 }
 
-class _SignUpPhoneState extends State<SignUpPhone> {
+class _CreateNewPhoneState extends State<CreateNewPhone> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   ProfileDataProvider _profileDataProvider;
+  AuthService _authService;
+  ProfileDBService _profileDBService;
+
   bool isValidPhone = false;
   bool _validLoading = false;
+
+  int resendingToken;
 
   // PhoneNumber initNumber;
 
@@ -57,10 +60,44 @@ class _SignUpPhoneState extends State<SignUpPhone> {
     }
   }
 
+  Future<void> _phoneVerificationSuccess() async {
+    print('Phone Verification Success | updatePhoneVerification');
+    // print('Phone number: ' + _authService.getCurrentUser.phoneNumber);
+
+    // DatabaseService().firestoreCreateAccount(
+    //   completeLogin: true,
+    //   email: _authService.getCurrentUser.email,
+    //   phone: _authService.getCurrentUser.phoneNumber,
+    //   username: widget.usernameController.text,
+    //   userUID: _authService.getCurrentUser.uid,
+    // );
+
+    // Navigator.popUntil(
+    //     context, ModalRoute.withName(Navigator.defaultRouteName));
+
+    //then wrapper listens to auth and redirect to homeWrapper
+
+    // DatabaseService()
+    //     .updateNewAccUser(
+    //   uid: _authService.authUser.uid,
+    //   username: widget.usernameController.text,
+    //   phone: phoneNumber,
+    //   email: _authService.authUser.email,
+    // )
+    //     .then((_) async {
+    //   _profileDataProvider.updateListeners();
+    //   Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => Wrapper(),
+    //       ));
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AuthService _authService = Provider.of<AuthService>(context);
-    final MyUser _user = Provider.of<MyUser>(context, listen: false);
+    _profileDBService = Provider.of<ProfileDBService>(context);
+    _authService = Provider.of<AuthService>(context);
     _profileDataProvider =
         Provider.of<ProfileDataProvider>(context, listen: false);
 
@@ -93,7 +130,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
               backgroundColor: Colors.white,
             ),
             child: Text(
-              'Cancel',
+              'Back',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black54,
@@ -101,7 +138,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
               ),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
             },
           ),
           actions: [
@@ -124,35 +161,35 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                 _fetchUrl().then((_) {
                   formKey.currentState.validate();
                   if (isValidPhone) {
-                    DatabaseService()
-                        .updateNewAccUser(
-                      uid: _user.userUID,
-                      username: widget.usernameController.text,
-                      phone: _profileDataProvider.phoneNumberNewAcc.phoneNumber,
-                      email: _authService.authUser.email,
-                    )
-                        .then((value) async {
-                      _profileDataProvider.updateListeners();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Wrapper(),
-                          ));
+                    //auth phone verification
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => new AccountVerification(
+                            accEditType: AccountEditType.phone,
+                            parsedText: _profileDataProvider
+                                .phoneNumberNewAcc.phoneNumber,
+                            resendingToken: resendingToken,
+                            verificationSuccessFunc: _phoneVerificationSuccess,
 
-                      // Navigator.popUntil(
-                      //     context, ModalRoute.withName(widget.routeName));
-                      // await ProfileDBService()
-                      //     .whetherHasAccount(_user.userUID)
-                      //     .then((user) {
-                      //   _authService.myUser = user;
-                      //   Navigator.popUntil(context, (route) => false);
-                      //   return Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => HomeWrapper(),
-                      //       ));
-                      // });
-                    });
+                            // DatabaseService()
+                            //     .updateNewAccUser(
+                            //   uid: _user.userUID,
+                            //   username: widget.usernameController.text,
+                            //   phone: _profileDataProvider
+                            //       .phoneNumberNewAcc.phoneNumber,
+                            //   email: _authService.authUser.email,
+                            // )
+                            //     .then((value) async {
+                            //   _profileDataProvider.updateListeners();
+                            //   Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => Wrapper(),
+                            //       ));
+                            // });
+                          ),
+                        ));
                   }
                   setState(() => _validLoading = false);
                 });
@@ -185,7 +222,6 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                 ),
               ),
               SizedBox(height: 5),
-
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Form(
@@ -226,7 +262,6 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                               initialValue:
                                   _profileDataProvider.phoneNumberNewAcc,
 
-                              textFieldController: widget.phoneController,
                               formatInput: false,
                               // keyboardType: TextInputType.numberWithOptions(
                               //     signed: true, decimal: true),
@@ -242,7 +277,10 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                                   child: SizedBox(
                                     height: 15,
                                     width: 15,
-                                    child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                    child: CircularProgressIndicator(
+                                      valueColor:
+                                          new AlwaysStoppedAnimation<Color>(
+                                              Theme.of(context).primaryColor),
                                       strokeWidth: 0.5,
                                     ),
                                   ),
@@ -263,57 +301,42 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                           ]),
                     )),
               ),
-              // TextFormField(
-              //   autofocus: true,
-              //   controller: _textController,
-              //   keyboardType: TextInputType.phone,
-              //   maxLength: 20,
-              //   maxLines: 1,
-              //   cursorColor: Theme.of(context).primaryColor,
-              //   validator: (text) {
-              //     return text.contains(' ') ? 'Cannot have spaces' : null;
-              //   },
-              //   buildCounter: (_, {currentLength, maxLength, isFocused}) {
-              //     return Visibility(
-              //       visible: false,
-              //       child: Container(
-              //         padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-              //         alignment: Alignment.centerLeft,
-              //         child: Text(
-              //           '${currentLength.toString()}/${maxLength.toString()}',
-              //           style: TextStyle(
-              //             fontSize: 12,
-              //             color: currentLength > maxLength
-              //                 ? Colors.red
-              //                 : Colors.black54,
-              //             fontWeight: FontWeight.w500,
-              //           ),
-              //         ),
-              //       ),
-              //     );
-              //   },
-              //   decoration: InputDecoration(
-              //     prefixStyle: TextStyle(color: Colors.black45, fontSize: 15),
-              //     isDense: true,
-              //     focusedBorder: UnderlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.black26, width: 0.5),
-              //     ),
-              //     enabledBorder: UnderlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.black26, width: 0.5),
-              //     ),
-              //   ),
-              // ),
               SizedBox(height: 15),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: SizedBox(
                   child: Text(
-                    'Your privacy is guaranteed.\nYour phone number is used for verification purposes only.',
+                    'Your privacy is guaranteed.\nYour phone number is used to enhance security to your account.',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
                       color: Colors.black54,
                       fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Wrapper(),
+                        ));
+                  },
+                  child: SizedBox(
+                    child: Text(
+                      'I\'ll do it later.',
+                      style: TextStyle(
+                        height: 1.7,
+                        fontSize: 12,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

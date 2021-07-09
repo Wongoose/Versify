@@ -10,6 +10,7 @@ import 'package:versify/screens/feed_screen/widget_view_post/input_comment.dart'
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/services/dynamic_links.dart';
+import 'package:versify/services/notification.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:versify/shared/report_post_dialog.dart';
@@ -463,7 +464,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                           replacement: SizedBox(
                             height: 15,
                             width: 15,
-                            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                            child: CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).primaryColor),
                               strokeWidth: 0.5,
                             ),
                           ),
@@ -481,29 +484,41 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                         style: TextButton.styleFrom(
                             padding: EdgeInsets.all(15), primary: Colors.white),
                         onPressed: () {
-                          setState(() => _followLoading = true);
+                          if (_authService.isUserAnonymous) {
+                            //dialog cannot perform action - need sign up
+                            NotificationOverlay().showNormalImageDialog(context,
+                                body:
+                                    'You can\'t follow them without an account. Sign up now!',
+                                buttonText: 'Sign-up',
+                                clickFunc: null,
+                                imagePath: 'assets/images/user.png',
+                                title: 'Create Account',
+                                delay: Duration(milliseconds: 0));
+                          } else {
+                            setState(() => _followLoading = true);
 
-                          bool _isFollowing = !allPostsViewProvider
-                              .currentViewPostUser.isFollowing;
+                            bool _isFollowing = !allPostsViewProvider
+                                .currentViewPostUser.isFollowing;
 
-                          _profileDBService
-                              .updateFollowing(
-                            profileUID: allPostsViewProvider
-                                .currentViewPostUser.userUID,
-                            isFollowing: _isFollowing,
-                            usersPublicFollowID: allPostsViewProvider
-                                .currentViewPostUser.usersPublicFollowID,
-                          )
-                              .then(
-                            (publicFollowID) {
-                              allPostsViewProvider.currentViewPostUser
-                                  .usersPublicFollowID = publicFollowID;
-                              allPostsViewProvider.currentViewPostUser
-                                  .isFollowing = _isFollowing;
-                              _followLoading = false;
-                              allPostsViewProvider.updateListeners();
-                            },
-                          );
+                            _profileDBService
+                                .updateFollowing(
+                              profileUID: allPostsViewProvider
+                                  .currentViewPostUser.userUID,
+                              isFollowing: _isFollowing,
+                              usersPublicFollowID: allPostsViewProvider
+                                  .currentViewPostUser.usersPublicFollowID,
+                            )
+                                .then(
+                              (publicFollowID) {
+                                allPostsViewProvider.currentViewPostUser
+                                    .usersPublicFollowID = publicFollowID;
+                                allPostsViewProvider.currentViewPostUser
+                                    .isFollowing = _isFollowing;
+                                _followLoading = false;
+                                allPostsViewProvider.updateListeners();
+                              },
+                            );
+                          }
                         },
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -523,7 +538,9 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                             replacement: SizedBox(
                               height: 15,
                               width: 15,
-                              child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                              child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
                                 strokeWidth: 0.5,
                               ),
                             ),

@@ -60,7 +60,7 @@ class ProfileDBService {
           return MyUser(
             userUID: _doc['userID'],
             username: _doc['username'],
-            description: _doc['description'],
+            description: _doc['description'] ?? '',
             profileImageUrl: _doc['profileImageUrl'] ??
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
             phoneNumber: _doc['phone'],
@@ -81,7 +81,7 @@ class ProfileDBService {
             return MyUser(
               userUID: doc.id,
               username: doc['username'],
-              description: doc['description'],
+              description: doc['description'] ?? '',
               profileImageUrl: doc['profileImageUrl'] ??
                   'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
               phoneNumber: doc['phone'],
@@ -308,7 +308,7 @@ class ProfileDBService {
           return MyUser(
             userUID: doc.id,
             username: doc['username'],
-            description: doc['description'],
+            description: doc['description'] ?? '',
             profileImageUrl: doc['profileImageUrl'] ??
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
             phoneNumber: doc['phone'],
@@ -412,6 +412,8 @@ class ProfileDBService {
   }
 
   Future<void> updatePhoneVerification({String phone}) async {
+    print(
+        'updatePhoneVerification() | update firebase phoneNumber to: ' + phone);
     await usersPrivateCollection.doc(this.uid).update({
       'phone': phone,
     });

@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/onboarding_screen/new_user_options.dart';
-import 'package:versify/screens/onboarding_screen/sign_up_phone.dart';
+import 'package:versify/screens/onboarding_screen/create_new_phone.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
@@ -13,16 +15,18 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
-class SignUpDetails extends StatefulWidget {
+class CreateNewUsername extends StatefulWidget {
   @override
-  _SignUpDetailsState createState() => _SignUpDetailsState();
+  _CreateNewUsernameState createState() => _CreateNewUsernameState();
 }
 
-class _SignUpDetailsState extends State<SignUpDetails> {
+class _CreateNewUsernameState extends State<CreateNewUsername> {
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
 
+  DatabaseService _databaseService;
+  AuthService _authService;
   ProfileDataProvider _profileDataProvider;
+
   PhoneNumber _phoneNumber = PhoneNumber(isoCode: 'US', phoneNumber: '');
 
   bool _validUsername = false;
@@ -31,7 +35,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
   String _text = '';
 
   Future<void> _checkForValidUsername(String username) async {
-    DatabaseService().checkValidUsername(username).then((isValid) {
+    _databaseService.checkIfValidUsername(username).then((isValid) {
       setState(() {
         _validUsername = isValid;
         _validLoading = false;
@@ -40,12 +44,10 @@ class _SignUpDetailsState extends State<SignUpDetails> {
   }
 
   _onUsernameChanged(String username) {
-    if (!_validLoading) {
-      setState(() {
-        _validUsername = false;
-        _validLoading = true;
-      });
-    }
+    setState(() {
+      _validUsername = false;
+      _validLoading = true;
+    });
 
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(seconds: 1), () {
@@ -55,27 +57,39 @@ class _SignUpDetailsState extends State<SignUpDetails> {
     });
   }
 
+  Future<void> onWillPop() async {
+    await FirebaseAuth.instance.currentUser.delete();
+  }
+
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _profileDataProvider.phoneNumberNewAcc = _phoneNumber;
+      _profileDataProvider.phoneNumberNewAcc =
+          PhoneNumber(phoneNumber: _authService.getCurrentUser.phoneNumber);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final AuthService _authService = Provider.of<AuthService>(context);
+    _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+    _databaseService = Provider.of<DatabaseService>(context);
     _profileDataProvider =
         Provider.of<ProfileDataProvider>(context, listen: false);
 
     return WillPopScope(
-      onWillPop: () {
-        _authService.logout();
+      onWillPop: () async {
+        if (!Navigator.of(context).userGestureInProgress) {
+          await onWillPop();
+          // _authService.logout();
+        }
         return null;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -83,26 +97,27 @@ class _SignUpDetailsState extends State<SignUpDetails> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: _themeProvider.primaryTextColor.withOpacity(0.87),
             ),
           ),
           leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
             ),
             child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: _themeProvider.secondaryTextColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               // _profileDataProvider.updateListeners();
-              _authService.logout();
+              await onWillPop();
+
               // Navigator.pop(context);
             },
           ),
@@ -110,27 +125,48 @@ class _SignUpDetailsState extends State<SignUpDetails> {
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).backgroundColor,
               ),
               child: Text(
                 'Next',
                 style: TextStyle(
                   fontSize: 14,
-                  color: _validUsername ? Theme.of(context).primaryColor : Colors.black26,
+                  color: _validUsername
+                      ? Theme.of(context).primaryColor
+                      : _themeProvider.primaryTextColor.withOpacity(0.26),
                   fontWeight: FontWeight.w600,
                 ),
               ),
               onPressed: () {
                 if (_validUsername && _usernameController.text != '') {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => SignUpPhone(
-                          usernameController: _usernameController,
-                          phoneController: _phoneController,
-                          routeName: Navigator.defaultRouteName,
-                        ),
-                      ));
+                  //check database second time
+                  _databaseService
+                      .checkIfValidUsername(_usernameController.text)
+                      .then((isValid) {
+                    if (isValid) {
+                      // username is 100% valid
+
+                      _databaseService.firestoreCreateAccount(
+                        completeLogin: true,
+                        email: _authService.getCurrentUser.email,
+                        phone: _authService.getCurrentUser.phoneNumber,
+                        username: _usernameController.text,
+                        userUID: _authService.getCurrentUser.uid,
+                      );
+
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => CreateNewPhone(
+                              usernameController: _usernameController,
+                            ),
+                          ));
+                    } else {
+                      // second check is not valid
+                    }
+                  });
+                } else {
+                  //not valid when typing (instant reject)
                 }
               },
             ),
@@ -145,7 +181,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                 'Choose your username',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -153,7 +189,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
               TextFormField(
                 autofocus: true,
                 controller: _usernameController,
-                maxLengthEnforced: true,
                 maxLength: 20,
                 maxLines: 1,
                 inputFormatters: [
@@ -193,13 +228,14 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                           fontSize: 12,
                           color: currentLength > maxLength
                               ? Colors.red
-                              : Colors.black54,
+                              : _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   );
                 },
+                style: TextStyle(color: _themeProvider.primaryTextColor),
                 decoration: InputDecoration(
                   prefixText: '@ ',
                   suffix: Visibility(
@@ -218,18 +254,42 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                     replacement: SizedBox(
                       height: 15,
                       width: 15,
-                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor),
                         strokeWidth: 0.5,
                       ),
                     ),
                   ),
-                  prefixStyle: TextStyle(color: Colors.black45, fontSize: 15),
+                  prefixStyle: TextStyle(
+                      color: _themeProvider.secondaryTextColor, fontSize: 15),
                   isDense: true,
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 0.5),
+                    borderSide: BorderSide(
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.26),
+                        width: 0.5),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 0.5),
+                    borderSide: BorderSide(
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.26),
+                        width: 0.5),
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: SizedBox(
+                  child: Text(
+                    'Your username is just a nickname. You can always change it later.',
+                    style: TextStyle(
+                      height: 1.7,
+                      fontSize: 12,
+                      color: _themeProvider.secondaryTextColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

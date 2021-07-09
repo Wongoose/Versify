@@ -6,12 +6,14 @@ import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/feeds/view_post_gift_provider.dart';
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
+import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/interaction_toolbar.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_content.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/view_post_title.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
+import 'package:versify/services/notification.dart';
 import 'package:versify/shared/splash_loading.dart';
 
 class DynamicLinkPost extends StatefulWidget {
@@ -36,6 +38,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
 
   ViewPostLikeProvider _likeProvider;
   GiftProvider _giftProvider;
+  TutorialProvider _tutorialProvider;
   ThemeProvider _themeProvider;
 
   void initState() {
@@ -95,7 +98,12 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
                     color: _themeProvider.primaryTextColor,
                   ),
                 ),
-                content: Text('Do you really want to exit the app'),
+                content: Text(
+                  'Do you really want to exit the app?',
+                  style: TextStyle(
+                    color: _themeProvider.primaryTextColor,
+                  ),
+                ),
                 actions: [
                   TextButton(
                     child: Text('No'),
@@ -123,6 +131,14 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
             Navigator.popUntil(
                 context, ModalRoute.withName(Navigator.defaultRouteName)));
       } else {
+        if (_tutorialProvider.signUpProfileNotif) {
+          //if tutorial profile not complete (still anonymous user)
+          NotificationOverlay().simpleNotification(
+              body: 'Sign-up now to unlock more features!',
+              imagePath: 'assets/images/relatable.png',
+              title: 'Sign Up Profile',
+              delay: Duration(seconds: 1));
+        }
         Navigator.pop(context);
       }
     }
@@ -159,6 +175,7 @@ class _DynamicLinkPostState extends State<DynamicLinkPost> {
     final ThemeData _theme = Theme.of(context);
     _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _authService = Provider.of<AuthService>(context);
+    _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 
     return WillPopScope(
       onWillPop: () {

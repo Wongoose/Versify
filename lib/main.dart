@@ -60,9 +60,10 @@ class VersifyApp extends StatelessWidget {
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
+        statusBarColor: Color(0xFFffdee9),
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarDividerColor: Colors.white,
-        systemNavigationBarColor: Colors.white,
+        systemNavigationBarColor: Color(0xFFffdee9),
       ),
     );
 
@@ -134,6 +135,8 @@ class VersifyApp extends StatelessWidget {
             final TutorialProvider _tutorialProvider = TutorialProvider();
 
             final ThemeProvider _themeProvider = ThemeProvider();
+
+            final Wrapper wrapperScreen = Wrapper();
 
             JsonAllBadgesStorage _jsonAllBadgesStorage;
 
@@ -262,6 +265,7 @@ class VersifyApp extends StatelessWidget {
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
                             canvasColor: Colors.white,
                             backgroundColor: Colors.white,
+                            dialogBackgroundColor: Colors.white,
                           ),
                           builder: (context, child) {
                             return MediaQuery(
@@ -275,6 +279,7 @@ class VersifyApp extends StatelessWidget {
                               dynamicLinkService: _dynamicLinkService),
                           routes: {
                             '/accountSettings': (context) => AccountSettings(),
+                            '/wrapper': (context) => wrapperScreen,
                           },
                         );
                       },

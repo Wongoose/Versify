@@ -1,3 +1,5 @@
+import 'package:overlay_support/overlay_support.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/shared/constants.dart';
@@ -29,19 +31,21 @@ class _SignUpAuthState extends State<SignUpAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     _authService = Provider.of<AuthService>(context);
 
     print('SIGN UP AUTH');
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0.0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Icon(
             Icons.arrow_back_ios_rounded,
-            color: Colors.black87,
+            color: _themeProvider.primaryTextColor,
           ),
         ),
         actions: [],
@@ -49,7 +53,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 35.0),
+            padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,7 +103,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                         TextSpan(
                           text: ' an Account',
                           style: TextStyle(
-                              color: Colors.black,
+                              color: _themeProvider.primaryTextColor,
                               fontSize: 37,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Nunito',
@@ -117,7 +121,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          primary: Colors.white,
+                          primary: Theme.of(context).dialogBackgroundColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
@@ -135,37 +139,53 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          primary: Colors.white,
+                          primary: Theme.of(context).dialogBackgroundColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
                         ),
                         onPressed: () async {
                           setState(() => loading = true);
-
-                          await _authService
-                              .createGoogleAccount()
-                              .then((createAcc) {
-                            if (createAcc == CreateAcc.newAccount) {
+                          _authService
+                              .signInWithGoogle(newUser: true)
+                              .then((authUser) {
+                            setState(() => loading = false);
+                            if (authUser != null) {
                               Navigator.popUntil(
                                   context,
                                   ModalRoute.withName(
                                     Navigator.defaultRouteName,
                                   ));
-                            } else if (createAcc == CreateAcc.hasAccount) {
-                              //already has account - switch to login
-                              showDialogWhenCancel();
                             } else {
-                              //error occured
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'An error has occured while logging in. Please try again.',
-                                ),
-                              ));
+                              toast('Failed to sign up. Please try again.');
                             }
-                            setState(() => loading = false);
                           });
+
+                          // setState(() => loading = true);
+
+                          // await _authService
+                          //     .createGoogleAccount()
+                          //     .then((createAcc) {
+                          //   if (createAcc == CreateAcc.newAccount) {
+                          //     Navigator.popUntil(
+                          //         context,
+                          //         ModalRoute.withName(
+                          //           Navigator.defaultRouteName,
+                          //         ));
+                          //   } else if (createAcc == CreateAcc.hasAccount) {
+                          //     //already has account - switch to login
+                          //     showDialogWhenCancel();
+                          //   } else {
+                          //     //error occured
+                          //     ScaffoldMessenger.of(context)
+                          //         .showSnackBar(SnackBar(
+                          //       content: Text(
+                          //         'An error has occured while logging in. Please try again.',
+                          //       ),
+                          //     ));
+                          //   }
+                          //   setState(() => loading = false);
+                          // });
                         },
                         child: Icon(
                           FontAwesomeIcons.google,
@@ -183,18 +203,22 @@ class _SignUpAuthState extends State<SignUpAuth> {
                     'or Sign Up with Email',
                     style: TextStyle(
                         fontFamily: 'Nunito',
-                        color: Colors.black54,
+                        color: _themeProvider.secondaryTextColor,
                         fontWeight: FontWeight.w400,
                         fontSize: 14),
                   ),
                 ),
-                SizedBox(height: error != '' ? 10 : 0),
+                SizedBox(height: error != '' ? 25 : 0),
                 error != ''
-                    ? Text(
-                        error,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          error,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       )
                     : Container(),
@@ -207,7 +231,8 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       Text(
                         ' Email',
                         style: TextStyle(
-                          color: Colors.black.withOpacity(0.75),
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.75),
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Nunito',
@@ -216,21 +241,42 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       SizedBox(height: 5),
                       TextFormField(
                         scrollPadding: EdgeInsets.fromLTRB(0, 0, 0, 80),
+                        style: TextStyle(
+                          color: _themeProvider.primaryTextColor,
+                        ),
                         decoration: textInputDecoration.copyWith(
                           hintText: 'Email',
-                          prefixIcon: Icon(Icons.mail_outline_rounded),
+                          hintStyle: TextStyle(
+                            color: _themeProvider.secondaryTextColor,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.mail_outline_rounded,
+                            color: _themeProvider.primaryTextColor,
+                          ),
+                          fillColor: Theme.of(context).backgroundColor,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                              color: _themeProvider.primaryTextColor,
+                              width: 1,
+                            ),
+                          ),
                         ),
                         validator: (val) =>
                             val.isEmpty ? 'Enter an email' : null,
                         onChanged: (val) {
-                          setState(() => email = val);
+                          setState(() {
+                            email = val;
+                            error = '';
+                          });
                         },
                       ),
                       SizedBox(height: 25),
                       Text(
                         ' Password',
                         style: TextStyle(
-                          color: Colors.black.withOpacity(0.75),
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.75),
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Nunito',
@@ -239,16 +285,36 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       SizedBox(height: 5),
                       TextFormField(
                         scrollPadding: EdgeInsets.fromLTRB(0, 0, 0, 80),
+                        style: TextStyle(
+                          color: _themeProvider.primaryTextColor,
+                        ),
                         decoration: textInputDecoration.copyWith(
                           hintText: 'Password',
-                          prefixIcon: Icon(Icons.lock_outline_rounded),
+                          hintStyle: TextStyle(
+                            color: _themeProvider.secondaryTextColor,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: _themeProvider.primaryTextColor,
+                          ),
+                          fillColor: Theme.of(context).backgroundColor,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                              color: _themeProvider.primaryTextColor,
+                              width: 1,
+                            ),
+                          ),
                         ),
                         validator: (val) => val.length < 6
-                            ? 'Enter a password 6+ chars long'
+                            ? 'Password must have at least 7 characters.'
                             : null, //return null when it is valid
                         obscureText: true,
                         onChanged: (val) {
-                          setState(() => password = val);
+                          setState(() {
+                            password = val;
+                            error = '';
+                          });
                         },
                       ),
                     ],
@@ -271,19 +337,41 @@ class _SignUpAuthState extends State<SignUpAuth> {
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           setState(() => loading = true);
-                          await _authService
-                              .createAccount(email.trim(), password.trim())
-                              .then((res) {
-                            if (res == null) {
-                              setState(() {
-                                loading = false;
-                                error = "Couldn't create account!";
-                              });
+                          _authService
+                              .createUserEmailPassword(
+                                  email.trim(), password.trim())
+                              .then((errorMap) {
+                            setState(() => loading = false);
+                            if (errorMap == null) {
+                              //no errors -> pop and go to createUsername screen
+                              Navigator.popUntil(
+                                  context,
+                                  ModalRoute.withName(
+                                      Navigator.defaultRouteName));
                             } else {
-                              Navigator.pop(context);
+                              //has errors
+                              toast(errorMap['errorMessage'],
+                                  duration: Toast.LENGTH_LONG);
+                              setState(() => error = errorMap['errorMessage']);
                             }
                           });
                         }
+
+                        // if (_formKey.currentState.validate()) {
+                        //   setState(() => loading = true);
+                        //   await _authService
+                        //       .createAccount(email.trim(), password.trim())
+                        //       .then((res) {
+                        //     if (res == null) {
+                        //       setState(() {
+                        //         loading = false;
+                        //         error = "Couldn't create account!";
+                        //       });
+                        //     } else {
+                        //       Navigator.pop(context);
+                        //     }
+                        //   });
+                        // }
                       },
                       child: Text(
                         "Sign Up with email",
@@ -313,7 +401,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                         'Already have an account?',
                         style: TextStyle(
                             fontFamily: 'Nunito',
-                            color: Colors.black54,
+                            color: _themeProvider.secondaryTextColor,
                             fontWeight: FontWeight.w400,
                             fontSize: 14),
                       ),
@@ -327,7 +415,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                           'Login',
                           style: TextStyle(
                               fontFamily: 'Nunito',
-                              color: Colors.black87,
+                              color: _themeProvider.primaryTextColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
@@ -339,7 +427,15 @@ class _SignUpAuthState extends State<SignUpAuth> {
             ),
           ),
           Visibility(
-              visible: loading, child: Opacity(opacity: 0.9, child: Loading())),
+            visible: loading,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black.withOpacity(0.8),
+              alignment: Alignment.center,
+              child: Loading(),
+            ),
+          ),
         ],
       ),
     );
@@ -378,21 +474,27 @@ class _SignUpAuthState extends State<SignUpAuth> {
                 child: FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.padded,
                   onPressed: () {
-                    setState(() => _dialogLoading = true);
+                    // setState(() => _dialogLoading = true);
 
-                    _authService.signInWithGoogle(newUser: false).then((user) {
-                      setState(() => _dialogLoading = false);
-                      if (user != null) {
-                        Navigator.popUntil(context,
-                            ModalRoute.withName(Navigator.defaultRouteName));
-                      }
-                    });
+                    // _authService.signInWithGoogle(newUser: false).then((user) {
+                    //   setState(() => _dialogLoading = false);
+                    //   if (user != null) {
+                    //     Navigator.popUntil(context,
+                    //         ModalRoute.withName(Navigator.defaultRouteName));
+                    //   }
+                    // });
+                    if (_authService.authUser != null) {
+                      Navigator.popUntil(context,
+                          ModalRoute.withName(Navigator.defaultRouteName));
+                    }
                   },
                   child: _dialogLoading
                       ? SizedBox(
                           height: 15,
                           width: 15,
-                          child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor),
                             strokeWidth: 0.5,
                           ),
                         )
@@ -413,6 +515,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                 child: FlatButton(
                   onPressed: () {
                     Navigator.pop(context);
+                    _authService.logout();
                   },
                   child: Text(
                     'Cancel',

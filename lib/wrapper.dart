@@ -4,7 +4,7 @@ import 'package:versify/home_wrapper.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/onboarding_screen/new_user_options.dart';
 import 'package:versify/screens/onboarding_screen/pick_topics.dart';
-import 'package:versify/screens/onboarding_screen/sign_up_user_details.dart';
+import 'package:versify/screens/onboarding_screen/create_new_username.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
 import 'package:versify/services/all_badges_json_storage.dart';
@@ -49,6 +49,7 @@ class Wrapper extends StatelessWidget {
     } else {
       if (user != null) {
         print('Wrapper stream user: ' + user.userUID.toString());
+        print('PhoneNumber: ' + user.phoneNumber.toString());
         return FutureBuilder<MyUser>(
             future: _profileDBService.whetherHasAccount(user.userUID),
             //change whetherHasAcc function to return MyUser
@@ -87,7 +88,7 @@ class Wrapper extends StatelessWidget {
                       return new HomeWrapper();
                     } else {
                       //not complete login
-                      return SignUpDetails();
+                      return CreateNewUsername();
                     }
                   }
                 } else {
@@ -108,8 +109,8 @@ class Wrapper extends StatelessWidget {
                         ));
                   } else {
                     //user authenticated not-anonymous but no firestore document
-                    //back to signUp
-                    return SignUpDetails();
+                    //part of sign up process
+                    return CreateNewUsername();
                   }
                 }
               } else {

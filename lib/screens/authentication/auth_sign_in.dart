@@ -276,7 +276,7 @@ class _SignInAuthState extends State<SignInAuth> {
                         if (_formKey.currentState.validate()) {
                           setState(() => loading = true);
                           await _authService
-                              .signInEmail(email.trim(), password.trim())
+                              .signInWithEmailPassword(email.trim(), password.trim())
                               .then((res) {
                             if (res != false) {
                               setState(() {
@@ -348,7 +348,15 @@ class _SignInAuthState extends State<SignInAuth> {
             ),
           ),
           Visibility(
-              visible: loading, child: Opacity(opacity: 0.9, child: Loading())),
+            visible: loading,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black.withOpacity(0.8),
+              alignment: Alignment.center,
+              child: Loading(),
+            ),
+          ),
         ],
       ),
     );

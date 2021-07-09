@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/feeds/feed_list_provider.dart';
@@ -693,61 +694,51 @@ class DatabaseService {
   }
 
   Future<CreateAcc> firestoreCreateAccount(
-      {String userUID,
-      String email,
-      String username,
-      String phone,
-      bool completeLogin}) async {
+      {@required String userUID,
+      @required String email,
+      @required String username,
+      @required String phone,
+      @required bool completeLogin}) async {
     try {
-      return await usersPrivateCollection.doc(userUID).get().then((doc) async {
-        bool _userHasAccount = doc.exists;
-        if (_userHasAccount) {
-          return CreateAcc.hasAccount;
-        } else {
-          print('firestoreCreateAccount | with uid: $userUID');
-          return await usersPrivateCollection.doc(userUID).set({
-            'username': username ?? null,
-            'description': null,
-            'profileImageUrl': null,
-            'phone': phone ?? null,
-            'email': email ?? null,
-            'totalFollowers': 0,
-            'totalFollowing': 0,
-            'tagRatings': ['love10', 'peace30'],
-            'tagTimestamps': {
-              'love': FieldValue.serverTimestamp(),
-              'peace': FieldValue.serverTimestamp(),
-            },
-            'socialLinks': null,
-            'completeLogin': completeLogin ?? false,
-          }).then((_) async {
-            final String _allFollowingCollectionPath =
-                '${usersPrivateCollection.path}/$userUID/allFollowing';
+      print('firestoreCreateAccount | with uid: $userUID');
+      return usersPrivateCollection.doc(userUID).set({
+        'username': username ?? null,
+        'description': null,
+        'profileImageUrl': null,
+        'phone': phone ?? null,
+        'email': email ?? null,
+        'totalFollowers': 0,
+        'totalFollowing': 0,
+        'tagRatings': ['love10', 'peace30'],
+        'tagTimestamps': {
+          'love': FieldValue.serverTimestamp(),
+          'peace': FieldValue.serverTimestamp(),
+        },
+        'socialLinks': null,
+        'completeLogin': completeLogin ?? false,
+      }).then((_) async {
+        final String _allFollowingCollectionPath =
+            '${usersPrivateCollection.path}/$userUID/allFollowing';
 
-            final CollectionReference privateAllFollowingCollection =
-                FirebaseFirestore.instance
-                    .collection(_allFollowingCollectionPath);
+        final CollectionReference privateAllFollowingCollection =
+            FirebaseFirestore.instance.collection(_allFollowingCollectionPath);
 
-            print('Collection Path is: ' + privateAllFollowingCollection.path);
+        privateAllFollowingCollection.add({
+          'numFollowing': 0,
+          'usersFollowing': [],
+        });
 
-            privateAllFollowingCollection.add({
-              'numFollowing': 0,
-              'usersFollowing': [],
-            });
-
-            usersPublicCollection.doc().set({
-              'userID': userUID,
-              'username': username ?? null,
-              'phone': phone ?? null,
-              'email': email,
-              'totalFollowers': 0,
-              'followers': [],
-              'latestPost': FieldValue.serverTimestamp(),
-            });
-            print('FB create account FINISH!');
-            return CreateAcc.newAccount;
-          });
-        }
+        usersPublicCollection.add({
+          'userID': userUID,
+          'username': username ?? null,
+          'phone': phone ?? null,
+          'email': email ?? null,
+          'totalFollowers': 0,
+          'followers': [],
+          'latestPost': FieldValue.serverTimestamp(),
+        });
+        print('firestoreCreateAccount | FINISH');
+        return CreateAcc.newAccount;
       });
     } catch (e) {
       print('Error creating account: ' + e.toString());
@@ -755,61 +746,61 @@ class DatabaseService {
     }
   }
 
-  Future<void> updateNewAccUser(
-      {String uid, String username, String phone, String email}) async {
-    try {
-      await usersPrivateCollection.doc(uid).get().then((doc) async {
-        if (doc.exists) {
-          await usersPrivateCollection.doc(uid).update({
-            'username': username,
-            'phone': phone,
-            'completeLogin': true, //shouldn't be true
-            'profileImageUrl': null,
-          });
-        } else {
-          // firestoreCreateAccount
-          firestoreCreateAccount(
-              userUID: uid,
-              username: username,
-              phone: phone,
-              email: email,
-              completeLogin: true);
-        }
-        await usersPublicCollection
-            .where('userID', isEqualTo: uid)
-            .get()
-            .then((snap) async {
-          if (snap.docs.isNotEmpty) {
-            snap.docs.forEach((doc) async {
-              await usersPublicCollection.doc(doc.id).update({
-                'username': username,
-                'phone': phone,
-                'profileImageUrl': null,
-              });
-            });
-          } else {
-            await usersPublicCollection.add({
-              'userID': uid,
-              'username': username,
-              'phone': phone,
-              'profileImageUrl': null,
-              'email': '',
-              'totalFollowers': 0,
-              'followers': [],
-              'latestPost': FieldValue.serverTimestamp(),
-            });
-          }
-        });
-      });
-    } catch (e) {}
-  }
+  // Future<void> updateNewAccUser(
+  //     {String uid, String username, String phone, String email}) async {
+  //   try {
+  //     await usersPrivateCollection.doc(uid).get().then((doc) async {
+  //       if (doc.exists) {
+  //         await usersPrivateCollection.doc(uid).update({
+  //           'username': username,
+  //           'phone': phone,
+  //           'completeLogin': true, //shouldn't be true
+  //           'profileImageUrl': null,
+  //         });
+  //       } else {
+  //         // firestoreCreateAccount
+  //         firestoreCreateAccount(
+  //             userUID: uid,
+  //             username: username,
+  //             phone: phone,
+  //             email: email,
+  //             completeLogin: true);
+  //       }
+  //       await usersPublicCollection
+  //           .where('userID', isEqualTo: uid)
+  //           .get()
+  //           .then((snap) async {
+  //         if (snap.docs.isNotEmpty) {
+  //           snap.docs.forEach((doc) async {
+  //             await usersPublicCollection.doc(doc.id).update({
+  //               'username': username,
+  //               'phone': phone,
+  //               'profileImageUrl': null,
+  //             });
+  //           });
+  //         } else {
+  //           await usersPublicCollection.add({
+  //             'userID': uid,
+  //             'username': username,
+  //             'phone': phone,
+  //             'profileImageUrl': null,
+  //             'email': '',
+  //             'totalFollowers': 0,
+  //             'followers': [],
+  //             'latestPost': FieldValue.serverTimestamp(),
+  //           });
+  //         }
+  //       });
+  //     });
+  //   } catch (e) {}
+  // }
 
-  Future<bool> checkValidUsername(String username) async {
+  Future<bool> checkIfValidUsername(String username) async {
     return await usersPrivateCollection
         .where('username', isEqualTo: username)
         .get()
         .then((snap) {
-      return snap.docs.length == 0 ? true : false;
+      return snap.docs.isEmpty;
     });
   }
 

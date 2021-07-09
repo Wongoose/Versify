@@ -16,7 +16,7 @@ enum TutorialProgress {
 class TutorialProvider extends ChangeNotifier {
   TutorialProgress currentTutorialCompleted = TutorialProgress.none;
 
-  bool pickTopics = true;
+  bool pickTopics = false;
   bool refreshFeedList = false;
   bool viewFirstPost = false;
   bool viewSecondPost = false;
@@ -39,7 +39,17 @@ class TutorialProvider extends ChangeNotifier {
 
   void updateTutorialComplete(bool completed) {
     print('update TutorialComplete | completed: $completed');
+    if(completed){
+
     allCompleted = completed;
+
+    pickTopics = false;
+    refreshFeedList = false;
+    viewFirstPost = false;
+    viewSecondPost = false;
+    checkInDialog = false;
+    signUpProfileNotif = false;
+    }
   }
 
   void updateProgress(TutorialProgress tutorialProgress) {

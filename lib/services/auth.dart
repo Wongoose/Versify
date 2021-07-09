@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,8 @@ class AuthService {
       return true;
     }
   }
+
+  User get getCurrentUser => _auth.currentUser;
 
   Future<bool> signInAnon() async {
     //method setup
@@ -57,7 +60,7 @@ class AuthService {
         }
       });
       // FirebaseUser user = result.user;
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print('SignInAnon() | Error: ${e.toString()}');
       return false;
     }
@@ -71,14 +74,19 @@ class AuthService {
     if (firebaseUser != null) {
       this.authUser = firebaseUser;
       this.userUID = firebaseUser.uid;
-      return MyUser(userUID: firebaseUser.uid);
+      this.myUser = MyUser(
+        userUID: firebaseUser.uid,
+        phoneNumber: firebaseUser.phoneNumber,
+        email: firebaseUser.email,
+      );
+      return this.myUser;
     } else {
       this.userUID = null;
       return null;
     }
   }
 
-  Future<dynamic> signInEmail(String email, password) async {
+  Future<dynamic> signInWithEmailPassword(String email, password) async {
     try {
       return await _auth
           .signInWithEmailAndPassword(email: email, password: password)
@@ -91,48 +99,83 @@ class AuthService {
     }
   }
 
-  Future<CreateAcc> createGoogleAccount() async {
-    try {
-      return signInWithGoogle(newUser: true).then((resUser) async {
-        String userUID = resUser.uid;
-        return DatabaseService()
-            .firestoreCreateAccount(userUID: userUID, email: resUser.email)
-            .then((createAcc) {
-          return createAcc;
-          // if (createAcc == CreateAcc.hasAccount) {
-          // } else {}
-          // return userUID != null ? userUID : null;
-        });
-      });
-    } catch (e) {
-      return null;
-    }
-  }
+  // Future<CreateAcc> createGoogleAccount() async {
+  //   try {
+  //     return signInWithGoogle(newUser: true).then((resUser) async {
+  //       String userUID = resUser.uid;
+  //       return DatabaseService()
+  //           .firestoreCreateAccount(userUID: userUID, email: resUser.email)
+  //           .then((createAcc) {
+  //         return createAcc;
+  //         // if (createAcc == CreateAcc.hasAccount) {
+  //         // } else {}
+  //         // return userUID != null ? userUID : null;
+  //       });
+  //     });
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
-  Future<dynamic> createAccount(String email, password) async {
-    try {
-      return await createEmailPassword(email, password)
-          .then((UserCredential result) async {
-        String userUID = result.user.uid;
-        await DatabaseService()
-            .firestoreCreateAccount(userUID: userUID, email: result.user.email);
-        return userUID != null ? _userFromFB(result.user) : null;
-      });
-    } catch (e) {
-      return null;
-    }
-  }
+  // Future<dynamic> createAccount(String email, password) async {
+  //   try {
+  //     return await createEmailPassword(email, password)
+  //         .then((UserCredential result) async {
+  //       String userUID = result.user.uid;
+  //       await DatabaseService()
+  //           .firestoreCreateAccount(userUID: userUID, email: result.user.email);
+  //       return userUID != null ? _userFromFB(result.user) : null;
+  //     });
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
-  Future<UserCredential> createEmailPassword(
+  // Future<UserCredential> createEmailPassword(
+  //     String email, String password) async {
+  //   try {
+  //     print('try');
+  //     return await _auth.createUserWithEmailAndPassword(
+  //         email: email, password: password);
+  //   } catch (err) {
+  //     print('ERROR _auth.createUserWithEmailAndPassword | err message: ' +
+  //         err.toString());
+
+  //     switch (err.toString()) {
+  //       case "email-already-in-use":
+  //         break;
+  //     }
+  //     return null;
+  //   }
+  // }
+
+  Future<Map<String, String>> createUserEmailPassword(
       String email, String password) async {
-    try {
-      print('try');
-      return await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-    } catch (e) {
-      print('create email with error: ' + e.toString());
-      return null;
-    }
+    Map<String, String> returnVal;
+
+    await _auth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .catchError((err) {
+      String errorCode = "";
+      String errorMessage = '';
+
+      print('ERROR _auth.createUserWithEmailAndPassword | err message: ' +
+          err.message.toString() +
+          '\n err code is: ' +
+          err.code);
+
+      switch (err.code.toString()) {
+        case "email-already-in-use":
+          errorCode = "email-already-in-use";
+          errorMessage =
+              "This email has already been used, please use another email and try again.";
+      }
+      returnVal = {
+        'errorCode': errorCode,
+        'errorMessage': err.message,
+      };
+    });
+    return returnVal;
   }
 
   Future<User> signInWithGoogle({bool newUser}) async {
@@ -155,19 +198,23 @@ class AuthService {
       idToken: googleSignInAuthentication.idToken,
     );
 
-    UserCredential authResult = await _auth.signInWithCredential(credential);
+    UserCredential authResult =
+        await _auth.signInWithCredential(credential).catchError((err) {
+      switch (err.code.toString()) {
+        case "":
+          break;
+      }
+    });
 
     _user = authResult.user;
 
     assert(!_user.isAnonymous);
     assert(await _user.getIdToken() != null);
-    User currentUser = _auth.currentUser;
 
-    assert(_user.uid == currentUser.uid);
-    print("User Name: ${_user.displayName}");
-    print("User Email ${_user.email}");
+    print("GoogleSignIn | User\'s Name: ${_user.displayName}");
+    print("GoogleSignin | User\'s Email ${_user.email}");
 
-    return currentUser;
+    return _user;
   }
 
   Future<void> logout() async {

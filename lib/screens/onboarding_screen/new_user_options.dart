@@ -22,31 +22,43 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: _theme.splashColor,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarDividerColor: Colors.white,
+        systemNavigationBarColor: _theme.splashColor,
+      ),
+    );
 
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: _theme.primaryColor,
+          backgroundColor: _theme.splashColor,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(child: Container()),
               SizedBox(height: 20),
-              Container(
-                alignment: Alignment.center,
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1000)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(100000)),
-                    child: Image(
-                      height: 250,
-                      image: AssetImage('assets/images/versify_logo_circle.png'),
-                    ),
-                  ),
-                ),
+              Image(
+                height: 300,
+                image: AssetImage('assets/images/versify_logo_circle.png'),
               ),
-              SizedBox(height: 40),
+              // Container(
+              //   alignment: Alignment.center,
+              //   child: Card(
+              //     elevation: 5,
+              //     shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(1000)),
+              //     child: ClipRRect(
+              //       borderRadius: BorderRadius.all(Radius.circular(100000)),
+              //       child: Image(
+              //         height: 250,
+              //         image: AssetImage('assets/images/versify_icon_v3.png'),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 10),
               Text(
                 'Versify App',
                 style: TextStyle(
@@ -56,22 +68,22 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                         blurRadius: 10,
                         offset: Offset(1, 1))
                   ],
-                  color: Colors.white,
+                  color: Colors.black87,
                   fontSize: 35,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Nunito',
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               SizedBox(
-                width: 250,
+                width: 270,
                 child: Text(
-                  'Welcome dear friend, let\'s get you signed in!',
+                  'Welcome, let\'s get you signed in!',
                   maxLines: null,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white,
+                    color: Colors.black87,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Nunito',
                   ),
@@ -84,7 +96,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                 margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
+                      primary: _theme.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
@@ -108,7 +120,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                         //       offset: Offset(0.5, 0.5))
                         // ],
                         fontFamily: 'Nunito',
-                        color: _theme.primaryColor,
+                        color: Colors.white,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
                       ),
@@ -122,16 +134,17 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                     Text(
                       'Already have an account?',
                       style: TextStyle(
-                          shadows: [
-                            Shadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(1, 1))
-                          ],
-                          fontFamily: 'Nunito',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14),
+                        shadows: [
+                          Shadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(1, 1))
+                        ],
+                        fontFamily: 'Nunito',
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
                     ),
                     FlatButton(
                       padding: EdgeInsets.fromLTRB(0, 20, 10, 20),
@@ -148,15 +161,15 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                       child: Text(
                         'LOGIN',
                         style: TextStyle(
-                            shadows: [
-                              Shadow(
-                                  color: Colors.black26,
-                                  blurRadius: 10,
-                                  offset: Offset(1, 1))
-                            ],
+                            // shadows: [
+                            //   Shadow(
+                            //       color: Colors.black26,
+                            //       blurRadius: 10,
+                            //       offset: Offset(1, 1))
+                            // ],
                             fontFamily: 'Nunito',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                            color: _theme.primaryColor,
+                            fontWeight: FontWeight.w800,
                             fontSize: 14),
                       ),
                     ),
@@ -170,10 +183,10 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
               context: context,
               builder: (c) => AlertDialog(
                 title: Text(
-                  'Warning',
+                  'Exit App',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                content: Text('Do you really want to exit the app'),
+                content: Text('Do you really want to exit the app?'),
                 actions: [
                   FlatButton(
                     child: Text('Yes'),

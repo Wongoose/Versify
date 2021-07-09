@@ -523,29 +523,41 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                               Theme.of(context).dialogBackgroundColor,
                         ),
                         onPressed: () {
-                          setState(() => _followLoading = true);
+                          if (_authService.isUserAnonymous) {
+                            //dialog cannot perform action - need sign up
+                            NotificationOverlay().showNormalImageDialog(context,
+                                body:
+                                    'You can\'t follow them without an account. Sign up now!',
+                                buttonText: 'Sign-up',
+                                clickFunc: null,
+                                imagePath: 'assets/images/user.png',
+                                title: 'Create Account',
+                                delay: Duration(milliseconds: 0));
+                          } else {
+                            setState(() => _followLoading = true);
 
-                          bool _isFollowing = !allPostsViewProvider
-                              .currentViewPostUser.isFollowing;
+                            bool _isFollowing = !allPostsViewProvider
+                                .currentViewPostUser.isFollowing;
 
-                          _profileDBService
-                              .updateFollowing(
-                            profileUID: allPostsViewProvider
-                                .currentViewPostUser.userUID,
-                            isFollowing: _isFollowing,
-                            usersPublicFollowID: allPostsViewProvider
-                                .currentViewPostUser.usersPublicFollowID,
-                          )
-                              .then(
-                            (publicFollowID) {
-                              allPostsViewProvider.currentViewPostUser
-                                  .usersPublicFollowID = publicFollowID;
-                              allPostsViewProvider.currentViewPostUser
-                                  .isFollowing = _isFollowing;
-                              _followLoading = false;
-                              allPostsViewProvider.updateListeners();
-                            },
-                          );
+                            _profileDBService
+                                .updateFollowing(
+                              profileUID: allPostsViewProvider
+                                  .currentViewPostUser.userUID,
+                              isFollowing: _isFollowing,
+                              usersPublicFollowID: allPostsViewProvider
+                                  .currentViewPostUser.usersPublicFollowID,
+                            )
+                                .then(
+                              (publicFollowID) {
+                                allPostsViewProvider.currentViewPostUser
+                                    .usersPublicFollowID = publicFollowID;
+                                allPostsViewProvider.currentViewPostUser
+                                    .isFollowing = _isFollowing;
+                                _followLoading = false;
+                                allPostsViewProvider.updateListeners();
+                              },
+                            );
+                          }
                         },
                         child: Align(
                           alignment: Alignment.centerLeft,

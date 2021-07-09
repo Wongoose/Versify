@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/services/profile_database.dart';
 
 enum AccountEditType { username, bio, phone, email, socialLinks }
 
@@ -31,6 +32,9 @@ class _AccountEditRowState extends State<AccountEditRow> {
   Widget build(BuildContext context) {
     final AccountSettingsProvider _accountSettingsProvider =
         Provider.of<AccountSettingsProvider>(context, listen: false);
+    final ProfileDBService _profileDBService =
+        Provider.of<ProfileDBService>(context);
+    final AuthService _authService = Provider.of<AuthService>(context);
 
     final MyUser _editingUser = _accountSettingsProvider.user;
 
@@ -162,6 +166,12 @@ class _AccountEditRowState extends State<AccountEditRow> {
                           builder: (context) => AccountVerification(
                             accEditType: widget.editType,
                             parsedText: _textController.text,
+                            verificationSuccessFunc: () {
+                              _accountSettingsProvider.updateProfileData();
+
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
                           ),
                         ));
                   } else {
