@@ -158,9 +158,17 @@ class VersifyApp extends StatelessWidget {
                 DynamicLinkService(authService: _authService);
 
             return StreamProvider<MyUser>.value(
+              updateShouldNotify: (previous, current) {
+                if (previous != null && current != null) {
+                  return previous.authIDToken != current.authIDToken;
+                } else {
+                  return true;
+                }
+              },
               initialData: null,
               value: _authService.user,
               child: Consumer<MyUser>(builder: (_, user, __) {
+                print('Stream was triggered in MAIN');
                 //parse anything to database service
                 //Rebuilds everytime user auth changes
 

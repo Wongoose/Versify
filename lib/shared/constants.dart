@@ -58,3 +58,18 @@ class _SizeProviderWidgetState extends State<SizeProviderWidget> {
     return widget.child;
   }
 }
+
+class CircleLoading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 15,
+      width: 15,
+      child: CircularProgressIndicator(
+        valueColor:
+            new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+        strokeWidth: 0.5,
+      ),
+    );
+  }
+}

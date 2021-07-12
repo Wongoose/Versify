@@ -1,5 +1,6 @@
 class MyUser {
   final String userUID;
+  final String authIDToken;
   final Map socialLinks;
   final bool completeLogin;
 
@@ -18,6 +19,7 @@ class MyUser {
   DateTime lastBlogsUpdated;
 
   MyUser({
+    this.authIDToken,
     this.completeLogin,
     this.profileImageUrl,
     this.socialLinks,

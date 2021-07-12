@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/onboarding_screen/new_user_options.dart';
 import 'package:versify/screens/onboarding_screen/create_new_phone.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/shared/constants.dart';
 import 'package:vibration/vibration.dart';
 
 class CreateNewUsername extends StatefulWidget {
@@ -32,6 +34,7 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
   bool _validUsername = false;
   Timer _debounce;
   bool _validLoading = true;
+  bool _nextLoading = false;
   String _text = '';
 
   Future<void> _checkForValidUsername(String username) async {
@@ -71,9 +74,9 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
 
   @override
   Widget build(BuildContext context) {
-    _authService = Provider.of<AuthService>(context);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
+    _authService = Provider.of<AuthService>(context);
     _databaseService = Provider.of<DatabaseService>(context);
     _profileDataProvider =
         Provider.of<ProfileDataProvider>(context, listen: false);
@@ -127,46 +130,57 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
                 padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                 backgroundColor: Theme.of(context).backgroundColor,
               ),
-              child: Text(
-                'Next',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: _validUsername
-                      ? Theme.of(context).primaryColor
-                      : _themeProvider.primaryTextColor.withOpacity(0.26),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: _nextLoading
+                  ? CircleLoading()
+                  : Text(
+                      'Next',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: _validUsername
+                            ? Theme.of(context).primaryColor
+                            : _themeProvider.primaryTextColor.withOpacity(0.26),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
               onPressed: () {
-                if (_validUsername && _usernameController.text != '') {
-                  //check database second time
-                  _databaseService
-                      .checkIfValidUsername(_usernameController.text)
-                      .then((isValid) {
-                    if (isValid) {
-                      // username is 100% valid
+                if (!_nextLoading) {
+                  if (_validUsername && _usernameController.text != '') {
+                    setState(() => _nextLoading = true);
 
-                      _databaseService.firestoreCreateAccount(
-                        completeLogin: true,
-                        email: _authService.getCurrentUser.email,
-                        phone: _authService.getCurrentUser.phoneNumber,
-                        username: _usernameController.text,
-                        userUID: _authService.getCurrentUser.uid,
-                      );
+                    //check database second time
+                    _databaseService
+                        .checkIfValidUsername(_usernameController.text)
+                        .then((isValid) {
+                      if (isValid) {
+                        // username is 100% valid
+                        _databaseService.firestoreCreateAccount(
+                          completeLogin: true,
+                          email: _authService.getCurrentUser.email,
+                          phone: _authService.getCurrentUser.phoneNumber,
+                          username: _usernameController.text,
+                          userUID: _authService.getCurrentUser.uid,
+                        );
 
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => CreateNewPhone(
-                              usernameController: _usernameController,
-                            ),
-                          ));
-                    } else {
-                      // second check is not valid
-                    }
-                  });
-                } else {
-                  //not valid when typing (instant reject)
+                        toast('New account created successfully!');
+
+                        Navigator.pushReplacement(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => CreateNewPhone(
+                                usernameController: _usernameController,
+                              ),
+                            ));
+                      } else {
+                        // second check is not valid
+                        toast(
+                            'This username has already been used. Please try another one.');
+                        _validUsername = false;
+                      }
+                      setState(() => _nextLoading = false);
+                    });
+                  } else {
+                    //not valid when typing (instant reject)
+                  }
                 }
               },
             ),

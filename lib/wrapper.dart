@@ -49,7 +49,7 @@ class Wrapper extends StatelessWidget {
     } else {
       if (user != null) {
         print('Wrapper stream user: ' + user.userUID.toString());
-        print('PhoneNumber: ' + user.phoneNumber.toString());
+        print('Hash: ' + hashCode.toString());
         return FutureBuilder<MyUser>(
             future: _profileDBService.whetherHasAccount(user.userUID),
             //change whetherHasAcc function to return MyUser

@@ -277,6 +277,7 @@ class HomeAppBar extends StatelessWidget {
           ),
         ),
       ),
+      automaticallyImplyLeading: false,
       actions: [
         pageViewProvider.pageIndex == 2
             ? TextButton.icon(

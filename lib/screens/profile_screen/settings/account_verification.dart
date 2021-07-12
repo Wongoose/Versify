@@ -45,7 +45,6 @@ class _AccountVerificationState extends State<AccountVerification> {
           timeout: Duration(seconds: 120),
           phoneNumber: widget.parsedText,
           //resendingToken
-          forceResendingToken: widget.resendingToken ?? null,
           verificationCompleted: (phoneAuthCredential) {
             phoneVerificationComplete(phoneAuthCredential);
           },

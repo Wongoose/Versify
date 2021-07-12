@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_verification.dart';
 import 'package:versify/services/auth.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:versify/services/database.dart';
 import 'package:versify/services/profile_database.dart';
+import 'package:versify/shared/constants.dart';
 import 'package:versify/wrapper.dart';
 
 // ignore: must_be_immutable
@@ -96,6 +98,8 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     _profileDBService = Provider.of<ProfileDBService>(context);
     _authService = Provider.of<AuthService>(context);
     _profileDataProvider =
@@ -108,11 +112,11 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
         if (Navigator.of(context).userGestureInProgress)
           return false;
         else
-          return true;
+          return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -120,24 +124,32 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: _themeProvider.primaryTextColor.withOpacity(0.87),
             ),
           ),
           leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
             ),
+            //skip or back
             child: Text(
-              'Back',
+              'Skip',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: _themeProvider.secondaryTextColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
             onPressed: () {
+              _authService.getCurrentUser.getIdToken(true);
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => Wrapper(),
+              //     ));
+              // pop or reload()
               // Navigator.pop(context);
             },
           ),
@@ -145,7 +157,8 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).backgroundColor,
+                primary: Theme.of(context).backgroundColor,
               ),
               child: Text(
                 'Done',
@@ -216,7 +229,7 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                   'Phone number',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black45,
+                    color: _themeProvider.secondaryTextColor,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -258,7 +271,9 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                               ),
                               ignoreBlank: false,
                               autoValidateMode: AutovalidateMode.disabled,
-                              selectorTextStyle: TextStyle(color: Colors.black),
+
+                              selectorTextStyle: TextStyle(
+                                  color: _themeProvider.primaryTextColor),
                               initialValue:
                                   _profileDataProvider.phoneNumberNewAcc,
 
@@ -274,27 +289,23 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                               inputDecoration: InputDecoration(
                                 suffix: Visibility(
                                   visible: _validLoading,
-                                  child: SizedBox(
-                                    height: 15,
-                                    width: 15,
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          new AlwaysStoppedAnimation<Color>(
-                                              Theme.of(context).primaryColor),
-                                      strokeWidth: 0.5,
-                                    ),
-                                  ),
+                                  child: CircleLoading(),
                                 ),
                                 prefixStyle: TextStyle(
-                                    color: Colors.black45, fontSize: 15),
+                                    color: _themeProvider.secondaryTextColor,
+                                    fontSize: 15),
                                 isDense: true,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.black26, width: 0.5),
+                                      color: _themeProvider.primaryTextColor
+                                          .withOpacity(0.26),
+                                      width: 0.5),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.black26, width: 0.5),
+                                      color: _themeProvider.primaryTextColor
+                                          .withOpacity(0.26),
+                                      width: 0.5),
                                 ),
                               ),
                             ),
@@ -306,11 +317,11 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: SizedBox(
                   child: Text(
-                    'Your privacy is guaranteed.\nYour phone number is used to enhance security to your account.',
+                    'Your privacy is guaranteed.\nYour phone number is used to enhance the security of your account.',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
-                      color: Colors.black54,
+                      color: _themeProvider.secondaryTextColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -322,11 +333,13 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Wrapper(),
-                        ));
+                    _authService.getCurrentUser.getIdToken(true);
+
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => Wrapper(),
+                    //     ));
                   },
                   child: SizedBox(
                     child: Text(
@@ -334,7 +347,7 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                       style: TextStyle(
                         height: 1.7,
                         fontSize: 12,
-                        color: Colors.blue,
+                        color: Colors.blue[400],
                         fontWeight: FontWeight.w500,
                       ),
                     ),

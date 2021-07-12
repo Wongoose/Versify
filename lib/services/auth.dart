@@ -71,11 +71,13 @@ class AuthService {
   }
 
   MyUser _userFromFB(User firebaseUser) {
+    print('Stream User Changes | Token: ' + firebaseUser.hashCode.toString());
     if (firebaseUser != null) {
       this.authUser = firebaseUser;
       this.userUID = firebaseUser.uid;
       this.myUser = MyUser(
         userUID: firebaseUser.uid,
+        authIDToken: firebaseUser.hashCode.toString(),
         phoneNumber: firebaseUser.phoneNumber,
         email: firebaseUser.email,
       );
