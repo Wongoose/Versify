@@ -1,5 +1,6 @@
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +28,8 @@ class _EditRowPageState extends State<EditRowPage> {
   @override
   Widget build(BuildContext context) {
     // final AuthService _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     final EditProfileProvider _editProfileProvider =
         Provider.of<EditProfileProvider>(context, listen: false);
@@ -74,8 +77,9 @@ class _EditRowPageState extends State<EditRowPage> {
           return true;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -83,20 +87,21 @@ class _EditRowPageState extends State<EditRowPage> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: _themeProvider.primaryTextColor.withOpacity(0.87),
             ),
           ),
           leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
+              primary: Theme.of(context).backgroundColor,
             ),
             child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: _themeProvider.secondaryTextColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -108,7 +113,8 @@ class _EditRowPageState extends State<EditRowPage> {
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).backgroundColor,
+                primary: Theme.of(context).backgroundColor,
               ),
               child: Text(
                 'Save',
@@ -158,7 +164,7 @@ class _EditRowPageState extends State<EditRowPage> {
                 _textTitle,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -188,22 +194,30 @@ class _EditRowPageState extends State<EditRowPage> {
                           fontSize: 12,
                           color: currentLength > maxLength
                               ? Colors.red
-                              : Colors.black54,
+                              : _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   );
                 },
+                style: TextStyle(color: _themeProvider.primaryTextColor),
                 decoration: InputDecoration(
                   prefixText: widget.editType == EditType.username ? '@ ' : '',
-                  prefixStyle: TextStyle(color: Colors.black45, fontSize: 15),
+                  prefixStyle: TextStyle(
+                      color: _themeProvider.secondaryTextColor, fontSize: 15),
                   isDense: true,
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 0.5),
+                    borderSide: BorderSide(
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.26),
+                        width: 0.5),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 0.5),
+                    borderSide: BorderSide(
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.26),
+                        width: 0.5),
                   ),
                 ),
               ),

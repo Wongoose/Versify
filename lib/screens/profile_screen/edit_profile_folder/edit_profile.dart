@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_specific_row.dart';
 import 'package:versify/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   EditProfileProvider _editProfileProvider;
+  ThemeProvider _themeProvider;
   MyUser _user;
 
   void popEditProfile() {
@@ -75,7 +77,7 @@ class _EditProfileState extends State<EditProfile> {
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        color: Colors.black38,
+                        color: _themeProvider.secondaryTextColor,
                         fontSize: 16,
                       ),
                     ),
@@ -100,6 +102,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     final AuthService _authService = Provider.of<AuthService>(context);
+    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     // _user = _authService.myUser;
 
@@ -116,8 +119,9 @@ class _EditProfileState extends State<EditProfile> {
         return null;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).canvasColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -125,7 +129,7 @@ class _EditProfileState extends State<EditProfile> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black,
+              color: _themeProvider.primaryTextColor,
             ),
           ),
           leading: GestureDetector(
@@ -135,7 +139,7 @@ class _EditProfileState extends State<EditProfile> {
             },
             child: Icon(
               Icons.arrow_back_rounded,
-              color: Colors.black,
+              color: _themeProvider.primaryTextColor,
               size: 25,
             ),
           ),
@@ -143,7 +147,8 @@ class _EditProfileState extends State<EditProfile> {
             TextButton.icon(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                backgroundColor: Colors.white,
+                primary: Theme.of(context).canvasColor,
+                backgroundColor: Theme.of(context).canvasColor,
               ),
               label: Text(''),
               icon: Icon(
@@ -234,7 +239,7 @@ class _EditProfileState extends State<EditProfile> {
                 'ACCOUNT',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -262,7 +267,8 @@ class _EditProfileState extends State<EditProfile> {
                         'Username',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -271,14 +277,14 @@ class _EditProfileState extends State<EditProfile> {
                         '@${_user.username}',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black45,
+                          color: _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -308,7 +314,8 @@ class _EditProfileState extends State<EditProfile> {
                         'Bio',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -316,12 +323,14 @@ class _EditProfileState extends State<EditProfile> {
                       SizedBox(
                         width: 180,
                         child: Text(
-                          _user.description ?? 'No bio written . . .',
+                          _user.description.isEmpty
+                              ? 'No bio written . . .'
+                              : _user.description,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black45,
+                            color: _themeProvider.secondaryTextColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -329,7 +338,7 @@ class _EditProfileState extends State<EditProfile> {
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -360,7 +369,7 @@ class _EditProfileState extends State<EditProfile> {
               //           'Contact number',
               //           style: TextStyle(
               //             fontSize: 15,
-              //             color: Colors.black87,
+              //             color: _themeProvider.primaryTextColor.withOpacity(0.87),
               //             fontWeight: FontWeight.w500,
               //           ),
               //         ),
@@ -369,14 +378,14 @@ class _EditProfileState extends State<EditProfile> {
               //           _user.phoneNumber,
               //           style: TextStyle(
               //             fontSize: 14,
-              //             color: Colors.black45,
+              //             color: _themeProvider.secondaryTextColor,
               //             fontWeight: FontWeight.w500,
               //           ),
               //         ),
               //         SizedBox(width: 10),
               //         Icon(
               //           Icons.arrow_forward_ios_rounded,
-              //           color: Colors.black45,
+              //           color: _themeProvider.secondaryTextColor,
               //           size: 15,
               //         ),
               //       ],
@@ -407,7 +416,7 @@ class _EditProfileState extends State<EditProfile> {
               //           'Email',
               //           style: TextStyle(
               //             fontSize: 15,
-              //             color: Colors.black87,
+              //             color: _themeProvider.primaryTextColor.withOpacity(0.87),
               //             fontWeight: FontWeight.w500,
               //           ),
               //         ),
@@ -416,14 +425,14 @@ class _EditProfileState extends State<EditProfile> {
               //           _user.email ?? 'None',
               //           style: TextStyle(
               //             fontSize: 14,
-              //             color: Colors.black45,
+              //             color: _themeProvider.secondaryTextColor,
               //             fontWeight: FontWeight.w500,
               //           ),
               //         ),
               //         SizedBox(width: 10),
               //         Icon(
               //           Icons.arrow_forward_ios_rounded,
-              //           color: Colors.black45,
+              //           color: _themeProvider.secondaryTextColor,
               //           size: 15,
               //         ),
               //       ],
@@ -437,7 +446,7 @@ class _EditProfileState extends State<EditProfile> {
                 'SOCIAL LINKS',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -466,7 +475,8 @@ class _EditProfileState extends State<EditProfile> {
                         'Instagram',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -479,7 +489,7 @@ class _EditProfileState extends State<EditProfile> {
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black45,
+                            color: _themeProvider.secondaryTextColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -487,7 +497,7 @@ class _EditProfileState extends State<EditProfile> {
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -518,7 +528,8 @@ class _EditProfileState extends State<EditProfile> {
                         'Tiktok',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -531,7 +542,7 @@ class _EditProfileState extends State<EditProfile> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black45,
+                            color: _themeProvider.secondaryTextColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -539,7 +550,7 @@ class _EditProfileState extends State<EditProfile> {
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -562,7 +573,8 @@ class _EditProfileState extends State<EditProfile> {
                       'YouTube',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.87),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -575,7 +587,7 @@ class _EditProfileState extends State<EditProfile> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black45,
+                          color: _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -583,7 +595,7 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(width: 10),
                     Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: Colors.black45,
+                      color: _themeProvider.secondaryTextColor,
                       size: 15,
                     ),
                   ],
@@ -605,7 +617,8 @@ class _EditProfileState extends State<EditProfile> {
                       'Personal website',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.87),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -618,7 +631,7 @@ class _EditProfileState extends State<EditProfile> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black45,
+                          color: _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -626,7 +639,7 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(width: 10),
                     Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: Colors.black45,
+                      color: _themeProvider.secondaryTextColor,
                       size: 15,
                     ),
                   ],
@@ -639,7 +652,7 @@ class _EditProfileState extends State<EditProfile> {
                 'MORE',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -659,7 +672,8 @@ class _EditProfileState extends State<EditProfile> {
                       'E-Shop',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.87),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -668,14 +682,14 @@ class _EditProfileState extends State<EditProfile> {
                       'zheng_xiang_wong',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(width: 10),
                     Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: Colors.black45,
+                      color: _themeProvider.secondaryTextColor,
                       size: 15,
                     ),
                   ],

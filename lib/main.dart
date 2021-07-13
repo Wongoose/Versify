@@ -158,17 +158,10 @@ class VersifyApp extends StatelessWidget {
                 DynamicLinkService(authService: _authService);
 
             return StreamProvider<MyUser>.value(
-              updateShouldNotify: (previous, current) {
-                if (previous != null && current != null) {
-                  return previous.authIDToken != current.authIDToken;
-                } else {
-                  return true;
-                }
-              },
               initialData: null,
               value: _authService.user,
-              child: Consumer<MyUser>(builder: (_, user, __) {
-                print('Stream was triggered in MAIN');
+              child: Consumer<MyUser>(builder: (context, user, _) {
+                print('Stream was triggered in MAIN.dart with user hashcode');
                 //parse anything to database service
                 //Rebuilds everytime user auth changes
 
@@ -382,6 +375,7 @@ class _VersifyHomeState extends State<VersifyHome> {
 
   @override
   Widget build(BuildContext context) {
+    print("MAIN rebuilt!");
     //tutorialProvider
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 

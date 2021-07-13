@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_specific_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
@@ -83,7 +84,7 @@ class _AccountSettingsState extends State<AccountSettings> {
   //                   child: Text(
   //                     'Cancel',
   //                     style: TextStyle(
-  //                       color: Colors.black38,
+  //                       color: _themeProvider.primaryTextColor38,
   //                       fontSize: 16,
   //                     ),
   //                   ),
@@ -108,6 +109,8 @@ class _AccountSettingsState extends State<AccountSettings> {
   @override
   Widget build(BuildContext context) {
     final AuthService _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     _accountSettingsProvider =
         Provider.of<AccountSettingsProvider>(context, listen: true);
@@ -123,8 +126,9 @@ class _AccountSettingsState extends State<AccountSettings> {
       },
       child: Scaffold(
         extendBodyBehindAppBar: false,
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).canvasColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -132,7 +136,7 @@ class _AccountSettingsState extends State<AccountSettings> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black,
+              color: _themeProvider.primaryTextColor,
             ),
           ),
           leading: GestureDetector(
@@ -143,7 +147,7 @@ class _AccountSettingsState extends State<AccountSettings> {
             },
             child: Icon(
               Icons.arrow_back_rounded,
-              color: Colors.black,
+              color: _themeProvider.primaryTextColor,
               size: 25,
             ),
           ),
@@ -157,7 +161,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 'ACCOUNT',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -185,7 +189,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Phone number',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -194,14 +199,14 @@ class _AccountSettingsState extends State<AccountSettings> {
                         '${_user.phoneNumber}',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black45,
+                          color: _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -231,7 +236,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Email',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -240,14 +246,14 @@ class _AccountSettingsState extends State<AccountSettings> {
                         '${_user.email}',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black45,
+                          color: _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -278,7 +284,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Password',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -287,14 +294,14 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Secured',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black45,
+                          color: _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -324,7 +331,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Privacy',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -337,7 +345,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black45,
+                            color: _themeProvider.secondaryTextColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -345,7 +353,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       SizedBox(width: 10),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         size: 15,
                       ),
                     ],
@@ -361,7 +369,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 'SUPPPORT',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -390,7 +398,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Report a problem',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -423,7 +432,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Help',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -441,7 +451,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 'ABOUT',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -461,7 +471,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                       'Community Guidelines',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.87),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -485,7 +496,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                       'Terms & Conditions',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.87),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -509,7 +521,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                       'Privacy Policy',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.87),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -524,7 +537,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 'LOGIN',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -556,7 +569,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         'Log out',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black87,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),

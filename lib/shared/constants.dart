@@ -60,11 +60,15 @@ class _SizeProviderWidgetState extends State<SizeProviderWidget> {
 }
 
 class CircleLoading extends StatelessWidget {
+  final double size;
+
+  CircleLoading({this.size});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 15,
-      width: 15,
+      height: size != null ? size * 15 : 15,
+      width: size != null ? size * 15 : 15,
       child: CircularProgressIndicator(
         valueColor:
             new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),

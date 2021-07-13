@@ -12,6 +12,7 @@ import 'package:versify/providers/home/profile_pageview_provider.dart';
 import 'package:versify/providers/home/visit_profile_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/profile_database.dart';
+import 'package:versify/shared/constants.dart';
 import 'package:versify/shared/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -245,25 +246,40 @@ class _MainProfilePageState extends State<MainProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     SizedBox(height: 30),
-                                    Card(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(300),
-                                        side: BorderSide(color: Colors.black12),
-                                      ),
-                                      color: Theme.of(context).backgroundColor,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(300),
-                                        child: Image(
-                                          fit: BoxFit.contain,
-                                          width: 100,
-                                          image: CachedNetworkImageProvider(
-                                              _userProfile.profileImageUrl,
-                                              cacheKey: _userProfile.userUID,
-                                              scale: 0.5),
-                                        ),
+                                    SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          CircleLoading(size: 2),
+                                          Card(
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(300),
+                                              side: BorderSide(
+                                                  color: Colors.black12),
+                                            ),
+                                            color: Theme.of(context)
+                                                .backgroundColor,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(300),
+                                              child: Image(
+                                                fit: BoxFit.contain,
+                                                width: 100,
+                                                image:
+                                                    CachedNetworkImageProvider(
+                                                        _userProfile
+                                                            .profileImageUrl,
+                                                        cacheKey: _userProfile
+                                                            .userUID,
+                                                        scale: 0.5),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     SizedBox(height: 15),

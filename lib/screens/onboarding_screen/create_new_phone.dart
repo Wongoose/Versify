@@ -143,7 +143,10 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
               ),
             ),
             onPressed: () {
-              _authService.getCurrentUser.getIdToken(true);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Wrapper()),
+                  (route) => false);
               // Navigator.push(
               //     context,
               //     MaterialPageRoute(
@@ -333,7 +336,10 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
-                    _authService.getCurrentUser.getIdToken(true);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Wrapper()),
+                        (route) => false);
 
                     // Navigator.push(
                     //     context,

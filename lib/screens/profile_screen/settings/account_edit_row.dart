@@ -1,5 +1,6 @@
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_verification.dart';
 import 'package:versify/services/auth.dart';
@@ -32,6 +33,9 @@ class _AccountEditRowState extends State<AccountEditRow> {
   Widget build(BuildContext context) {
     final AccountSettingsProvider _accountSettingsProvider =
         Provider.of<AccountSettingsProvider>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context);
     final AuthService _authService = Provider.of<AuthService>(context);
@@ -82,8 +86,9 @@ class _AccountEditRowState extends State<AccountEditRow> {
           return true;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -91,20 +96,20 @@ class _AccountEditRowState extends State<AccountEditRow> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: _themeProvider.primaryTextColor.withOpacity(0.87),
             ),
           ),
           leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
-              padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              backgroundColor: Colors.white,
-            ),
+                padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                backgroundColor: Theme.of(context).backgroundColor,
+                primary: Theme.of(context).backgroundColor),
             child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: _themeProvider.secondaryTextColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -116,7 +121,8 @@ class _AccountEditRowState extends State<AccountEditRow> {
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).backgroundColor,
+                primary: Theme.of(context).backgroundColor,
               ),
               child: Consumer<AccountSettingsProvider>(
                 builder: (context, state, _) => Text(
@@ -191,7 +197,7 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 _textTitle,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -228,23 +234,33 @@ class _AccountEditRowState extends State<AccountEditRow> {
                           fontSize: 12,
                           color: currentLength > maxLength
                               ? Colors.red
-                              : Colors.black54,
+                              : _themeProvider.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   );
                 },
+                style: TextStyle(
+                  color: _themeProvider.primaryTextColor,
+                ),
                 decoration: InputDecoration(
                   prefixText:
                       widget.editType == AccountEditType.username ? '@ ' : '',
-                  prefixStyle: TextStyle(color: Colors.black45, fontSize: 15),
+                  prefixStyle: TextStyle(
+                      color: _themeProvider.secondaryTextColor, fontSize: 15),
                   isDense: true,
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 0.5),
+                    borderSide: BorderSide(
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.26),
+                        width: 0.5),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 0.5),
+                    borderSide: BorderSide(
+                        color:
+                            _themeProvider.primaryTextColor.withOpacity(0.26),
+                        width: 0.5),
                   ),
                 ),
               ),
