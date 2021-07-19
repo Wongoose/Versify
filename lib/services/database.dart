@@ -693,6 +693,34 @@ class DatabaseService {
     return tempList;
   }
 
+  Future<void> firestoreCreateAnonAccount({
+    @required String userUID,
+    @required String username,
+    @required bool completeLogin,
+  }) async {
+    try {
+      print('firestoreCreateAnonAccount | START');
+      return usersPrivateCollection.doc(userUID).set({
+        'username': username ?? null,
+        'description': null,
+        'profileImageUrl': null,
+        'phone': null,
+        'email': null,
+        'totalFollowers': 0,
+        'totalFollowing': 0,
+        'tagRatings': ['love10', 'peace30'],
+        'tagTimestamps': {
+          'love': FieldValue.serverTimestamp(),
+          'peace': FieldValue.serverTimestamp(),
+        },
+        'socialLinks': null,
+        'completeLogin': completeLogin ?? false,
+      });
+    } catch (err) {
+      print('firestoreCreateAccount | Failed');
+    }
+  }
+
   Future<CreateAcc> firestoreCreateAccount(
       {@required String userUID,
       @required String email,

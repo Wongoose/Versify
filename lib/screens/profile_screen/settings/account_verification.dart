@@ -36,38 +36,15 @@ class _AccountVerificationState extends State<AccountVerification> {
 
   ThemeProvider _themeProvider;
   String _verificationId;
+  Duration timeout = Duration(seconds: 120);
+  bool canResendToken = false;
 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (widget.accEditType == AccountEditType.phone) {
-        await _auth.verifyPhoneNumber(
-          timeout: Duration(seconds: 120),
-          phoneNumber: widget.parsedText,
-          //resendingToken
-          verificationCompleted: (phoneAuthCredential) {
-            phoneVerificationComplete(phoneAuthCredential);
-          },
-          verificationFailed: (authException) {
-            print('Failed Verification with ${authException.toString()}');
-            toast('Unable to verify with ${authException.phoneNumber}.',
-                duration: Toast.LENGTH_LONG);
-          },
-          codeSent: (verificationId, resendingToken) {
-            widget.resendingToken = resendingToken;
-            print('Code was sent \n$verificationId and \n$resendingToken');
-            toast('Verification code was sent to ${widget.parsedText}.',
-                duration: Toast.LENGTH_LONG);
-
-            setState(() => _verificationId = verificationId);
-          },
-          codeAutoRetrievalTimeout: (_) {
-            // toast("Request time out. Please click 'resend code' and try again.",
-            //     duration: Toast.LENGTH_LONG);
-
-            print('Too late');
-          },
-        );
+        //phone verification
+        verifyPhoneNumber();
       } else {
         //email verification
         try {
@@ -88,6 +65,71 @@ class _AccountVerificationState extends State<AccountVerification> {
         }
       }
     });
+  }
+
+  Future<void> verifyPhoneNumber({int forceResendingToken}) async {
+    setState(() => canResendToken = false);
+    if (forceResendingToken == null) {
+      await _auth.verifyPhoneNumber(
+        timeout: timeout,
+        phoneNumber: widget.parsedText,
+
+        //resendingToken
+        verificationCompleted: (phoneAuthCredential) {
+          phoneVerificationComplete(phoneAuthCredential);
+        },
+        verificationFailed: (authException) {
+          print('Failed Verification with ${authException.toString()}');
+          toast('Unable to verify with ${authException.phoneNumber}.',
+              duration: Toast.LENGTH_LONG);
+        },
+        codeSent: (verificationId, resendingToken) {
+          widget.resendingToken = resendingToken;
+          print('Code was sent \n$verificationId and \n$resendingToken');
+          toast('Verification code was sent to ${widget.parsedText}.',
+              duration: Toast.LENGTH_LONG);
+
+          setState(() => _verificationId = verificationId);
+        },
+        codeAutoRetrievalTimeout: (_) {
+          // toast("Request time out. Please click 'resend code' and try again.",
+          //     duration: Toast.LENGTH_LONG);
+
+          print('Too late');
+          setState(() => canResendToken = true);
+        },
+      );
+    } else {
+      print('verifyPhoneNumber | with resendingToken: $forceResendingToken');
+      await _auth.verifyPhoneNumber(
+        timeout: timeout,
+        phoneNumber: widget.parsedText,
+        forceResendingToken: forceResendingToken,
+        verificationCompleted: (phoneAuthCredential) {
+          phoneVerificationComplete(phoneAuthCredential);
+        },
+        verificationFailed: (authException) {
+          print('Failed Verification with ${authException.toString()}');
+          toast('Unable to verify with ${authException.phoneNumber}.',
+              duration: Toast.LENGTH_LONG);
+        },
+        codeSent: (verificationId, resendingToken) {
+          widget.resendingToken = resendingToken;
+          print('Code was sent \n$verificationId and \n$resendingToken');
+          toast('Verification code was sent to ${widget.parsedText}.',
+              duration: Toast.LENGTH_LONG);
+
+          setState(() => _verificationId = verificationId);
+        },
+        codeAutoRetrievalTimeout: (_) {
+          // toast("Request time out. Please click 'resend code' and try again.",
+          //     duration: Toast.LENGTH_LONG);
+          setState(() => canResendToken = true);
+
+          print('Too late');
+        },
+      );
+    }
   }
 
   Future<void> phoneVerificationComplete(AuthCredential credential) async {
@@ -146,7 +188,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                 alignment: Alignment.center,
                 width: 40,
                 child: Text(
-                  'Verification is still in progress. Do you want to cancel the verification?',
+                  'Verification is still in progress. Do you want to cancel the verification process?',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                 ),
@@ -192,6 +234,14 @@ class _AccountVerificationState extends State<AccountVerification> {
         });
   }
 
+  // void postFrameCheck() {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     if (_verificationId == null) {
+  //       setState(() => canResendToken = true);
+  //     }
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
@@ -213,8 +263,9 @@ class _AccountVerificationState extends State<AccountVerification> {
         }
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
           elevation: 0.5,
           title: Text(
@@ -222,20 +273,21 @@ class _AccountVerificationState extends State<AccountVerification> {
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: _themeProvider.primaryTextColor.withOpacity(0.87),
             ),
           ),
           leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
+              primary: Theme.of(context).backgroundColor,
             ),
             child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: _themeProvider.secondaryTextColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -247,7 +299,8 @@ class _AccountVerificationState extends State<AccountVerification> {
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).backgroundColor,
+                primary: Theme.of(context).backgroundColor,
               ),
               child: Text(
                 'Confirm',
@@ -294,7 +347,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                       : 'Verification email',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black45,
+                    color: _themeProvider.secondaryTextColor,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -315,23 +368,30 @@ class _AccountVerificationState extends State<AccountVerification> {
                       // validator: (text) {
                       //   return text.contains(' ') ? '' : text;
                       // },
-
+                      style: TextStyle(
+                        color: _themeProvider.primaryTextColor,
+                      ),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8),
                         prefixText:
                             widget.accEditType == AccountEditType.username
                                 ? '@ '
                                 : '',
-                        prefixStyle:
-                            TextStyle(color: Colors.black45, fontSize: 15),
+                        prefixStyle: TextStyle(
+                            color: _themeProvider.secondaryTextColor,
+                            fontSize: 15),
                         isDense: false,
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black26, width: 0.5),
+                          borderSide: BorderSide(
+                              color: _themeProvider.primaryTextColor
+                                  .withOpacity(0.26),
+                              width: 0.5),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black26, width: 0.5),
+                          borderSide: BorderSide(
+                              color: _themeProvider.primaryTextColor
+                                  .withOpacity(0.26),
+                              width: 0.5),
                         ),
                       ),
                     )
@@ -342,13 +402,42 @@ class _AccountVerificationState extends State<AccountVerification> {
                 child: SizedBox(
                   child: Text(
                     widget.accEditType == AccountEditType.phone
-                        ? 'A verification code was sent to your device. If you have not received the code after 1 minute, click resend.'
+                        ? 'A verification code was sent to ${widget.parsedText}. If you have not received the code within 2 minutes, click resend.'
                         : 'A verification email was sent to ${widget.parsedText}. Please check your inbox to verify your new email.',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
-                      color: Colors.black54,
+                      color: _themeProvider.secondaryTextColor,
                       fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    if (canResendToken) {
+                      verifyPhoneNumber(
+                          forceResendingToken: widget.resendingToken);
+                    } else {
+                      toast(
+                          "You can only resend verification once every 2 minutes. Please wait and try again later.");
+                    }
+                  },
+                  child: SizedBox(
+                    child: Text(
+                      'Resend code',
+                      style: TextStyle(
+                        height: 1.7,
+                        fontSize: 12,
+                        color: canResendToken
+                            ? Colors.blue[400]
+                            : _themeProvider.primaryTextColor.withOpacity(0.26),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

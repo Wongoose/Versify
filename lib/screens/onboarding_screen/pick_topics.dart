@@ -83,12 +83,14 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                   //user not signed in
                   _authService.signInAnon().then((successSignIn) async {
                     if (successSignIn) {
-                      //create usersPrivateCollection
+                      //create usersPrivateCollection not public follow
                       _dbService
-                          .firestoreCreateAccount(
-                              userUID: _authService.authUser.uid,
-                              username: _authService.authUser.uid)
-                          .then((createAcc) {
+                          .firestoreCreateAnonAccount(
+                        userUID: _authService.authUser.uid,
+                        username: _authService.authUser.uid,
+                        completeLogin: false,
+                      )
+                          .then((_) {
                         updateSelectionTopics(_listOfTopicInterests);
                       });
                     }
@@ -97,10 +99,14 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
                   await _profileDBService
                       .whetherHasAccount(_authService.authUser.uid)
                       .then((myUser) async {
+                    //create usersPrivateCollection not public follow
+
                     if (myUser == null) {
-                      await _dbService.firestoreCreateAccount(
-                          userUID: _authService.authUser.uid,
-                          username: _authService.authUser.uid);
+                      await _dbService.firestoreCreateAnonAccount(
+                        userUID: _authService.authUser.uid,
+                        username: _authService.authUser.uid,
+                        completeLogin: false,
+                      );
                     }
                     updateSelectionTopics(_listOfTopicInterests);
                   });

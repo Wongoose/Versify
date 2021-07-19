@@ -588,6 +588,7 @@ class _ViewPostWidgetState extends State<ViewPostWidget> {
                                 likeProvider: _likeProvider,
                                 content: widget.content,
                                 listMapContent: widget.listMapContent,
+                                fromDynamicLink: false,
                                 readMoreVisible: readMoreVisible,
                               ),
                             ),
