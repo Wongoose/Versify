@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
@@ -5,6 +8,8 @@ import 'package:versify/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/services/database.dart';
+import 'package:versify/shared/username_textfield.dart';
 
 enum EditType { username, bio, phone, email, socialLinks }
 
@@ -24,10 +29,44 @@ class _EditRowPageState extends State<EditRowPage> {
   String _appBarTitle;
   String _textTitle;
   int _maxLength;
+  bool _validToSave = true;
+
+  String _text;
+
+  // bool _validLoading = true;
+  bool _validUsername = false;
+  // Timer _debounce;
+
+  void updateValidUsername(bool validUsername) {
+    _validUsername = validUsername;
+  }
+
+  // Future<void> _checkForValidUsername(String username) async {
+  //   DatabaseService().checkIfValidUsername(username).then((isValid) {
+  //     setState(() {
+  //       _validUsername = isValid;
+  //       _validLoading = false;
+  //     });
+  //   });
+  // }
+
+  // _onUsernameChanged(String username) {
+  //   setState(() {
+  //     _validUsername = false;
+  //     _validLoading = true;
+  //   });
+
+  //   if (_debounce?.isActive ?? false) _debounce.cancel();
+  //   _debounce = Timer(const Duration(seconds: 1), () {
+  //     if (username != '') {
+  //       _checkForValidUsername(username);
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // final AuthService _authService = Provider.of<AuthService>(context);
+    final AuthService _authService = Provider.of<AuthService>(context);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
 
@@ -124,21 +163,42 @@ class _EditRowPageState extends State<EditRowPage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 // _authService.myUser.username = _textController.text;
                 // updateFunc();
                 switch (widget.editType) {
                   case EditType.username:
                     _editingUser.username = _textController.text.trim();
+                    print('Username changed to: ' + _editingUser.username);
+                    if (_editingUser.username == _authService.myUser.username) {
+                      _validToSave = true;
+                    } else if (_validUsername &&
+                        _editingUser.username.isNotEmpty) {
+                      await DatabaseService()
+                          .checkIfValidUsername(_editingUser.username)
+                          .then((isValid) {
+                        _validToSave = isValid;
+                      });
+                    } else {
+                      print('Saved | validUsername: ' +
+                          _validUsername.toString());
+                      _validToSave = false;
+                    }
                     break;
                   case EditType.bio:
                     _editingUser.description = _textController.text.trim();
+                    _validToSave = true;
+
                     break;
                   case EditType.phone:
                     _editingUser.phoneNumber = _textController.text.trim();
+                    _validToSave = true;
+
                     break;
                   case EditType.email:
                     _editingUser.email = _textController.text.trim();
+                    _validToSave = true;
+
                     break;
                   case EditType.socialLinks:
                     _editingUser.socialLinks[widget.socialLink] =
@@ -148,9 +208,14 @@ class _EditRowPageState extends State<EditRowPage> {
                     break;
                 }
                 // MyUser _editedUser = _editingUser;
-
-                _editProfileProvider.updateProfileData(_editingUser);
-                Navigator.pop(context);
+                print('ValidToSave: ' + _validToSave.toString());
+                if (_validToSave) {
+                  _editProfileProvider.updateProfileData(_editingUser);
+                  Navigator.pop(context);
+                } else {
+                  _editingUser.username = _authService.myUser.username;
+                  toast('Invalid $_appBarTitle, please try again.');
+                }
               },
             ),
           ],
@@ -169,58 +234,65 @@ class _EditRowPageState extends State<EditRowPage> {
                 ),
               ),
               SizedBox(height: 5),
-              TextFormField(
-                autofocus: true,
-                controller: _textController,
-                maxLength: _maxLength,
-                maxLines: widget.editType == EditType.bio ? null : 1,
-                // keyboardType: TextInputType.multiline,
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
-                ],
-                cursorColor: Theme.of(context).primaryColor,
-                validator: (text) {
-                  return text.contains(' ') ? '' : text;
-                },
-                buildCounter: (_, {currentLength, maxLength, isFocused}) {
-                  return Visibility(
-                    visible: widget.editType != EditType.socialLinks,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${currentLength.toString()}/${maxLength.toString()}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: currentLength > maxLength
-                              ? Colors.red
-                              : _themeProvider.secondaryTextColor,
-                          fontWeight: FontWeight.w500,
+              widget.editType == EditType.username
+                  ? UsernameTextField(
+                      usernameController: _textController,
+                      updateValidUsername: updateValidUsername,
+                    )
+                  : TextFormField(
+                      autofocus: true,
+                      controller: _textController,
+                      maxLength: _maxLength,
+                      maxLines: widget.editType == EditType.bio ? null : 1,
+                      // keyboardType: TextInputType.multiline,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
+                      ],
+                      cursorColor: Theme.of(context).primaryColor,
+                      validator: (text) {
+                        return text.contains(' ') ? '' : text;
+                      },
+                      buildCounter: (_, {currentLength, maxLength, isFocused}) {
+                        return Visibility(
+                          visible: widget.editType != EditType.socialLinks,
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '${currentLength.toString()}/${maxLength.toString()}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: currentLength > maxLength
+                                    ? Colors.red
+                                    : _themeProvider.secondaryTextColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      style: TextStyle(color: _themeProvider.primaryTextColor),
+                      decoration: InputDecoration(
+                        prefixText:
+                            widget.editType == EditType.username ? '@ ' : '',
+                        prefixStyle: TextStyle(
+                            color: _themeProvider.secondaryTextColor,
+                            fontSize: 15),
+                        isDense: true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: _themeProvider.primaryTextColor
+                                  .withOpacity(0.26),
+                              width: 0.5),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: _themeProvider.primaryTextColor
+                                  .withOpacity(0.26),
+                              width: 0.5),
                         ),
                       ),
                     ),
-                  );
-                },
-                style: TextStyle(color: _themeProvider.primaryTextColor),
-                decoration: InputDecoration(
-                  prefixText: widget.editType == EditType.username ? '@ ' : '',
-                  prefixStyle: TextStyle(
-                      color: _themeProvider.secondaryTextColor, fontSize: 15),
-                  isDense: true,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            _themeProvider.primaryTextColor.withOpacity(0.26),
-                        width: 0.5),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            _themeProvider.primaryTextColor.withOpacity(0.26),
-                        width: 0.5),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

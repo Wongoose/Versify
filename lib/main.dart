@@ -56,16 +56,18 @@ class VersifyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays(
-        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Color(0xFFffdee9),
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Colors.white,
-        systemNavigationBarColor: Color(0xFFffdee9),
-      ),
-    );
+    SystemChrome.setEnabledSystemUIOverlays([
+      SystemUiOverlay.top,
+      SystemUiOverlay.bottom,
+    ]);
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //     statusBarColor: Color(0xFFffdee9),
+    //     statusBarIconBrightness: Brightness.dark,
+    //     systemNavigationBarDividerColor: Colors.white,
+    //     systemNavigationBarColor: Color(0xFFffdee9),
+    //   ),
+    // );
 
     SystemChrome.setPreferredOrientations(
       [
@@ -378,6 +380,22 @@ class _VersifyHomeState extends State<VersifyHome> {
     print("MAIN rebuilt!");
     //tutorialProvider
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Color(0xFFffdee9),
+        statusBarIconBrightness:
+            _themeProvider.isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarDividerColor:
+            Theme.of(context).dialogBackgroundColor,
+        systemNavigationBarColor: Theme.of(context).dialogBackgroundColor,
+      ),
+    );
 
     if (_completedBoarding != null) {
       if (_completedBoarding == true) {

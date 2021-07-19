@@ -29,7 +29,10 @@ class _EditProfileState extends State<EditProfile> {
                 alignment: Alignment.center,
                 child: Text(
                   'Unsaved changes',
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.w600,
+                      color: _themeProvider.primaryTextColor,),
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -679,19 +682,19 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     Expanded(child: Container()),
                     Text(
-                      'zheng_xiang_wong',
+                      'coming soon...',
                       style: TextStyle(
                         fontSize: 14,
                         color: _themeProvider.secondaryTextColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: _themeProvider.secondaryTextColor,
-                      size: 15,
-                    ),
+                    // SizedBox(width: 10),
+                    // Icon(
+                    //   Icons.arrow_forward_ios_rounded,
+                    //   color: _themeProvider.secondaryTextColor,
+                    //   size: 15,
+                    // ),
                   ],
                 ),
               ),

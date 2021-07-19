@@ -70,13 +70,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
   }
 
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        systemNavigationBarDividerColor: Colors.white,
-        systemNavigationBarColor: Colors.white,
-      ),
-    );
+   
 
     _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _databaseService = Provider.of<DatabaseService>(context, listen: false);

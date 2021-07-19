@@ -44,13 +44,13 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Color(0xFFffdee9),
-        systemNavigationBarDividerColor: Colors.white,
-        systemNavigationBarColor: Colors.white,
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //     statusBarColor: Color(0xFFffdee9),
+    //     systemNavigationBarDividerColor: Colors.white,
+    //     systemNavigationBarColor: Colors.white,
+    //   ),
+    // );
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFffdee9),
