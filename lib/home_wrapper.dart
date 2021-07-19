@@ -70,8 +70,6 @@ class _HomeWrapperState extends State<HomeWrapper> {
   }
 
   Widget build(BuildContext context) {
-   
-
     _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
     _future =
@@ -280,7 +278,8 @@ class HomeAppBar extends StatelessWidget {
                 ),
                 onPressed: () {
                   showModalBottomSheet(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).dialogBackgroundColor,
+                      clipBehavior: Clip.hardEdge,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
@@ -448,9 +447,12 @@ class HomeProfileBottomSheet extends StatelessWidget {
     EditProfileProvider _editProfileProvider =
         Provider.of<EditProfileProvider>(context, listen: false);
     AuthService _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Container(
       margin: EdgeInsets.fromLTRB(4, 4, 4, 8),
+      color: Theme.of(context).dialogBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -460,7 +462,10 @@ class HomeProfileBottomSheet extends StatelessWidget {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {},
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -482,7 +487,10 @@ class HomeProfileBottomSheet extends StatelessWidget {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {
                 _editProfileProvider.initProfileUser(_authService.myUser);
                 Navigator.pop(context);
@@ -497,7 +505,7 @@ class HomeProfileBottomSheet extends StatelessWidget {
                 child: Text(
                   'Edit profile',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: _themeProvider.primaryTextColor,
                     fontSize: 16,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
@@ -512,7 +520,10 @@ class HomeProfileBottomSheet extends StatelessWidget {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -526,7 +537,7 @@ class HomeProfileBottomSheet extends StatelessWidget {
                 child: Text(
                   'Settings',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: _themeProvider.primaryTextColor,
                     fontSize: 16,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,

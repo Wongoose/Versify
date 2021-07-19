@@ -5,6 +5,7 @@ import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/providers/feeds/feed_type_provider.dart';
 import 'package:versify/providers/feeds/input_comments_provider.dart';
 import 'package:versify/providers/feeds/post_swipe_up_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/feed_screen/widgets_feeds/feed_list_wrapper.dart';
 import 'package:versify/screens/feed_screen/widget_view_post/input_comment.dart';
 import 'package:versify/services/auth.dart';
@@ -197,7 +198,9 @@ class _FollowingPageViewState extends State<FollowingPageView> {
                               onPressed: () {
                                 if (_allPostsViewProvider.hasSetNewuser) {
                                   showModalBottomSheet(
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: Theme.of(context)
+                                          .dialogBackgroundColor,
+                                      clipBehavior: Clip.hardEdge,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20),
@@ -378,6 +381,8 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
     _authService = Provider.of<AuthService>(context);
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     allPostsViewProvider = Provider.of<AllPostsView>(context, listen: true);
     print(
         'Build bottomSheet with isVisitProfile: ' + _isVisitProfile.toString());
@@ -394,7 +399,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     height: 60,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                          padding: EdgeInsets.all(15), primary: Colors.white),
+                        padding: EdgeInsets.all(15),
+                        primary: Theme.of(context).dialogBackgroundColor,
+                        backgroundColor:
+                            Theme.of(context).dialogBackgroundColor,
+                      ),
                       onPressed: () {
                         if (_isVisitProfile) {
                           //report
@@ -432,7 +441,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     height: 60,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                          padding: EdgeInsets.all(15), primary: Colors.white),
+                        padding: EdgeInsets.all(15),
+                        primary: Theme.of(context).dialogBackgroundColor,
+                        backgroundColor:
+                            Theme.of(context).dialogBackgroundColor,
+                      ),
                       onPressed: () {
                         setState(() => _shareLoading = true);
                         DynamicLinkService()
@@ -455,7 +468,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                           child: Text(
                             'Share post',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: _themeProvider.primaryTextColor,
                               fontSize: 16,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.w600,
@@ -482,7 +495,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                       height: 60,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(15), primary: Colors.white),
+                          padding: EdgeInsets.all(15),
+                          primary: Theme.of(context).dialogBackgroundColor,
+                          backgroundColor:
+                              Theme.of(context).dialogBackgroundColor,
+                        ),
                         onPressed: () {
                           if (_authService.isUserAnonymous) {
                             //dialog cannot perform action - need sign up
@@ -529,7 +546,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                                   ? 'Unfollow'
                                   : 'Follow',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: _themeProvider.primaryTextColor,
                                 fontSize: 16,
                                 fontFamily: 'Nunito',
                                 fontWeight: FontWeight.w600,
@@ -553,14 +570,18 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                       height: 60,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(15), primary: Colors.white),
+                          padding: EdgeInsets.all(15),
+                          primary: Theme.of(context).dialogBackgroundColor,
+                          backgroundColor:
+                              Theme.of(context).dialogBackgroundColor,
+                        ),
                         onPressed: () {},
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Edit post',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: _themeProvider.primaryTextColor,
                               fontSize: 16,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.w600,

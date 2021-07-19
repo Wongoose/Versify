@@ -219,6 +219,7 @@ class _ForYouPageViewState extends State<ForYouPageView> {
                                   showModalBottomSheet(
                                       backgroundColor: Theme.of(context)
                                           .dialogBackgroundColor,
+                                      clipBehavior: Clip.hardEdge,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20),
