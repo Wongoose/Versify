@@ -81,47 +81,56 @@ class Wrapper extends StatelessWidget {
                   //has user document in firestore
                   _authService.hasFirestoreDocuments = true;
 
-                  _authService.myUser = myUserSnap.data;
+                  return FutureBuilder<void>(
+                      future: validateUserPhoneAndEmail(
+                        authService: _authService,
+                        authServiceMyUser: _authService.myUser,
+                        whetherHasAccUser: myUserSnap.data,
+                        profileDBService: _profileDBService,
+                      ),
+                      builder: (context, res) {
+                        if (res.connectionState == ConnectionState.done) {
+                          _accountSettingsProvider
+                              .initSettingsUser(_authService.myUser);
+                          if (_authService.isUserAnonymous) {
+                            print(myUserSnap.data.userUID +
+                                "| is signInAnonymous");
+                            // _authService.myUser = myUserSnap.data;
 
-                  _authService.myUser.phoneNumber =
-                      _authService.getCurrentUser.phoneNumber;
-                  _authService.myUser.email = _authService.getCurrentUser.email;
+                            initSharedPrefs(
+                                logInUserID: myUserSnap.data.userUID);
+                            _profileDBService.profileDBInit();
+                            _jsonFollowingStorage.jsonInit(); //diff accounts
+                            _jsonAllBadgesStorage.jsonInit();
 
-                  _accountSettingsProvider
-                      .initSettingsUser(_authService.myUser);
+                            return new HomeWrapper();
+                          } else {
+                            if (myUserSnap.data.completeLogin == true) {
+                              //oldUser compelte login
+                              print(myUserSnap.data.userUID +
+                                  "| is completeLogin = true");
+                              // _authService.myUser = myUserSnap.data;
 
-                  if (_authService.isUserAnonymous) {
-                    print(myUserSnap.data.userUID + "| is signInAnonymous");
-                    // _authService.myUser = myUserSnap.data;
+                              initSharedPrefs(
+                                  logInUserID: myUserSnap.data.userUID);
+                              _profileDBService.profileDBInit();
+                              _jsonFollowingStorage.jsonInit(); //diff accounts
+                              _jsonAllBadgesStorage.jsonInit();
 
-                    initSharedPrefs(logInUserID: myUserSnap.data.userUID);
-                    _profileDBService.profileDBInit();
-                    _jsonFollowingStorage.jsonInit(); //diff accounts
-                    _jsonAllBadgesStorage.jsonInit();
-
-                    return new HomeWrapper();
-                  } else {
-                    if (myUserSnap.data.completeLogin == true) {
-                      //oldUser compelte login
-                      print(myUserSnap.data.userUID +
-                          "| is completeLogin = true");
-                      // _authService.myUser = myUserSnap.data;
-
-                      initSharedPrefs(logInUserID: myUserSnap.data.userUID);
-                      _profileDBService.profileDBInit();
-                      _jsonFollowingStorage.jsonInit(); //diff accounts
-                      _jsonAllBadgesStorage.jsonInit();
-
-                      // return DynamicLinkPost(
-                      //   postId: '5ACsnQ8gciM6nO85qCCp',
-                      //   onPopExitApp: false,
-                      // );
-                      return new HomeWrapper();
-                    } else {
-                      //not complete login
-                      return CreateNewUsername();
-                    }
-                  }
+                              // return DynamicLinkPost(
+                              //   postId: '5ACsnQ8gciM6nO85qCCp',
+                              //   onPopExitApp: false,
+                              // );
+                              return new HomeWrapper();
+                            } else {
+                              //not complete login
+                              return CreateNewUsername();
+                            }
+                          }
+                        }else{
+                          return SplashLoading();
+                        }
+                      });
                 } else {
                   // no user document but authenticated
                   _authService.hasFirestoreDocuments = false;
@@ -165,6 +174,33 @@ class Wrapper extends StatelessWidget {
     } else {
       //sameUser
       // prefs.setString('currentUserID', logInUserID);
+    }
+  }
+
+  Future<void> validateUserPhoneAndEmail({
+    @required AuthService authService,
+    @required MyUser authServiceMyUser,
+    @required MyUser whetherHasAccUser,
+    @required ProfileDBService profileDBService,
+  }) async {
+    bool requiresUpdate = false;
+
+    if (authServiceMyUser.phoneNumber != whetherHasAccUser.phoneNumber ||
+        authServiceMyUser.email != whetherHasAccUser.email) {
+      //phone number or email not the same (update FB)
+      requiresUpdate = true;
+    }
+    whetherHasAccUser.phoneNumber = authServiceMyUser.phoneNumber;
+    whetherHasAccUser.email = authServiceMyUser.email;
+
+    authServiceMyUser = whetherHasAccUser;
+    authService.myUser = authServiceMyUser;
+
+    if (requiresUpdate) {
+      await profileDBService.updatedValidatedPhoneAndEmail(
+        phone: authServiceMyUser.phoneNumber,
+        email: authServiceMyUser.email,
+      );
     }
   }
 

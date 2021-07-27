@@ -41,8 +41,8 @@ class _EditRowPageState extends State<EditRowPage> {
   void updateValidUsername(
       {@required bool validUsername, @required bool isSetState}) {
     _validUsername = validUsername;
-    _editingUser.username = _textController.text.trim();
-
+    //does not consider isSetState
+    
     // if (isSetState) {
     //   setState(() {});
     // }
