@@ -35,14 +35,17 @@ class _EditRowPageState extends State<EditRowPage> {
 
   // bool _validLoading = true;
   bool _validUsername = false;
+  MyUser _editingUser;
   // Timer _debounce;
 
   void updateValidUsername(
       {@required bool validUsername, @required bool isSetState}) {
     _validUsername = validUsername;
-    if (isSetState) {
-      setState(() {});
-    }
+    _editingUser.username = _textController.text.trim();
+
+    // if (isSetState) {
+    //   setState(() {});
+    // }
   }
 
   // Future<void> _checkForValidUsername(String username) async {
@@ -77,7 +80,7 @@ class _EditRowPageState extends State<EditRowPage> {
     final EditProfileProvider _editProfileProvider =
         Provider.of<EditProfileProvider>(context, listen: false);
 
-    final MyUser _editingUser = _editProfileProvider.user;
+    _editingUser = _editProfileProvider.user;
 
     switch (widget.editType) {
       case EditType.username:

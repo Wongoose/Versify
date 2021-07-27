@@ -133,6 +133,7 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
             return false;
         },
         child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
             backgroundColor: Theme.of(context).backgroundColor,
             centerTitle: true,
@@ -186,50 +187,62 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                   'Done',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).primaryColor,
+                    color: this
+                            ._profileDataProvider
+                            .phoneNumberNewAcc
+                            .phoneNumber
+                            .isNotEmpty
+                        ? Theme.of(context).primaryColor
+                        : _themeProvider.primaryTextColor.withOpacity(0.26),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 onPressed: () async {
-                  setState(() => _validLoading = true);
+                  if (isValidPhone &&
+                      this
+                          ._profileDataProvider
+                          .phoneNumberNewAcc
+                          .phoneNumber
+                          .isNotEmpty) {
+                    setState(() => _validLoading = true);
 
-                  _fetchUrl().then((_) {
-                    formKey.currentState.validate();
-                    if (isValidPhone) {
-                      //auth phone verification
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => new AccountVerification(
-                              accEditType: AccountEditType.phone,
-                              parsedText: _profileDataProvider
-                                  .phoneNumberNewAcc.phoneNumber,
-                              resendingToken: resendingToken,
-                              verificationSuccessFunc:
-                                  _phoneVerificationSuccess,
+                    _fetchUrl().then((_) {
+                      formKey.currentState.validate();
+                      if (isValidPhone) {
+                        //auth phone verification
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => new AccountVerification(
+                                accEditType: AccountEditType.phone,
+                                parsedText: _profileDataProvider
+                                    .phoneNumberNewAcc.phoneNumber,
+                                resendingToken: resendingToken,
+                                verificationSuccessFunc:
+                                    _phoneVerificationSuccess,
 
-                              // DatabaseService()
-                              //     .updateNewAccUser(
-                              //   uid: _user.userUID,
-                              //   username: widget.usernameController.text,
-                              //   phone: _profileDataProvider
-                              //       .phoneNumberNewAcc.phoneNumber,
-                              //   email: _authService.authUser.email,
-                              // )
-                              //     .then((value) async {
-                              //   _profileDataProvider.updateListeners();
-                              //   Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //         builder: (context) => Wrapper(),
-                              //       ));
-                              // });
-                            ),
-                          ));
-                    }
-                    setState(() => _validLoading = false);
-                  });
-
+                                // DatabaseService()
+                                //     .updateNewAccUser(
+                                //   uid: _user.userUID,
+                                //   username: widget.usernameController.text,
+                                //   phone: _profileDataProvider
+                                //       .phoneNumberNewAcc.phoneNumber,
+                                //   email: _authService.authUser.email,
+                                // )
+                                //     .then((value) async {
+                                //   _profileDataProvider.updateListeners();
+                                //   Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(
+                                //         builder: (context) => Wrapper(),
+                                //       ));
+                                // });
+                              ),
+                            ));
+                      }
+                      setState(() => _validLoading = false);
+                    });
+                  }
                   // formKey.currentState.validate();
                   // String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
                   // RegExp regExp = new RegExp(pattern);
