@@ -35,7 +35,11 @@ class _UsernameTextFieldState extends State<UsernameTextField> {
         _validUsername = isValid;
         _validLoading = false;
       });
-      widget.updateValidUsername(_validUsername);
+      //setsState update _validUsername (add)
+      widget.updateValidUsername(
+        validUsername: _validUsername,
+        isSetState: true,
+      );
     });
   }
 
@@ -44,7 +48,10 @@ class _UsernameTextFieldState extends State<UsernameTextField> {
       _validUsername = false;
       _validLoading = true;
     });
-    widget.updateValidUsername(_validUsername);
+    widget.updateValidUsername(
+      validUsername: _validUsername,
+      isSetState: false,
+    );
 
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(seconds: 1), () {

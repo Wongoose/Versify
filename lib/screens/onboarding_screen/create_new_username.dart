@@ -36,8 +36,12 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
   // Timer _debounce;
   bool _nextLoading = false;
 
-  void updateValidUsername(bool validUsername) {
+  void updateValidUsername(
+      {@required bool validUsername, @required bool isSetState}) {
     _validUsername = validUsername;
+    if (isSetState) {
+      setState(() {});
+    }
   }
 
   // Future<void> _checkForValidUsername(String username) async {

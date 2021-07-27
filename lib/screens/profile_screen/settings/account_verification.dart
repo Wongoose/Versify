@@ -54,10 +54,10 @@ class _AccountVerificationState extends State<AccountVerification> {
             await _auth.currentUser
                 .verifyBeforeUpdateEmail(widget.parsedText)
                 .then((_) {
-              _authService.myUser.email = widget.parsedText;
-              _profileDBService.updateEmailVerification(
-                email: _authService.myUser.email,
-              );
+              // _authService.myUser.email = widget.parsedText;
+              // _profileDBService.updateEmailVerification(
+              // email: _authService.myUser.email,
+              // );
             });
           });
         } catch (err) {
@@ -303,7 +303,9 @@ class _AccountVerificationState extends State<AccountVerification> {
                 primary: Theme.of(context).backgroundColor,
               ),
               child: Text(
-                'Confirm',
+                widget.accEditType == AccountEditType.email
+                    ? 'Close'
+                    : 'Confirm',
                 style: TextStyle(
                   fontSize: 14,
                   color: _verificationId != null ||
@@ -343,7 +345,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                 padding: EdgeInsets.fromLTRB(2, 0, 20, 0),
                 child: Text(
                   widget.accEditType == AccountEditType.phone
-                      ? 'Verification code'
+                      ? 'Enter 6-digit OTP'
                       : 'Verification email',
                   style: TextStyle(
                     fontSize: 14,
@@ -358,8 +360,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                   ? TextFormField(
                       autofocus: true,
                       controller: _textController,
-                      maxLines:
-                          widget.accEditType == AccountEditType.bio ? null : 1,
+                      maxLines: 1,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -373,10 +374,6 @@ class _AccountVerificationState extends State<AccountVerification> {
                       ),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8),
-                        prefixText:
-                            widget.accEditType == AccountEditType.username
-                                ? '@ '
-                                : '',
                         prefixStyle: TextStyle(
                             color: _themeProvider.secondaryTextColor,
                             fontSize: 15),
@@ -403,7 +400,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                   child: Text(
                     widget.accEditType == AccountEditType.phone
                         ? 'A verification code was sent to ${widget.parsedText}. If you have not received the code within 2 minutes, click resend.'
-                        : 'A verification email was sent to ${widget.parsedText}. Please check your inbox to verify your new email.',
+                        : 'A verification email was sent to ${widget.parsedText}. Please check your inbox. Your email will be updated after it is verified.',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,

@@ -10,14 +10,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/profile_database.dart';
 
-enum AccountEditType { username, bio, phone, email, socialLinks }
+enum AccountEditType { phone, email, password }
 
 class AccountEditRow extends StatefulWidget {
   final AccountEditType editType;
-  final String socialLink;
   // final Function updateFunc;
 
-  AccountEditRow({this.editType, this.socialLink});
+  AccountEditRow({this.editType});
 
   @override
   _AccountEditRowState createState() => _AccountEditRowState();
@@ -25,36 +24,30 @@ class AccountEditRow extends StatefulWidget {
 
 class _AccountEditRowState extends State<AccountEditRow> {
   final TextEditingController _textController = TextEditingController();
+  AccountSettingsProvider _accountSettingsProvider;
   String _appBarTitle;
   String _textTitle;
   int _maxLength;
+  int _resendingToken;
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // setState(() => _accountSettingsProvider.textController = _textController);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final AccountSettingsProvider _accountSettingsProvider =
-        Provider.of<AccountSettingsProvider>(context, listen: false);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
 
-    final ProfileDBService _profileDBService =
-        Provider.of<ProfileDBService>(context);
-    final AuthService _authService = Provider.of<AuthService>(context);
-
+    _accountSettingsProvider =
+        Provider.of<AccountSettingsProvider>(context, listen: false);
     final MyUser _editingUser = _accountSettingsProvider.user;
+    _accountSettingsProvider.textController = _textController;
 
     switch (widget.editType) {
-      case AccountEditType.username:
-        _appBarTitle = 'Username';
-        _textTitle = 'Change username';
-        _maxLength = 20;
-        _textController.text = _editingUser.username;
-        break;
-      case AccountEditType.bio:
-        _appBarTitle = 'Bio';
-        _textTitle = 'Change bio';
-        _maxLength = 150;
-        _textController.text = _editingUser.description;
-        break;
       case AccountEditType.phone:
         _appBarTitle = 'Phone';
         _textTitle = 'Change phone number';
@@ -69,14 +62,10 @@ class _AccountEditRowState extends State<AccountEditRow> {
         _textController.text = _editingUser.email;
         _accountSettingsProvider.initialText = _editingUser.email;
         break;
-      case AccountEditType.socialLinks:
-        _appBarTitle = widget.socialLink;
-        _textTitle = 'Change link';
-        _maxLength = 1000;
-        _textController.text = _editingUser.socialLinks[widget.socialLink];
+      case AccountEditType.password:
+        // TODO: Handle this case.
         break;
     }
-    _accountSettingsProvider.textController = _textController;
 
     return WillPopScope(
       onWillPop: () async {
@@ -143,12 +132,6 @@ class _AccountEditRowState extends State<AccountEditRow> {
                   bool _needVerification;
 
                   switch (widget.editType) {
-                    case AccountEditType.username:
-                      // _editingUser.username = _textController.text.trim();
-                      break;
-                    case AccountEditType.bio:
-                      // _editingUser.description = _textController.text.trim();
-                      break;
                     case AccountEditType.phone:
                       _needVerification = true;
                       // _editingUser.phoneNumber = _textController.text.trim();
@@ -157,11 +140,8 @@ class _AccountEditRowState extends State<AccountEditRow> {
                       _needVerification = true;
                       // _editingUser.email = _textController.text.trim();
                       break;
-                    case AccountEditType.socialLinks:
-                      // _editingUser.socialLinks[widget.socialLink] =
-                      //     _textController.text.trim() == ''
-                      //         ? null
-                      //         : _textController.text.trim();
+                    case AccountEditType.password:
+                      // TODO: Handle this case.
                       break;
                   }
                   // _accountSettingsProvider.updateProfileData();
@@ -171,6 +151,7 @@ class _AccountEditRowState extends State<AccountEditRow> {
                         MaterialPageRoute(
                           builder: (context) => AccountVerification(
                             accEditType: widget.editType,
+                            resendingToken: _resendingToken,
                             parsedText: _textController.text,
                             verificationSuccessFunc: () {
                               _accountSettingsProvider.updateProfileData();
@@ -206,7 +187,7 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 autofocus: true,
                 controller: _textController,
                 maxLength: _maxLength,
-                maxLines: widget.editType == AccountEditType.bio ? null : 1,
+                maxLines: 1,
                 keyboardType: widget.editType == AccountEditType.phone
                     ? TextInputType.phone
                     : TextInputType.emailAddress,
@@ -219,24 +200,22 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 },
 
                 onChanged: (_) {
+                  //trigger has change text
                   _accountSettingsProvider.updateProfileData();
                 },
 
                 buildCounter: (_, {currentLength, maxLength, isFocused}) {
-                  return Visibility(
-                    visible: widget.editType != AccountEditType.socialLinks,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${currentLength.toString()}/${maxLength.toString()}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: currentLength > maxLength
-                              ? Colors.red
-                              : _themeProvider.secondaryTextColor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  return Container(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${currentLength.toString()}/${maxLength.toString()}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: currentLength > maxLength
+                            ? Colors.red
+                            : _themeProvider.secondaryTextColor,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   );
@@ -245,8 +224,8 @@ class _AccountEditRowState extends State<AccountEditRow> {
                   color: _themeProvider.primaryTextColor,
                 ),
                 decoration: InputDecoration(
-                  prefixText:
-                      widget.editType == AccountEditType.username ? '@ ' : '',
+                  // prefixText:
+                  //     widget.editType == AccountEditType.username ? '@ ' : '',
                   prefixStyle: TextStyle(
                       color: _themeProvider.secondaryTextColor, fontSize: 15),
                   isDense: true,

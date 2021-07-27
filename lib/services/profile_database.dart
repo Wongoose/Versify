@@ -311,8 +311,8 @@ class ProfileDBService {
             description: doc['description'] ?? '',
             profileImageUrl: doc['profileImageUrl'] ??
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-            phoneNumber: doc['phone'],
-            email: doc['email'],
+            // phoneNumber: doc['phone'],
+            // email: doc['email'],
             socialLinks: doc['socialLinks'] ??
                 {
                   'instagram': null,

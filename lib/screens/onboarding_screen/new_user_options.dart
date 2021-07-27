@@ -22,14 +22,6 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: _theme.splashColor,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Colors.white,
-        systemNavigationBarColor: _theme.splashColor,
-      ),
-    );
 
     return WillPopScope(
         child: Scaffold(

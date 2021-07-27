@@ -24,100 +24,23 @@ class AccountSettings extends StatefulWidget {
 
 class _AccountSettingsState extends State<AccountSettings> {
   AccountSettingsProvider _accountSettingsProvider;
-  MyUser _user;
-
-  // void popAccountSettings() {
-  //   if () {
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) {
-  //           return SimpleDialog(
-  //             title: Align(
-  //               alignment: Alignment.center,
-  //               child: Text(
-  //                 'Unsaved changes',
-  //                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
-  //               ),
-  //             ),
-  //             contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-  //             shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(10.0)),
-  //             children: [
-  //               Container(
-  //                 padding: EdgeInsets.fromLTRB(30, 15, 30, 10),
-  //                 alignment: Alignment.center,
-  //                 width: 40,
-  //                 child: Text(
-  //                   'If you go back now, your profile will not be updated. ',
-  //                   textAlign: TextAlign.center,
-  //                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-  //                 ),
-  //               ),
-  //               // Divider(thickness: 0.5, height: 0),
-  //               Container(
-  //                 margin: EdgeInsets.all(0),
-  //                 height: 60,
-  //                 child: FlatButton(
-  //                   materialTapTargetSize: MaterialTapTargetSize.padded,
-  //                   onPressed: () {
-  //                     Navigator.popUntil(context,
-  //                         ModalRoute.withName(Navigator.defaultRouteName));
-  //                   },
-  //                   child: Text(
-  //                     'Don\'t save',
-  //                     style: TextStyle(
-  //                       color: Colors.red,
-  //                       fontSize: 16,
-  //                       fontWeight: FontWeight.w600,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Divider(thickness: 0.5, height: 0),
-  //               Container(
-  //                 margin: EdgeInsets.all(0),
-  //                 height: 60,
-  //                 child: FlatButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: Text(
-  //                     'Cancel',
-  //                     style: TextStyle(
-  //                       color: _themeProvider.primaryTextColor38,
-  //                       fontSize: 16,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           );
-  //         });
-  //   } else {
-  //     Navigator.pop(context);
-  //   }
-  // }
-  // void updateData() {}
+  AuthService _authService;
 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _accountSettingsProvider.initProfileUser(_user);
+      //initialize user in accountSettingsProvider (done in wrapper)
+      // _accountSettingsProvider.initSettingsUser(_authService.myUser);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final AuthService _authService = Provider.of<AuthService>(context);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
-
+    _authService = Provider.of<AuthService>(context);
     _accountSettingsProvider =
         Provider.of<AccountSettingsProvider>(context, listen: true);
-
-    _user = _authService.myUser;
-
-    print(_user);
 
     return WillPopScope(
       onWillPop: () async {
@@ -196,7 +119,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       ),
                       Expanded(child: Container()),
                       Text(
-                        '${_user.phoneNumber}',
+                        _authService.getCurrentUser.phoneNumber,
                         style: TextStyle(
                           fontSize: 14,
                           color: _themeProvider.secondaryTextColor,
@@ -243,7 +166,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       ),
                       Expanded(child: Container()),
                       Text(
-                        '${_user.email}',
+                        _authService.getCurrentUser.email,
                         style: TextStyle(
                           fontSize: 14,
                           color: _themeProvider.secondaryTextColor,

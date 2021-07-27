@@ -37,8 +37,12 @@ class _EditRowPageState extends State<EditRowPage> {
   bool _validUsername = false;
   // Timer _debounce;
 
-  void updateValidUsername(bool validUsername) {
+  void updateValidUsername(
+      {@required bool validUsername, @required bool isSetState}) {
     _validUsername = validUsername;
+    if (isSetState) {
+      setState(() {});
+    }
   }
 
   // Future<void> _checkForValidUsername(String username) async {

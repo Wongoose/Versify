@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:versify/home_wrapper.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/onboarding_screen/new_user_options.dart';
 import 'package:versify/screens/onboarding_screen/pick_topics.dart';
@@ -43,6 +45,26 @@ class Wrapper extends StatelessWidget {
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context, listen: false);
 
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
+    AccountSettingsProvider _accountSettingsProvider =
+        Provider.of<AccountSettingsProvider>(context, listen: false);
+
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Color(0xFFffdee9),
+        statusBarIconBrightness:
+            _themeProvider.isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarDividerColor:
+            Theme.of(context).dialogBackgroundColor,
+        systemNavigationBarColor: Theme.of(context).dialogBackgroundColor,
+      ),
+    );
+
     if (_tutorialProvider.pickTopics) {
       //tutorial pick topics
       return IntroPickTopics(completePickTutorials);
@@ -59,9 +81,18 @@ class Wrapper extends StatelessWidget {
                   //has user document in firestore
                   _authService.hasFirestoreDocuments = true;
 
+                  _authService.myUser = myUserSnap.data;
+
+                  _authService.myUser.phoneNumber =
+                      _authService.getCurrentUser.phoneNumber;
+                  _authService.myUser.email = _authService.getCurrentUser.email;
+
+                  _accountSettingsProvider
+                      .initSettingsUser(_authService.myUser);
+
                   if (_authService.isUserAnonymous) {
                     print(myUserSnap.data.userUID + "| is signInAnonymous");
-                    _authService.myUser = myUserSnap.data;
+                    // _authService.myUser = myUserSnap.data;
 
                     initSharedPrefs(logInUserID: myUserSnap.data.userUID);
                     _profileDBService.profileDBInit();
@@ -74,7 +105,7 @@ class Wrapper extends StatelessWidget {
                       //oldUser compelte login
                       print(myUserSnap.data.userUID +
                           "| is completeLogin = true");
-                      _authService.myUser = myUserSnap.data;
+                      // _authService.myUser = myUserSnap.data;
 
                       initSharedPrefs(logInUserID: myUserSnap.data.userUID);
                       _profileDBService.profileDBInit();
