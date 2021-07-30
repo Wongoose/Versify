@@ -81,6 +81,9 @@ class Wrapper extends StatelessWidget {
                   //has user document in firestore
                   _authService.hasFirestoreDocuments = true;
 
+                  _authService.getCurrentSignInProvider();
+
+                  //validate and update firebase (phone and email)
                   return FutureBuilder<void>(
                       future: validateUserPhoneAndEmail(
                         authService: _authService,

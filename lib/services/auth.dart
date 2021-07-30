@@ -10,10 +10,12 @@ class AuthService {
   MyUser myUser;
   User authUser;
   String userUID;
+  String currentSignInProvider;
 
   bool hasFirestoreDocuments;
 
   bool get isUserAuthenticated => authUser != null;
+
   bool get isUserAnonymous {
     if (authUser != null) {
       return authUser.isAnonymous;
@@ -23,6 +25,16 @@ class AuthService {
   }
 
   User get getCurrentUser => _auth.currentUser;
+
+  Future<String> getCurrentSignInProvider() async {
+    return _auth.currentUser
+        .getIdTokenResult()
+        .then((IdTokenResult tokenResult) {
+      print('currentSignInProvider | is: ' + tokenResult?.signInProvider);
+      currentSignInProvider = tokenResult.signInProvider;
+      return tokenResult.signInProvider;
+    });
+  }
 
   Future<bool> signInAnon() async {
     //method setup
@@ -71,7 +83,8 @@ class AuthService {
   }
 
   MyUser _userFromFB(User firebaseUser) {
-    print('Stream User Changes | hashCode: ' + firebaseUser.hashCode.toString());
+    print(
+        'Stream User Changes | hashCode: ' + firebaseUser.hashCode.toString());
     if (firebaseUser != null) {
       this.authUser = firebaseUser;
       this.userUID = firebaseUser.uid;

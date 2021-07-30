@@ -119,7 +119,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       ),
                       Expanded(child: Container()),
                       Text(
-                        _authService.getCurrentUser.phoneNumber,
+                        _authService.getCurrentUser.phoneNumber ?? 'none',
                         style: TextStyle(
                           fontSize: 14,
                           color: _themeProvider.secondaryTextColor,
@@ -150,13 +150,19 @@ class _AccountSettingsState extends State<AccountSettings> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.email_rounded,
-                        size: 16.5,
+                        _authService.currentSignInProvider == 'google.com'
+                            ? FontAwesomeIcons.google
+                            : Icons.email_rounded,
+                        size: _authService.currentSignInProvider == 'google.com'
+                            ? 15
+                            : 16.5,
                         color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
                       SizedBox(width: 10),
                       Text(
-                        'Email',
+                        _authService.currentSignInProvider == 'google.com'
+                            ? 'Google'
+                            : 'Email',
                         style: TextStyle(
                           fontSize: 15,
                           color:
@@ -183,54 +189,58 @@ class _AccountSettingsState extends State<AccountSettings> {
                   ),
                 ),
               ),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                // onTap: () => Navigator.push(
-                //     context,
-                //     CupertinoPageRoute(
-                //       builder: (context) =>
-                //           EditRowPage(editType: EditType.username),
-                //     )),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.key,
-                        size: 15,
-                        color: Theme.of(context).primaryColor.withOpacity(0.6),
-                      ),
-                      SizedBox(width: 10),
-                      //hide this widget if using Google/Facebook
-                      Text(
-                        'Password',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color:
-                              _themeProvider.primaryTextColor.withOpacity(0.87),
-                          fontWeight: FontWeight.w500,
+              _authService.currentSignInProvider == 'google.com'
+                  ? Container()
+                  : GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      // onTap: () => Navigator.push(
+                      //     context,
+                      //     CupertinoPageRoute(
+                      //       builder: (context) =>
+                      //           EditRowPage(editType: EditType.username),
+                      //     )),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.key,
+                              size: 15,
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.6),
+                            ),
+                            SizedBox(width: 10),
+                            //hide this widget if using Google/Facebook
+                            Text(
+                              'Password',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: _themeProvider.primaryTextColor
+                                    .withOpacity(0.87),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Expanded(child: Container()),
+                            Text(
+                              'Secured',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: _themeProvider.secondaryTextColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: _themeProvider.secondaryTextColor,
+                              size: 15,
+                            ),
+                          ],
                         ),
                       ),
-                      Expanded(child: Container()),
-                      Text(
-                        'Secured',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: _themeProvider.secondaryTextColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: _themeProvider.secondaryTextColor,
-                        size: 15,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
               // SizedBox(height: 30),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
