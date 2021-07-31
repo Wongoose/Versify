@@ -41,28 +41,30 @@ class _AccountVerificationState extends State<AccountVerification> {
 
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (widget.accEditType == AccountEditType.phone) {
         //phone verification
         verifyPhoneNumber();
-      } else {
+      } else if (widget.accEditType == AccountEditType.email) {
         //email verification
         try {
-          await _authService
-              .signInWithGoogle(newUser: false)
-              .then((value) async {
-            await _auth.currentUser
-                .verifyBeforeUpdateEmail(widget.parsedText)
-                .then((_) {
-              // _authService.myUser.email = widget.parsedText;
-              // _profileDBService.updateEmailVerification(
-              // email: _authService.myUser.email,
-              // );
-            });
+          if (_authService.currentSignInProvider == 'google.com') {
+            await _authService.signInWithGoogle(newUser: false);
+          }
+          await _auth.currentUser
+              .verifyBeforeUpdateEmail(widget.parsedText)
+              .then((_) {
+            // _authService.myUser.email = widget.parsedText;
+            // _profileDBService.updateEmailVerification(
+            // email: _authService.myUser.email,
+            // );
           });
         } catch (err) {
           print('Error verify email: ' + err.toString());
         }
+      } else {
+        _authService.resetPasswordWithEmail(_authService.getCurrentUser.email);
       }
     });
   }
@@ -257,6 +259,8 @@ class _AccountVerificationState extends State<AccountVerification> {
       onWillPop: () async {
         if (Navigator.of(context).userGestureInProgress) {
           return false;
+        } else if (widget.accEditType == AccountEditType.password) {
+          return false;
         } else {
           await _onWillPopDialog();
           return false;
@@ -269,7 +273,9 @@ class _AccountVerificationState extends State<AccountVerification> {
           centerTitle: true,
           elevation: 0.5,
           title: Text(
-            'Verification',
+            widget.accEditType == AccountEditType.password
+                ? 'Password'
+                : 'Verification',
             style: TextStyle(
               fontSize: 17.5,
               fontWeight: FontWeight.w600,
@@ -277,24 +283,26 @@ class _AccountVerificationState extends State<AccountVerification> {
             ),
           ),
           leadingWidth: 60,
-          leading: TextButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              backgroundColor: Theme.of(context).backgroundColor,
-              primary: Theme.of(context).backgroundColor,
-            ),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                fontSize: 14,
-                color: _themeProvider.secondaryTextColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            onPressed: () {
-              _onWillPopDialog();
-            },
-          ),
+          leading: widget.accEditType == AccountEditType.password
+              ? Container()
+              : TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    primary: Theme.of(context).backgroundColor,
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: _themeProvider.secondaryTextColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    _onWillPopDialog();
+                  },
+                ),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
@@ -303,13 +311,15 @@ class _AccountVerificationState extends State<AccountVerification> {
                 primary: Theme.of(context).backgroundColor,
               ),
               child: Text(
-                widget.accEditType == AccountEditType.email
+                widget.accEditType == AccountEditType.email ||
+                        widget.accEditType == AccountEditType.password
                     ? 'Close'
                     : 'Confirm',
                 style: TextStyle(
                   fontSize: 14,
                   color: _verificationId != null ||
-                          widget.accEditType == AccountEditType.email
+                          widget.accEditType == AccountEditType.email ||
+                          widget.accEditType == AccountEditType.password
                       ? Theme.of(context).primaryColor
                       : Theme.of(context).primaryColor.withOpacity(0.4),
                   fontWeight: FontWeight.w600,
@@ -328,7 +338,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                   }
                 } else {
                   _accountSettingsProvider.updateProfileData();
-                  //email
+                  //email or password
                   Navigator.pop(context);
                   Navigator.pop(context);
                 }
@@ -346,7 +356,9 @@ class _AccountVerificationState extends State<AccountVerification> {
                 child: Text(
                   widget.accEditType == AccountEditType.phone
                       ? 'Enter 6-digit OTP'
-                      : 'Verification email',
+                      : widget.accEditType == AccountEditType.password
+                          ? 'Reset password'
+                          : 'Verification email',
                   style: TextStyle(
                     fontSize: 14,
                     color: _themeProvider.secondaryTextColor,
@@ -400,7 +412,9 @@ class _AccountVerificationState extends State<AccountVerification> {
                   child: Text(
                     widget.accEditType == AccountEditType.phone
                         ? 'A verification code was sent to ${widget.parsedText}. If you have not received the code within 2 minutes, click resend.'
-                        : 'A verification email was sent to ${widget.parsedText}. Please check your inbox. Your email will be updated after it is verified.',
+                        : widget.accEditType == AccountEditType.password
+                            ? 'A password reset email was sent to ${_authService.getCurrentUser.email}. Please check your inbox and follow the steps to reset your password. '
+                            : 'A verification email was sent to ${widget.parsedText}. Please check your inbox. Your email will be updated after it is verified.',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
@@ -411,34 +425,37 @@ class _AccountVerificationState extends State<AccountVerification> {
                 ),
               ),
               SizedBox(height: 15),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    if (canResendToken) {
-                      verifyPhoneNumber(
-                          forceResendingToken: widget.resendingToken);
-                    } else {
-                      toast(
-                          "You can only resend verification once every 2 minutes. Please wait and try again later.");
-                    }
-                  },
-                  child: SizedBox(
-                    child: Text(
-                      'Resend code',
-                      style: TextStyle(
-                        height: 1.7,
-                        fontSize: 12,
-                        color: canResendToken
-                            ? Colors.blue[400]
-                            : _themeProvider.primaryTextColor.withOpacity(0.26),
-                        fontWeight: FontWeight.w500,
+              widget.accEditType == AccountEditType.phone
+                  ? Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          if (canResendToken) {
+                            verifyPhoneNumber(
+                                forceResendingToken: widget.resendingToken);
+                          } else {
+                            toast(
+                                "You can resend verification code once every 2 minutes. Please wait and try again later.");
+                          }
+                        },
+                        child: SizedBox(
+                          child: Text(
+                            'Resend code',
+                            style: TextStyle(
+                              height: 1.7,
+                              fontSize: 12,
+                              color: canResendToken
+                                  ? Colors.blue[400]
+                                  : _themeProvider.primaryTextColor
+                                      .withOpacity(0.26),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
+                    )
+                  : Container(),
             ],
           ),
         ),

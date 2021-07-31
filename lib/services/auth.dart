@@ -231,6 +231,11 @@ class AuthService {
     return _user;
   }
 
+  Future<void> resetPasswordWithEmail(String email) async {
+    print('resetPasswordWithEmail | RAN: ' + email);
+    _auth.sendPasswordResetEmail(email: email);
+  }
+
   Future<void> logout() async {
     await _auth.signOut();
   }

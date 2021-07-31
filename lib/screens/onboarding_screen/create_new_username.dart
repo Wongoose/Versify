@@ -75,7 +75,7 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _profileDataProvider.phoneNumberNewAcc =
-          PhoneNumber(phoneNumber: _authService.getCurrentUser.phoneNumber);
+          PhoneNumber(phoneNumber: _authService.getCurrentUser.phoneNumber ?? '');
     });
   }
 

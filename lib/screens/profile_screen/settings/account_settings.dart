@@ -193,12 +193,12 @@ class _AccountSettingsState extends State<AccountSettings> {
                   ? Container()
                   : GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      // onTap: () => Navigator.push(
-                      //     context,
-                      //     CupertinoPageRoute(
-                      //       builder: (context) =>
-                      //           EditRowPage(editType: EditType.username),
-                      //     )),
+                      onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => AccountEditRow(
+                                editType: AccountEditType.password),
+                          )),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                         child: Row(
