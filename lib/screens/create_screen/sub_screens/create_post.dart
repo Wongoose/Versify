@@ -1,11 +1,10 @@
 import 'package:versify/models/content_widget.dart';
 import 'package:versify/providers/create_post/content_body_provider.dart';
 import 'package:versify/providers/create_post/create_topics_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/create_screen/sub_screens/review_post.dart';
-import 'package:versify/screens/create_screen/widgets/content_normal_text.dart';
 import 'package:versify/screens/create_screen/widgets/my_tags.dart';
 import 'package:versify/screens/create_screen/widgets/create_body.dart';
-import 'package:versify/screens/create_screen/widgets/quote_text.dart';
 import 'package:versify/screens/create_screen/widgets/smart_text.dart';
 import 'package:versify/screens/create_screen/widgets/toolBar.dart';
 import 'package:versify/services/database.dart';
@@ -51,6 +50,8 @@ class _CreatePostState extends State<CreatePost> {
 
     final DatabaseService _databaseService =
         Provider.of<DatabaseService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     contentBodyProvider =
         Provider.of<ContentBodyProvider>(context, listen: false);
@@ -66,21 +67,24 @@ class _CreatePostState extends State<CreatePost> {
           return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           elevation: 1,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           titleSpacing: 5,
           title: Text(
             'Create',
             style: TextStyle(
-                color: Colors.black, fontSize: 22, fontWeight: FontWeight.w600),
+              color: _themeProvider.primaryTextColor,
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           leading: GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Icon(
                 Icons.arrow_back_ios_rounded,
-                color: Colors.black,
+                color: _themeProvider.primaryTextColor,
                 size: 25,
               )),
           actions: [
@@ -89,7 +93,8 @@ class _CreatePostState extends State<CreatePost> {
                 return TextButton.icon(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    primary: Theme.of(context).backgroundColor,
                   ),
                   label: Text(''),
                   icon: Icon(
@@ -241,7 +246,7 @@ class _CreatePostState extends State<CreatePost> {
                           state.writeCounter.toString(),
                           style: TextStyle(
                               fontSize: 10,
-                              color: Colors.black,
+                              color: _themeProvider.primaryTextColor,
                               fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -271,7 +276,7 @@ class _CreatePostState extends State<CreatePost> {
     //     padding: EdgeInsets.all(10),
     //     decoration: BoxDecoration(
     //       color: Colors.white,
-    //       border: Border.all(color: Colors.black12),
+    //       border: Border.all(color: _themeProvider.primaryTextColor12),
     //     ),
     //     child: Row(
     //       children: [
@@ -295,7 +300,7 @@ class _CreatePostState extends State<CreatePost> {
     //                       ? 'wow! such interesting story . . . 😍'
     //                       : 'amazing! can\'t wait to post it! 😎',
     //           style: TextStyle(
-    //               color: Colors.black38,
+    //               color: _themeProvider.primaryTextColor38,
     //               fontSize: 12,
     //               fontWeight: FontWeight.w300),
     //         ),
@@ -348,7 +353,7 @@ class _CreatePostState extends State<CreatePost> {
 //                           ? 'wow! such interesting story . . . 😍'
 //                           : 'amazing! can\'t wait to post it! 😎',
 //               style: TextStyle(
-//                   color: Colors.black38,
+//                   color: _themeProvider.primaryTextColor38,
 //                   fontWeight: FontWeight.w300),
 //             ),
 //           ],

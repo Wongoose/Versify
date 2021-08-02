@@ -1,4 +1,5 @@
 import 'package:versify/providers/create_post/create_topics_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/create_screen/widgets/create_tags_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,8 @@ class _MyTagsState extends State<MyTags> {
   Widget build(BuildContext context) {
     final CreateTopicsProvider _topicsProvider =
         Provider.of<CreateTopicsProvider>(context, listen: true);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,23 +32,24 @@ class _MyTagsState extends State<MyTags> {
                 onPressed: () {},
                 style: TextButton.styleFrom(
                   visualDensity: VisualDensity.compact,
-                  primary: Colors.white,
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  primary: Theme.of(context).backgroundColor,
                 ),
                 label: Text(
                   'My Tags',
                   style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black54,
-                      fontFamily: 'Nunito',
+                      color: _themeProvider.secondaryTextColor,
+                      // fontFamily: 'Nunito',
                       fontWeight: FontWeight.w600),
                 ),
-                icon: Icon(Icons.tag, color: Colors.black54),
+                icon: Icon(Icons.tag, color: _themeProvider.secondaryTextColor),
               ),
               TextButton.icon(
                 onPressed: () {
                   showModalBottomSheet(
+                    backgroundColor: Theme.of(context).backgroundColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15),
@@ -58,8 +62,7 @@ class _MyTagsState extends State<MyTags> {
                       return ChangeNotifierProvider<CreateTopicsProvider>.value(
                         value: _topicsProvider,
                         child: SingleChildScrollView(
-                          child: CreateTagsBottomSheet(
-                            ),
+                          child: CreateTagsBottomSheet(),
                         ),
                       );
                     },
@@ -68,9 +71,9 @@ class _MyTagsState extends State<MyTags> {
                 },
                 style: TextButton.styleFrom(
                   visualDensity: VisualDensity.compact,
-                  primary: Colors.white,
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  primary: Theme.of(context).backgroundColor,
                 ),
                 label: Text(
                   'Edit',
@@ -147,8 +150,8 @@ class _MyTagsState extends State<MyTags> {
                             padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              border: Border.fromBorderSide(
-                                  BorderSide(color: Theme.of(context).primaryColor)),
+                              border: Border.fromBorderSide(BorderSide(
+                                  color: Theme.of(context).primaryColor)),
                               borderRadius: BorderRadius.circular(5),
                               // color: _colorScheme[_colorIndex]['secondary']
                               //     .withOpacity(0.3),

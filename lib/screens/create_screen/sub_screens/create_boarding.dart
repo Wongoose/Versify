@@ -1,6 +1,7 @@
 import 'package:versify/providers/create_post/content_body_provider.dart';
 import 'package:versify/providers/create_post/create_topics_provider.dart';
 import 'package:versify/providers/create_post/suggestion_topics_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/create_screen/sub_screens/create_post.dart';
 import 'package:versify/screens/create_screen/widgets/content_normal_text.dart';
 import 'package:versify/services/auth.dart';
@@ -24,6 +25,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
   final CreateTopicsProvider _createTopicsProvider = CreateTopicsProvider();
 
   ContentBodyProvider contentBodyProvider;
+  ThemeProvider _themeProvider;
 
   void showDialogWhenCancel() {
     if (widget.titleController.text != '' || contentBodyProvider.hasWritten) {
@@ -35,7 +37,11 @@ class _CreateBoardingState extends State<CreateBoarding> {
                 alignment: Alignment.center,
                 child: Text(
                   'Discard post?',
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w600,
+                    color: _themeProvider.primaryTextColor,
+                  ),
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -49,9 +55,14 @@ class _CreateBoardingState extends State<CreateBoarding> {
                   child: Text(
                     'If you go back now, you will lose all your writing data.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: _themeProvider.primaryTextColor,
+                    ),
                   ),
                 ),
+
                 // Divider(thickness: 0.5, height: 0),
                 Container(
                   margin: EdgeInsets.all(0),
@@ -82,9 +93,9 @@ class _CreateBoardingState extends State<CreateBoarding> {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      'Keep',
+                      'Cancel',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: _themeProvider.secondaryTextColor,
                         fontSize: 16,
                       ),
                     ),
@@ -132,6 +143,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
 
     contentBodyProvider =
         Provider.of<ContentBodyProvider>(context, listen: false);
+    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     return ChangeNotifierProvider<SuggestionTopicsProvider>.value(
       value: _suggestionTopicsProvider,
@@ -141,14 +153,15 @@ class _CreateBoardingState extends State<CreateBoarding> {
           return null;
         },
         child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).backgroundColor,
             elevation: 1,
             titleSpacing: 5,
             title: Text(
               'Create',
               style: TextStyle(
-                  color: Colors.black,
+                  color: _themeProvider.primaryTextColor,
                   fontSize: 22,
                   fontWeight: FontWeight.w600),
             ),
@@ -156,14 +169,15 @@ class _CreateBoardingState extends State<CreateBoarding> {
                 onTap: () => showDialogWhenCancel(),
                 child: Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: Colors.black,
+                  color: _themeProvider.primaryTextColor,
                   size: 25,
                 )),
             actions: [
               TextButton.icon(
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  primary: Theme.of(context).backgroundColor,
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -214,7 +228,8 @@ class _CreateBoardingState extends State<CreateBoarding> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.black38,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.38),
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -240,7 +255,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                           TextSpan(
                             text: ' suggestions',
                             style: TextStyle(
-                                color: Colors.black,
+                                color: _themeProvider.primaryTextColor,
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Nunito',
@@ -257,7 +272,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                       'FROM THE PEOPLE',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: _themeProvider.secondaryTextColor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -275,7 +290,8 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                 (chipData) => FilterChip(
                                     selected: chipData.checked,
                                     checkmarkColor: Colors.white,
-                                    selectedColor: Theme.of(context).primaryColor,
+                                    selectedColor:
+                                        Theme.of(context).primaryColor,
                                     showCheckmark: false,
                                     onSelected: ((onSelected) {
                                       topicsProvider.uncheckAll();
@@ -290,11 +306,12 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                       side: BorderSide(
                                         color: chipData.checked
                                             ? Theme.of(context).primaryColor
-                                            : Colors.black38,
+                                            : _themeProvider.primaryTextColor
+                                                .withOpacity(0.38),
                                         width: chipData.checked ? 1 : 0,
                                       ),
                                     ),
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Theme.of(context).backgroundColor,
                                     label: Container(
                                       constraints: BoxConstraints(
                                           minWidth: 0, maxWidth: 200),
@@ -309,7 +326,8 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                         fontWeight: FontWeight.w600,
                                         color: chipData.checked
                                             ? Colors.white
-                                            : Colors.black45)),
+                                            : _themeProvider
+                                                .secondaryTextColor)),
                               )
                               .toList()
                               .cast<Widget>(),
@@ -326,7 +344,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                       'FOR YOU',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: _themeProvider.secondaryTextColor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -344,7 +362,8 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                 (chipData) => FilterChip(
                                     selected: chipData.checked,
                                     checkmarkColor: Colors.white,
-                                    selectedColor: Theme.of(context).primaryColor,
+                                    selectedColor:
+                                        Theme.of(context).primaryColor,
                                     showCheckmark: false,
                                     onSelected: ((onSelected) {
                                       topicsProvider.uncheckAll();
@@ -358,11 +377,12 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                       side: BorderSide(
                                         color: chipData.checked
                                             ? Theme.of(context).primaryColor
-                                            : Colors.black38,
+                                            : _themeProvider.primaryTextColor
+                                                .withOpacity(0.38),
                                         width: chipData.checked ? 1 : 0,
                                       ),
                                     ),
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Theme.of(context).backgroundColor,
                                     label: Container(
                                       constraints: BoxConstraints(
                                           minWidth: 0,
@@ -378,7 +398,8 @@ class _CreateBoardingState extends State<CreateBoarding> {
                                         fontWeight: FontWeight.w600,
                                         color: chipData.checked
                                             ? Colors.white
-                                            : Colors.black45)),
+                                            : _themeProvider
+                                                .secondaryTextColor)),
                               )
                               .toList()
                               .cast<Widget>(),
@@ -394,26 +415,28 @@ class _CreateBoardingState extends State<CreateBoarding> {
                       TextButton.icon(
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                          backgroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).backgroundColor,
+                          primary: Theme.of(context).backgroundColor,
                         ),
                         onPressed: () => {},
                         label: Text(
                           'help',
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: _themeProvider.secondaryTextColor,
                             fontFamily: 'Nunito',
                           ),
                         ),
                         icon: Icon(
                           Icons.help_outline_rounded,
                           size: 14,
-                          color: Colors.black54,
+                          color: _themeProvider.secondaryTextColor,
                         ),
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                          backgroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).backgroundColor,
+                          primary: Theme.of(context).backgroundColor,
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -431,7 +454,7 @@ class _CreateBoardingState extends State<CreateBoarding> {
                             return Text(
                               topicsProvider.hasSelected ? 'next' : 'skip',
                               style: TextStyle(
-                                color: Colors.black54,
+                                color: _themeProvider.secondaryTextColor,
                                 fontFamily: 'Nunito',
                               ),
                             );

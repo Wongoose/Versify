@@ -1,4 +1,5 @@
 import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/shared/profilePicture.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ class ContentBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService _authService = Provider.of<AuthService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Column(
       children: [
@@ -57,7 +60,7 @@ class ContentBody extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.italic,
-                      color: Colors.black54,
+                      color: _themeProvider.secondaryTextColor,
                     ),
                   ),
                 ],

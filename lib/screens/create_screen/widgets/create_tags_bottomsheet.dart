@@ -1,12 +1,17 @@
 import 'package:versify/providers/create_post/create_topics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 
 class CreateTagsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     return Container(
       padding: EdgeInsets.fromLTRB(30, 40, 30, 10),
+      // color: Theme.of(context).backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,9 +24,9 @@ class CreateTagsBottomSheet extends StatelessWidget {
                 maxLines: 2,
                 text: TextSpan(children: [
                   TextSpan(
-                    text: '#Edit Tags',
+                    text: 'Edit Tags',
                     style: TextStyle(
-                        color: Colors.black45,
+                        color: _themeProvider.secondaryTextColor,
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Nunito',
@@ -65,7 +70,7 @@ class CreateTagsBottomSheet extends StatelessWidget {
                                 width: 1.0,
                               ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).backgroundColor,
                             label: Text(chipData.topic),
                             labelStyle: TextStyle(
                                 fontFamily: 'Nunito',
@@ -89,34 +94,36 @@ class CreateTagsBottomSheet extends StatelessWidget {
               TextButton.icon(
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  primary: Theme.of(context).backgroundColor,
                 ),
                 onPressed: () => {},
                 label: Text(
                   'help',
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: _themeProvider.secondaryTextColor,
                     fontFamily: 'Nunito',
                   ),
                 ),
                 icon: Icon(
                   Icons.help_outline_rounded,
                   size: 14,
-                  color: Colors.black54,
+                  color: _themeProvider.secondaryTextColor,
                 ),
               ),
               TextButton(
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  primary: Theme.of(context).backgroundColor,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  'save',
+                  'close',
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: _themeProvider.secondaryTextColor,
                     fontFamily: 'Nunito',
                   ),
                 ),

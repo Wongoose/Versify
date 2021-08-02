@@ -1,5 +1,6 @@
 import 'package:versify/models/content_widget.dart';
 import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/create_screen/widgets/content_normal_text.dart';
 import 'package:versify/screens/create_screen/widgets/quote_text.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,9 @@ class _CreateToolBarState extends State<CreateToolBar> {
   Widget build(BuildContext context) {
     final ContentBodyProvider _contentBodyProvider =
         Provider.of<ContentBodyProvider>(context, listen: true);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -24,8 +28,10 @@ class _CreateToolBarState extends State<CreateToolBar> {
           height: 50,
           // padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.black54),
+              color: Theme.of(context).backgroundColor,
+              border: Border.all(
+                color: _themeProvider.secondaryTextColor,
+              ),
               borderRadius: BorderRadius.circular(30)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -55,7 +61,7 @@ class _CreateToolBarState extends State<CreateToolBar> {
                       // contentBodyProvider.selectToolbar(
                       //   WidgetType.quote,
                       //   isRequestFocus: true,
-                      //   index: contentBodyProvider
+                      //   index: contentBodyProvider 
                       //           .listOfContentWidgets.isEmpty
                       //       ? 0
                       //       : contentBodyProvider.currentFocusIndex + 1,
@@ -69,7 +75,7 @@ class _CreateToolBarState extends State<CreateToolBar> {
                         color: _contentBodyProvider.selectedTool ==
                                 WidgetType.quote
                             ? Colors.deepPurpleAccent
-                            : Colors.black54),
+                            : _themeProvider.secondaryTextColor),
                   )),
               GestureDetector(
                 onTap: () {
@@ -105,13 +111,14 @@ class _CreateToolBarState extends State<CreateToolBar> {
                       color:
                           _contentBodyProvider.selectedTool == WidgetType.text
                               ? Theme.of(context).primaryColor
-                              : Colors.black54),
+                              : _themeProvider.secondaryTextColor),
                 ),
               ),
               Container(
                   height: 50,
                   width: 65,
-                  child: Icon(Icons.image, color: Colors.black54)),
+                  child: Icon(Icons.image,
+                      color: _themeProvider.secondaryTextColor)),
               VerticalDivider(thickness: 1, width: 0),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,

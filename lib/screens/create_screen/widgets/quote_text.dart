@@ -1,4 +1,6 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/create_screen/widgets/feature_quote.dart';
 import 'package:versify/screens/create_screen/widgets/search_verse_bottomsheet.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class QuoteText extends StatefulWidget {
 
 class _QuoteTextState extends State<QuoteText> {
   ContentBodyProvider contentBodyProvider;
+  ThemeProvider _themeProvider;
   String _quoteTitle;
 
   void updateVerse({String topic, String verse}) {
@@ -72,6 +75,7 @@ class _QuoteTextState extends State<QuoteText> {
 
   @override
   Widget build(BuildContext context) {
+    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     contentBodyProvider =
         Provider.of<ContentBodyProvider>(context, listen: false);
 
@@ -120,25 +124,32 @@ class _QuoteTextState extends State<QuoteText> {
                   textAlign: TextAlign.start,
                   enableInteractiveSelection: true,
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.7),
-                    fontSize: 14,
-                    fontFamily: 'Libre',
-                    fontStyle: FontStyle.italic,
+                    color: _themeProvider.primaryTextColor.withOpacity(0.7),
+                    fontSize: 15.5,
+                    fontFamily: GoogleFonts.getFont('Philosopher').fontFamily,
+                    fontWeight: FontWeight.w300,
+                    fontStyle: FontStyle.normal,
                     height: 1.35,
                   ),
                   decoration: InputDecoration(
                     alignLabelWithHint: true,
                     hintText: '" Your Quote "',
                     hintStyle: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                        fontSize: 13,
-                        fontFamily: 'Libre',
-                        fontStyle: FontStyle.italic),
+                        color: _themeProvider.primaryTextColor.withOpacity(0.7),
+                        fontSize: 15.5,
+                        height: 1.35,
+                        fontFamily:
+                            GoogleFonts.getFont('Philosopher').fontFamily,
+                        fontWeight: FontWeight.w300,
+                        fontStyle: FontStyle.normal),
                     labelStyle: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                        fontSize: 14,
-                        fontFamily: 'Libre',
-                        fontStyle: FontStyle.italic),
+                        color: _themeProvider.primaryTextColor.withOpacity(0.7),
+                        fontSize: 15.5,
+                        height: 1.35,
+                        fontFamily:
+                            GoogleFonts.getFont('Philosopher').fontFamily,
+                        fontWeight: FontWeight.w300,
+                        fontStyle: FontStyle.normal),
                     border: InputBorder.none,
                     isDense: true,
                     contentPadding: EdgeInsets.fromLTRB(10, 12, 8, 12),
@@ -180,7 +191,7 @@ class _QuoteTextState extends State<QuoteText> {
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                             color: Color(0xfffffcfe),
                           ),
                         ),
