@@ -19,7 +19,7 @@ class ProfileActionBar extends StatefulWidget {
   final bool visitProfile;
   final ProfileDBService profileDBService;
   final EditProfileProvider editProfileProvider;
-  final MyUser userProfile;
+  MyUser userProfile;
 
   ProfileActionBar({
     this.visitProfile,
@@ -68,6 +68,7 @@ class _ProfileActionBarState extends State<ProfileActionBar> {
       //userIsMe
       _profileDetailsIsEmpty = _authService.myUser.description.isEmpty ||
           _authService.myUser.profileImageUrl == null;
+      widget.userProfile = _authService.myUser;
     }
 
     return Row(
