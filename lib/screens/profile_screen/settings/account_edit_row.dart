@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-enum AccountEditType { phone, email, password }
+enum AccountEditType { phone, google, email, password }
 
 class AccountEditRow extends StatefulWidget {
   final AccountEditType editType;
@@ -73,6 +73,11 @@ class _AccountEditRowState extends State<AccountEditRow> {
         // _textController.text = _editingUser.email;
         // _accountSettingsProvider.initialText = _editingUser.email;
         break;
+      case AccountEditType.google:
+        _appBarTitle = 'Account';
+        _textTitle = 'Google account';
+        _maxLength = 40;
+        break;
     }
 
     return WillPopScope(
@@ -115,7 +120,8 @@ class _AccountEditRowState extends State<AccountEditRow> {
             },
           ),
           actions: [
-            widget.editType == AccountEditType.password
+            widget.editType == AccountEditType.password ??
+                    widget.editType == AccountEditType.google
                 ? Container()
                 : TextButton(
                     style: TextButton.styleFrom(
@@ -151,6 +157,9 @@ class _AccountEditRowState extends State<AccountEditRow> {
                             // _editingUser.email = _textController.text.trim();
                             break;
                           case AccountEditType.password:
+                            // TODO: Handle this case.
+                            break;
+                          case AccountEditType.google:
                             // TODO: Handle this case.
                             break;
                         }
@@ -194,7 +203,8 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 ),
               ),
               SizedBox(height: 5),
-              widget.editType == AccountEditType.password
+              widget.editType == AccountEditType.password ||
+                      widget.editType == AccountEditType.google
                   ? Container()
                   : TextFormField(
                       autofocus: true,
@@ -258,12 +268,15 @@ class _AccountEditRowState extends State<AccountEditRow> {
                       ),
                     ),
               SizedBox(height: 5),
-              widget.editType == AccountEditType.password
+              widget.editType == AccountEditType.password ||
+                      widget.editType == AccountEditType.google
                   ? Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                       child: SizedBox(
                         child: Text(
-                          'The password for ${_authService.getCurrentUser.email} is secured.',
+                          widget.editType == AccountEditType.password
+                              ? 'The password for ${_authService.getCurrentUser.email} is secured.'
+                              : 'Your Versify account is created with ${_authService.getCurrentUser.email} Google account.',
                           style: TextStyle(
                             height: 1.7,
                             fontSize: 12,

@@ -201,8 +201,8 @@ class Wrapper extends StatelessWidget {
 
     if (requiresUpdate) {
       await profileDBService.updatedValidatedPhoneAndEmail(
-        phone: authServiceMyUser.phoneNumber,
-        email: authServiceMyUser.email,
+        phone: authService.myUser.phoneNumber,
+        email: authService.myUser.email,
       );
     }
   }

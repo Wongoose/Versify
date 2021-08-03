@@ -119,7 +119,9 @@ class _AccountSettingsState extends State<AccountSettings> {
                       ),
                       Expanded(child: Container()),
                       Text(
-                        _authService.getCurrentUser.phoneNumber ?? 'none',
+                        _authService.getCurrentUser.phoneNumber == null
+                            ? 'none'
+                            : _authService.getCurrentUser.phoneNumber,
                         style: TextStyle(
                           fontSize: 14,
                           color: _themeProvider.secondaryTextColor,
@@ -141,8 +143,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                 onTap: () => Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) =>
-                          AccountEditRow(editType: AccountEditType.email),
+                      builder: (context) => AccountEditRow(
+                          editType:
+                              _authService.currentSignInProvider == 'google.com'
+                                  ? AccountEditType.google
+                                  : AccountEditType.email),
                     )),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),

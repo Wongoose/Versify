@@ -437,6 +437,8 @@ class DatabaseService {
   }
 
   Future<void> get getNewFeeds async {
+    //onRefresh don't clear existing list (if no new data)
+    //when latest and oldest all done, repeat by choronological order
     print('getNewFeeds has been CALLED is DATABASE');
     List<Feed> tempList = [];
 

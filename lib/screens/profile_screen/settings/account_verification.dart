@@ -2,6 +2,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/services/auth.dart';
+import 'package:versify/services/dynamic_links.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class _AccountVerificationState extends State<AccountVerification> {
   String _verificationId;
   Duration timeout = Duration(seconds: 120);
   bool canResendToken = false;
+  bool _successSendVerification = false;
 
   void initState() {
     super.initState();
@@ -52,9 +54,22 @@ class _AccountVerificationState extends State<AccountVerification> {
           if (_authService.currentSignInProvider == 'google.com') {
             await _authService.signInWithGoogle(newUser: false);
           }
-          await _auth.currentUser
-              .verifyBeforeUpdateEmail(widget.parsedText)
-              .then((_) {
+
+          await DynamicLinkService()
+              .createResetEmailDynamicLink(widget.parsedText)
+              .then((dynamicLinkUrl) async {
+            await _authService.getCurrentUser.verifyBeforeUpdateEmail(
+                widget.parsedText,
+                ActionCodeSettings(
+                  url: dynamicLinkUrl,
+                  androidInstallApp: false,
+                  handleCodeInApp: false,
+                  androidPackageName: 'com.wongoose.versify',
+                  dynamicLinkDomain: 'versify.wongoose.com',
+                ));
+
+            setState(() => _successSendVerification = true);
+            // _auth.currentUser.reload();
             // _authService.myUser.email = widget.parsedText;
             // _profileDBService.updateEmailVerification(
             // email: _authService.myUser.email,
@@ -62,6 +77,9 @@ class _AccountVerificationState extends State<AccountVerification> {
           });
         } catch (err) {
           print('Error verify email: ' + err.toString());
+          toast('Failed: ${err.message}.');
+          Navigator.pop(context);
+          Navigator.pop(context);
         }
       } else {
         _authService.resetPasswordWithEmail(_authService.getCurrentUser.email);
@@ -72,7 +90,8 @@ class _AccountVerificationState extends State<AccountVerification> {
   Future<void> verifyPhoneNumber({int forceResendingToken}) async {
     setState(() => canResendToken = false);
     if (forceResendingToken == null) {
-      await _auth.verifyPhoneNumber(
+      await _auth
+          .verifyPhoneNumber(
         timeout: timeout,
         phoneNumber: widget.parsedText,
 
@@ -91,7 +110,10 @@ class _AccountVerificationState extends State<AccountVerification> {
           toast('Verification code was sent to ${widget.parsedText}.',
               duration: Toast.LENGTH_LONG);
 
-          setState(() => _verificationId = verificationId);
+          setState(() {
+            _verificationId = verificationId;
+            _successSendVerification = true;
+          });
         },
         codeAutoRetrievalTimeout: (_) {
           // toast("Request time out. Please click 'resend code' and try again.",
@@ -100,7 +122,10 @@ class _AccountVerificationState extends State<AccountVerification> {
           print('Too late');
           setState(() => canResendToken = true);
         },
-      );
+      )
+          .catchError((err) {
+        //error when sending
+      });
     } else {
       print('verifyPhoneNumber | with resendingToken: $forceResendingToken');
       await _auth.verifyPhoneNumber(
@@ -410,11 +435,13 @@ class _AccountVerificationState extends State<AccountVerification> {
                 padding: EdgeInsets.fromLTRB(2, 0, 20, 0),
                 child: SizedBox(
                   child: Text(
-                    widget.accEditType == AccountEditType.phone
-                        ? 'A verification code was sent to ${widget.parsedText}. If you have not received the code within 2 minutes, click resend.'
-                        : widget.accEditType == AccountEditType.password
-                            ? 'A password reset email was sent to ${_authService.getCurrentUser.email}. Please check your inbox and follow the steps to reset your password. '
-                            : 'A verification email was sent to ${widget.parsedText}. Please check your inbox. Your email will be updated after it is verified.',
+                    _successSendVerification
+                        ? widget.accEditType == AccountEditType.phone
+                            ? 'Enter the verification code that we have sent to ${widget.parsedText}. If you have not received the code within 2 minutes, click resend.'
+                            : widget.accEditType == AccountEditType.password
+                                ? 'A password reset email was sent to ${_authService.getCurrentUser.email}. Please check your inbox and follow the steps to reset your password. '
+                                : 'Follow the the steps in the verification email that we have sent to ${widget.parsedText}. Your email will be updated after it is verified.'
+                        : 'Sending...',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
@@ -425,7 +452,8 @@ class _AccountVerificationState extends State<AccountVerification> {
                 ),
               ),
               SizedBox(height: 15),
-              widget.accEditType == AccountEditType.phone
+              _successSendVerification &&
+                      widget.accEditType == AccountEditType.phone
                   ? Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                       child: GestureDetector(

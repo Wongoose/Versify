@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/profile_database.dart';
@@ -43,15 +44,23 @@ class DynamicLinkService {
   Future<bool> _handleDynamicLink(
       PendingDynamicLinkData data, BuildContext context,
       {bool onPopExitApp}) async {
-    final Uri deepLink = data?.link;
+    // Uri deepLink = data.link;
+    Uri deepLink = data?.link;
+    // if (deepLink.queryParameters.containsKey('link')) {
+    //   deepLink = Uri.parse(deepLink.queryParameters['link']);
+    //   print('deepLink containes "link" | deepLink is: $deepLink');
+    // }
+    //   print('before | deepLink is: $deepLink');
 
     if (deepLink != null) {
       print('_handleDynamicLink | deepLink is: $deepLink');
 
       bool isProfile = deepLink.pathSegments.contains('profile');
       bool isPost = deepLink.pathSegments.contains('post');
+      bool isEmail = deepLink.pathSegments.contains('email');
       print('isProfile | is: ${isProfile.toString()}');
       print('isPost | is: ${isPost.toString()}');
+      print('isEmail | is: ${isEmail.toString()}');
 
       if (!authService.isUserAuthenticated) {
         //not signed in
@@ -63,6 +72,7 @@ class DynamicLinkService {
               deepLink: deepLink,
               isPost: isPost,
               isProfile: isProfile,
+              isEmail: isEmail,
               context: context,
               onPopExitApp: onPopExitApp,
             );
@@ -105,6 +115,7 @@ class DynamicLinkService {
             deepLink: deepLink,
             isPost: isPost,
             isProfile: isProfile,
+            isEmail: isEmail,
             context: context,
             onPopExitApp: onPopExitApp,
           );
@@ -121,6 +132,7 @@ class DynamicLinkService {
     Uri deepLink,
     bool isPost,
     bool isProfile,
+    bool isEmail,
     BuildContext context,
     bool onPopExitApp,
   }) {
@@ -145,6 +157,11 @@ class DynamicLinkService {
 
         print('isProfile | Profile ID is: $userId');
       }
+    } else if (isEmail) {
+      String newEmail = deepLink.queryParameters['new-email'];
+      print('Dynamic Link handled newEmail: $newEmail');
+      toast('Dynamic Link handled newEmail: $newEmail');
+      authService.getCurrentUser.reload();
     }
   }
 
@@ -176,6 +193,24 @@ class DynamicLinkService {
 
     print('createProfileDynamicLink | dynamicShortUrl: ${shortUrl.toString()}');
 
+    return shortUrl.toString();
+  }
+
+  Future<String> createResetEmailDynamicLink(String newEmail) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://versify.wongoose.com/',
+      link: Uri.parse('https://versifyapp.com/email?new-email=$newEmail'),
+      androidParameters: AndroidParameters(packageName: 'com.wongoose.versify'),
+    );
+
+    final ShortDynamicLink shortDynamicLink = await parameters.buildShortLink();
+    // final Uri deepLink = await parameters.buildUrl();
+
+    final Uri shortUrl = shortDynamicLink.shortUrl;
+
+    print('createProfileDynamicLink | dynamicShortUrl: ${shortUrl.toString()}');
+
+    // return deepLink.toString();
     return shortUrl.toString();
   }
 }

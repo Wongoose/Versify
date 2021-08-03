@@ -339,7 +339,7 @@ class ProfileDBService {
       {String phone, String email}) async {
     try {
       await usersPrivateCollection.doc(this.uid).update({
-        'phone': phone,
+        'phone': phone ?? null,
         'email': email,
       });
     } catch (err) {
