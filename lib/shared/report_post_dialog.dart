@@ -1,4 +1,5 @@
 import 'package:versify/models/feed_model.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
   Widget build(BuildContext context) {
     final DatabaseService _databaseService =
         Provider.of<DatabaseService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return WillPopScope(
       onWillPop: () async {
@@ -45,11 +48,11 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
             style: TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.w600,
-              color: _thankYou ? Colors.blue : Colors.redAccent,
+              color: _thankYou ? Colors.blue : _themeProvider.primaryTextColor,
             ),
           ),
         ),
-        titlePadding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        titlePadding: EdgeInsets.fromLTRB(10, 25, 10, 20),
         contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -79,7 +82,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 value: _checksMap[ReportFeed.violence],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.violence] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -95,7 +99,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -109,7 +113,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 value: _checksMap[ReportFeed.sensitive],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.sensitive] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -125,7 +130,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -139,7 +144,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 value: _checksMap[ReportFeed.political],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.political] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -155,7 +161,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -170,7 +176,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.adultContent] =
                                         value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -186,7 +193,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -200,7 +207,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 value: _checksMap[ReportFeed.language],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.language] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -216,7 +224,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -230,7 +238,8 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 value: _checksMap[ReportFeed.others],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.others] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -246,7 +255,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -262,7 +271,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                             'What\'s wrong?',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black45,
+                              color: _themeProvider.secondaryTextColor,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -293,7 +302,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                       fontSize: 10,
                                       color: currentLength > maxLength
                                           ? Colors.red
-                                          : Colors.black54,
+                                          : _themeProvider.secondaryTextColor,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -306,15 +315,20 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                               //     widget.editType == EditType.username ? '@ ' : '',
 
                               prefixStyle: TextStyle(
-                                  color: Colors.black45, fontSize: 15),
+                                  color: _themeProvider.secondaryTextColor,
+                                  fontSize: 15),
                               isDense: true,
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.black26, width: 0.5),
+                                    color: _themeProvider.primaryTextColor
+                                        .withOpacity(0.26),
+                                    width: 0.5),
                               ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.black26, width: 0.5),
+                                    color: _themeProvider.primaryTextColor
+                                        .withOpacity(0.26),
+                                    width: 0.5),
                               ),
                             ),
                           ),
@@ -364,13 +378,15 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                         style: TextStyle(
                           color: Colors.redAccent,
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       replacement: SizedBox(
                         height: 15,
                         width: 15,
-                        child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
                           strokeWidth: 0.5,
                         ),
                       ),
@@ -388,7 +404,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
               child: Text(
                 _thankYou ? 'Okay' : 'Cancel',
                 style: TextStyle(
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontSize: 16,
                 ),
               ),

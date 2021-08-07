@@ -213,7 +213,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
                               );
                             } else if (mode == LoadStatus.failed) {
                               body = Text(
-                                "Load Failed!Click retry!",
+                                "Load Failed. Click retry!",
                                 style: TextStyle(color: Colors.black),
                               );
                             } else if (mode == LoadStatus.canLoading) {

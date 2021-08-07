@@ -44,8 +44,17 @@ class DynamicLinkService {
   Future<bool> _handleDynamicLink(
       PendingDynamicLinkData data, BuildContext context,
       {bool onPopExitApp}) async {
-    // Uri deepLink = data.link;
-    Uri deepLink = data?.link;
+    Uri deepLink;
+    if (data.toString().contains('email')) {
+      print('_handleDynamicLink | data contains "email"');
+      String link = data.toString().split('link=')[1];
+      print('_handleDynamicLink | split link as string: $link');
+      deepLink = Uri.parse(link);
+      print(
+          '_handleDynamicLink | deepLink Uri.parse(link) is: ${deepLink.toString()}');
+    } else {
+      deepLink = data?.link;
+    }
     // if (deepLink.queryParameters.containsKey('link')) {
     //   deepLink = Uri.parse(deepLink.queryParameters['link']);
     //   print('deepLink containes "link" | deepLink is: $deepLink');
@@ -203,14 +212,14 @@ class DynamicLinkService {
       androidParameters: AndroidParameters(packageName: 'com.wongoose.versify'),
     );
 
-    final ShortDynamicLink shortDynamicLink = await parameters.buildShortLink();
-    // final Uri deepLink = await parameters.buildUrl();
+    // final ShortDynamicLink shortDynamicLink = await parameters.buildShortLink();
+    final Uri deepLink = await parameters.buildUrl();
 
-    final Uri shortUrl = shortDynamicLink.shortUrl;
+    // final Uri shortUrl = shortDynamicLink.shortUrl;
 
-    print('createProfileDynamicLink | dynamicShortUrl: ${shortUrl.toString()}');
+    print('createEmailDynamicLink | dynamicShortUrl: ${deepLink.toString()}');
 
     // return deepLink.toString();
-    return shortUrl.toString();
+    return deepLink.toString();
   }
 }

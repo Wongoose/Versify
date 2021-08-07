@@ -171,7 +171,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                       label: Text(''),
                       onPressed: () {
                         showModalBottomSheet(
-                            backgroundColor: Colors.white,
+                            backgroundColor: _themeProvider.dialogColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
@@ -333,6 +333,8 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
     final AuthService _authService = Provider.of<AuthService>(context);
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     print('Profile BottomSheet profileDataProvider is: ' +
         widget.profileDataProvider.hashCode.toString());
@@ -353,7 +355,10 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {
                 if (_isVisitProfile) {
                   //report
@@ -390,7 +395,10 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {
                 setState(() => _shareLoading = true);
                 DynamicLinkService()
@@ -413,7 +421,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   child: Text(
                     'Share post',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: _themeProvider.primaryTextColor,
                       fontSize: 16,
                       fontFamily: 'Nunito',
                       fontWeight: FontWeight.w600,
@@ -440,7 +448,10 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
               height: 60,
               child: TextButton(
                 style: TextButton.styleFrom(
-                    padding: EdgeInsets.all(15), primary: Colors.white),
+                  padding: EdgeInsets.all(15),
+                  primary: Theme.of(context).dialogBackgroundColor,
+                  backgroundColor: Theme.of(context).dialogBackgroundColor,
+                ),
                 onPressed: () {
                   setState(() => _followLoading = true);
 
@@ -476,7 +487,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                               : 'Follow'
                           : 'none',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: _themeProvider.primaryTextColor,
                         fontSize: 16,
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
@@ -507,7 +518,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                   child: Text(
                     'Edit post',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: _themeProvider.primaryTextColor,
                       fontSize: 16,
                       fontFamily: 'Nunito',
                       fontWeight: FontWeight.w600,

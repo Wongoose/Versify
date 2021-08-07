@@ -176,7 +176,7 @@ class ProfileFeedWidget extends StatelessWidget {
                                   fontFamily: 'Nunito',
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
-                                  color: Colors.black26,
+                                  color: _themeProvider.secondaryTextColor,
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
@@ -224,7 +224,10 @@ class ProfileFeedWidget extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w200,
                             fontSize: 12,
-                            color: _colorScheme[_colorIndex]['secondary'],
+                            color: _colorScheme[_colorIndex][
+                                _themeProvider.isDark
+                                    ? 'secondary'
+                                    : 'primary'],
                           ),
                         ),
                       ),
@@ -244,7 +247,9 @@ class ProfileFeedWidget extends StatelessWidget {
                                         border: Border.fromBorderSide(
                                             BorderSide(
                                                 color: _colorScheme[_colorIndex]
-                                                        ['secondary']
+                                                        [_themeProvider.isDark
+                                                            ? 'secondary'
+                                                            : 'primary']
                                                     .withOpacity(0.7))),
                                         borderRadius: BorderRadius.circular(5),
                                         // color: _colorScheme[_colorIndex]['secondary']
@@ -268,8 +273,10 @@ class ProfileFeedWidget extends StatelessWidget {
                                             fontFamily: 'Nunito',
                                             fontSize: 11,
                                             // color: Colors.white,
-                                            color: _colorScheme[_colorIndex]
-                                                    ['secondary']
+                                            color: _colorScheme[_colorIndex][
+                                                    _themeProvider.isDark
+                                                        ? 'secondary'
+                                                        : 'primary']
                                                 .withOpacity(0.7)),
                                       ),
                                     ),
