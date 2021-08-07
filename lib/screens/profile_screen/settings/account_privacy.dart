@@ -106,16 +106,16 @@ class AccountPrivacy extends StatelessWidget {
               ),
             ),
             SizedBox(
-                  child: Text(
-                    'With a private account, your profile will be hidden from everyone, only you can see.',
-                    style: TextStyle(
-                      height: 1.7,
-                      fontSize: 12,
-                      color: _themeProvider.secondaryTextColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+              child: Text(
+                'With a private account, your profile will be hidden from everyone, only you can see it.',
+                style: TextStyle(
+                  height: 1.7,
+                  fontSize: 12,
+                  color: _themeProvider.secondaryTextColor,
+                  fontWeight: FontWeight.w500,
                 ),
+              ),
+            ),
             SizedBox(height: 10),
             Divider(thickness: 0.5),
             SizedBox(height: 10),
@@ -134,13 +134,13 @@ class AccountPrivacy extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    FontAwesomeIcons.lock,
+                    FontAwesomeIcons.shareAlt,
                     size: 15,
                     color: Theme.of(context).primaryColor.withOpacity(0.6),
                   ),
                   SizedBox(width: 10),
                   Text(
-                    'Block sharing',
+                    'Disable sharing',
                     style: TextStyle(
                       fontSize: 15,
                       color: _themeProvider.primaryTextColor.withOpacity(0.87),
@@ -151,19 +151,31 @@ class AccountPrivacy extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(
+              child: Text(
+                'When enabled, people cannot share your post.',
+                style: TextStyle(
+                  height: 1.7,
+                  fontSize: 12,
+                  color: _themeProvider.secondaryTextColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
             Padding(
               padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    FontAwesomeIcons.lock,
+                    FontAwesomeIcons.eyeSlash,
                     size: 15,
                     color: Theme.of(context).primaryColor.withOpacity(0.6),
                   ),
                   SizedBox(width: 10),
                   Text(
-                    'Hide views and likes',
+                    'Hide views, likes...',
                     style: TextStyle(
                       fontSize: 15,
                       color: _themeProvider.primaryTextColor.withOpacity(0.87),
@@ -174,6 +186,29 @@ class AccountPrivacy extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(
+              child: Text(
+                'When enabled, the number of views, likes, and shares in your posts will be hidden.',
+                style: TextStyle(
+                  height: 1.7,
+                  fontSize: 12,
+                  color: _themeProvider.secondaryTextColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            // SizedBox(height: 10),
+            // Divider(thickness: 0.5),
+            // SizedBox(height: 10),
+            // Text(
+            //   'PERSONALIZATION',
+            //   style: TextStyle(
+            //     fontSize: 14,
+            //     color: _themeProvider.secondaryTextColor,
+            //     fontWeight: FontWeight.w600,
+            //   ),
+            // ),
+            // SizedBox(height: 10),
           ],
         ),
       ),
