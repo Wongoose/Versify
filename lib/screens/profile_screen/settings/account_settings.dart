@@ -4,6 +4,7 @@ import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/screens/profile_screen/edit_profile_folder/edit_specific_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
+import 'package:versify/screens/profile_screen/settings/account_privacy.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/wrapper.dart';
@@ -249,11 +250,11 @@ class _AccountSettingsState extends State<AccountSettings> {
               // SizedBox(height: 30),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                // onTap: () => Navigator.push(
-                //     context,
-                //     CupertinoPageRoute(
-                //       builder: (context) => EditRowPage(editType: EditType.bio),
-                //     )),
+                onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => AccountPrivacy(),
+                    )),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                   child: Row(
