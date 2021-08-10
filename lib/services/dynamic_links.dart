@@ -45,15 +45,19 @@ class DynamicLinkService {
       PendingDynamicLinkData data, BuildContext context,
       {bool onPopExitApp}) async {
     Uri deepLink;
-    if (data.toString().contains('email')) {
+    if (data?.link.toString().contains('email')) {
       print('_handleDynamicLink | data contains "email"');
-      String link = data.toString().split('link=')[1];
+      String link =
+          data?.link.toString().split('link=')[1].replaceAll('%3D', '=');
+
       print('_handleDynamicLink | split link as string: $link');
       deepLink = Uri.parse(link);
       print(
           '_handleDynamicLink | deepLink Uri.parse(link) is: ${deepLink.toString()}');
     } else {
       deepLink = data?.link;
+      print('_handleDynamicLink | does not contain "email": ' +
+          deepLink.toString());
     }
     // if (deepLink.queryParameters.containsKey('link')) {
     //   deepLink = Uri.parse(deepLink.queryParameters['link']);
@@ -169,8 +173,15 @@ class DynamicLinkService {
     } else if (isEmail) {
       String newEmail = deepLink.queryParameters['new-email'];
       print('Dynamic Link handled newEmail: $newEmail');
-      toast('Dynamic Link handled newEmail: $newEmail');
-      authService.getCurrentUser.reload();
+      toast(
+        'Email verified. Please login again with $newEmail.',
+        duration: Toast.LENGTH_LONG,
+      );
+      //add navigate to DynamicLink Quick Sign In
+      authService.logout().then((_) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      });
     }
   }
 

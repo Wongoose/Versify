@@ -120,7 +120,7 @@ class _AccountEditRowState extends State<AccountEditRow> {
             },
           ),
           actions: [
-            widget.editType == AccountEditType.password ??
+            widget.editType == AccountEditType.password ||
                     widget.editType == AccountEditType.google
                 ? Container()
                 : TextButton(

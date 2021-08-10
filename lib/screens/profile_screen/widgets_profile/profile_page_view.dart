@@ -391,6 +391,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
           ),
           Divider(thickness: 0.5, height: 0),
           Container(
+            color: Colors.transparent,
             margin: EdgeInsets.all(0),
             height: 60,
             child: TextButton(
