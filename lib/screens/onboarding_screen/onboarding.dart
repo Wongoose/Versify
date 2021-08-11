@@ -53,7 +53,8 @@ class _OnBoardingState extends State<OnBoarding> {
     // );
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFFffdee9),
+        // backgroundColor: Color(0xFFffdee9),
+        backgroundColor: Theme.of(context).splashColor,
         appBar: null,
         body: PageView.builder(
           controller: _pageController,
@@ -106,7 +107,7 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
         bottomNavigationBar: BottomAppBar(
           elevation: 0,
-          color: Color(0xFFffdee9),
+          color: Theme.of(context).splashColor,
           child: Container(
             padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
             height: 150,
@@ -144,7 +145,7 @@ class _OnBoardingState extends State<OnBoarding> {
                     padding: EdgeInsets.fromLTRB(12, 7, 12, 7),
                     decoration: BoxDecoration(
                       color: _currentIndex == 3
-                          ? Color(0xFF61c0bf)
+                          ? Theme.of(context).accentColor
                           : Colors.black45,
                       borderRadius: BorderRadius.circular(15),
                     ),

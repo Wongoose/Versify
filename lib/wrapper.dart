@@ -56,9 +56,8 @@ class Wrapper extends StatelessWidget {
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Color(0xFFffdee9),
-        statusBarIconBrightness:
-            _themeProvider.isDark ? Brightness.light : Brightness.dark,
+        statusBarColor: Theme.of(context).splashColor,
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarDividerColor:
             Theme.of(context).dialogBackgroundColor,
         systemNavigationBarColor: Theme.of(context).dialogBackgroundColor,
@@ -130,7 +129,7 @@ class Wrapper extends StatelessWidget {
                               return CreateNewUsername();
                             }
                           }
-                        }else{
+                        } else {
                           return SplashLoading();
                         }
                       });

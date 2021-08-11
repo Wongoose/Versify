@@ -14,31 +14,21 @@ class ProfileFeedWidget extends StatelessWidget {
 
   final List<Map<String, Color>> _colorScheme = [
     {
-      //red
-      'primary': Color(0xFFff699F),
-      'secondary': Color(0xFFFFD6E6),
+      //purple
+      'primary': Color(0xFFcc99ff),
+      'secondary': Color(0xFFefdaff),
     },
     {
       //biege
-      'primary': Color(0xFFe8ab92),
-      'secondary': Color(0xFFFAE3D9),
+      'primary': Color(0xFFffcc99),
+      'secondary': Color(0xFFffefda),
     },
     {
-      //green
-      'primary': Color(0xFF61C0BF),
-      'secondary': Color(0xFFBBDED6),
-    },
-    {
-      //orange
-      'primary': Color(0xFF61C0BF),
-      'secondary': Colors.amber[700],
-    },
-    {
-      //purple
-      'primary': Colors.deepPurpleAccent,
-      'secondary': Colors.deepPurpleAccent,
-    },
-  ];
+      //blue
+      'primary': Color(0xFF99ccff),
+      'secondary': Color(0xFFdaeaff),
+    },];
+  
   // final _colorScheme = [
   //   {
   //     //red

@@ -247,9 +247,9 @@ class VersifyApp extends StatelessWidget {
                           title: 'Versify',
                           themeMode: state.currentTheme(),
                           darkTheme: ThemeData(
-                            primaryColor: Color(0xFFff699F),
-                            accentColor: Color(0xFF61c0bf),
-                            splashColor: Color(0xFFffdee9),
+                            primaryColor: Color(0xFFcc99ff),
+                            accentColor: Color(0xFF33cccc),
+                            splashColor: Color(0xFFefdaff),
                             textTheme: TextTheme(
                                 bodyText1: TextStyle(color: Colors.white),
                                 bodyText2: TextStyle(color: Colors.white)),
@@ -261,9 +261,9 @@ class VersifyApp extends StatelessWidget {
                           ),
                           theme: ThemeData(
                             // colorScheme: ColorScheme.fromSwatch(),
-                            primaryColor: Color(0xFFff699F),
-                            accentColor: Color(0xFF61c0bf),
-                            splashColor: Color(0xFFffdee9),
+                            primaryColor: Color(0xFFcc99ff),
+                            accentColor: Color(0xFF33cccc),
+                            splashColor: Color(0xFFefdaff),
                             fontFamily:
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
                             canvasColor: Colors.white,
@@ -285,6 +285,49 @@ class VersifyApp extends StatelessWidget {
                             '/wrapper': (context) => wrapperScreen,
                           },
                         );
+                        // return MaterialApp(
+                        //   debugShowCheckedModeBanner: false,
+                        //   title: 'Versify',
+                        //   themeMode: state.currentTheme(),
+                        //   darkTheme: ThemeData(
+                        //     primaryColor: Color(0xFFff699F),
+                        //     accentColor: Color(0xFF61c0bf),
+                        //     splashColor: Color(0xFFffdee9),
+                        //     textTheme: TextTheme(
+                        //         bodyText1: TextStyle(color: Colors.white),
+                        //         bodyText2: TextStyle(color: Colors.white)),
+                        //     fontFamily:
+                        //         GoogleFonts.getFont('Nunito Sans').fontFamily,
+                        //     canvasColor: Color(0xFF0d090d),
+                        //     backgroundColor: Color(0xFF0d0a0c),
+                        //     dialogBackgroundColor: Colors.grey[900],
+                        //   ),
+                        //   theme: ThemeData(
+                        //     // colorScheme: ColorScheme.fromSwatch(),
+                        //     primaryColor: Color(0xFFff699F),
+                        //     accentColor: Color(0xFF61c0bf),
+                        //     splashColor: Color(0xFFffdee9),
+                        //     fontFamily:
+                        //         GoogleFonts.getFont('Nunito Sans').fontFamily,
+                        //     canvasColor: Colors.white,
+                        //     backgroundColor: Colors.white,
+                        //     dialogBackgroundColor: Colors.white,
+                        //   ),
+                        //   builder: (context, child) {
+                        //     return MediaQuery(
+                        //       child: child,
+                        //       data: MediaQuery.of(context)
+                        //           .copyWith(textScaleFactor: 1.0),
+                        //     );
+                        //   },
+                        //   home: VersifyHome(
+                        //       authService: _authService,
+                        //       dynamicLinkService: _dynamicLinkService),
+                        //   routes: {
+                        //     '/accountSettings': (context) => AccountSettings(),
+                        //     '/wrapper': (context) => wrapperScreen,
+                        //   },
+                        // );
                       },
                     ),
                   ),
@@ -388,9 +431,8 @@ class _VersifyHomeState extends State<VersifyHome> {
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Color(0xFFffdee9),
-        statusBarIconBrightness:
-            _themeProvider.isDark ? Brightness.light : Brightness.dark,
+        statusBarColor: Theme.of(context).splashColor,
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarDividerColor:
             Theme.of(context).dialogBackgroundColor,
         systemNavigationBarColor: Theme.of(context).dialogBackgroundColor,
