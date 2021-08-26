@@ -254,7 +254,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                 onTap: () => Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => AccountPrivacy(),
+                      builder: (context) =>
+                          AccountPrivacy(authService: _authService),
                     )),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),

@@ -3,6 +3,7 @@ import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/profile_blogs_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:versify/screens/profile_screen/settings/account_privacy.dart';
 
 enum ReportUser {
   offTopic,
@@ -324,6 +325,9 @@ class ProfileDBService {
             totalFollowing: doc['totalFollowing'],
             isFollowing: false,
             completeLogin: doc['completeLogin'] ?? false,
+            isPrivateAccount: doc['isPrivateAccount'] ?? false,
+            isDisableSharing: doc['isDisableSharing'] ?? false,
+            isHideContentInteraction: doc['isHideInteraction'] ?? false,
           );
         } else {
           return null;
@@ -435,6 +439,33 @@ class ProfileDBService {
     await usersPrivateCollection.doc(this.uid).update({
       'email': email,
     });
+  }
+
+  Future<bool> updatePrivacySettings(
+      PrivacySwitches privacySwitch, bool switchBool) async {
+    try {
+      switch (privacySwitch) {
+        case PrivacySwitches.privateAccount:
+          usersPrivateCollection.doc(this.uid).update({
+            'isPrivateAccount': switchBool,
+          });
+          break;
+        case PrivacySwitches.disableSharing:
+          usersPrivateCollection.doc(this.uid).update({
+            'isDisableSharing': switchBool,
+          });
+          break;
+        case PrivacySwitches.hideInteraction:
+          usersPrivateCollection.doc(this.uid).update({
+            'isHideInteraction': switchBool,
+          });
+          break;
+      }
+      return false;
+    } catch (err) {
+//hasError
+      return true;
+    }
   }
 
   // Future<void> updateAllUserProfileImage() async {

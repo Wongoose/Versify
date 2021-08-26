@@ -717,6 +717,9 @@ class DatabaseService {
         },
         'socialLinks': null,
         'completeLogin': completeLogin ?? false,
+        'isPrivateAccount': false,
+        'isDisableSharing': false,
+        'isHideInteraction': false,
       });
     } catch (err) {
       print('firestoreCreateAccount | Failed');
@@ -746,6 +749,9 @@ class DatabaseService {
         },
         'socialLinks': null,
         'completeLogin': completeLogin ?? false,
+        'isPrivateAccount': false,
+        'isDisableSharing': false,
+        'isHideInteraction': false,
       }).then((_) async {
         final String _allFollowingCollectionPath =
             '${usersPrivateCollection.path}/$userUID/allFollowing';
@@ -955,6 +961,18 @@ class DatabaseService {
     } catch (err) {
       return false;
     }
+  }
+
+  Future<void> dummyUpdateAllPrivacy() async {
+    await usersPrivateCollection.get().then((snap) async {
+      snap.docs.forEach((doc) async {
+        await usersPrivateCollection.doc(doc.id).update({
+          'isPrivateAccount': false,
+          'isDisableSharing': false,
+          'isHideInteraction': false,
+        });
+      });
+    });
   }
 
   // Future<void> updateAllPostWithFields() async {

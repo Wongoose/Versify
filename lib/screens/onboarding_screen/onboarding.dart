@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:versify/models/onboarding_page_model.dart';
+import 'package:versify/services/database.dart';
 
 class OnBoarding extends StatefulWidget {
   final Function completeBoarding;
@@ -73,8 +74,12 @@ class _OnBoardingState extends State<OnBoarding> {
                   Expanded(child: Container()),
                   Align(
                     alignment: Alignment.center,
-                    child:
-                        Image.asset(_page.imagePath, height: 280, width: 280),
+                    child: GestureDetector(
+                        onTap: () {
+                          // DatabaseService().dummyUpdateAllPrivacy();
+                        },
+                        child: Image.asset(_page.imagePath,
+                            height: 280, width: 280)),
                   ),
                   Expanded(child: Container()),
                   Text(

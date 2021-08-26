@@ -255,8 +255,10 @@ class VersifyApp extends StatelessWidget {
                                 bodyText2: TextStyle(color: Colors.white)),
                             fontFamily:
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
-                            canvasColor: Color(0xFF0d090d),
-                            backgroundColor: Color(0xFF0d0a0c),
+                            canvasColor: Color(0xFF202020),
+                            // canvasColor: Color(0xFF0d090d),
+                            backgroundColor: Color(0xFF272727),
+                            // backgroundColor: Color(0xFF0d0a0c),
                             dialogBackgroundColor: Colors.grey[900],
                           ),
                           theme: ThemeData(

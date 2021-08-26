@@ -17,6 +17,10 @@ class MyUser {
   DateTime lastUpdated;
   DateTime lastBlogsUpdated;
 
+  bool isPrivateAccount;
+  bool isDisableSharing;
+  bool isHideContentInteraction;
+
   MyUser({
     this.completeLogin,
     this.profileImageUrl,
@@ -32,5 +36,8 @@ class MyUser {
     this.usersPublicFollowID,
     this.lastUpdated,
     this.lastBlogsUpdated,
+    this.isPrivateAccount,
+    this.isDisableSharing,
+    this.isHideContentInteraction,
   });
 }

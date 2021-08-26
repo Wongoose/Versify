@@ -1,23 +1,98 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
+import 'package:versify/services/auth.dart';
+import 'package:versify/services/profile_database.dart';
+
+enum PrivacySwitches { privateAccount, disableSharing, hideInteraction }
 
 class AccountPrivacy extends StatefulWidget {
+  final AuthService authService;
+  AccountPrivacy({this.authService});
+
   @override
   _AccountPrivacyState createState() => _AccountPrivacyState();
 }
 
 class _AccountPrivacyState extends State<AccountPrivacy> {
+  ProfileDBService _profileDBService;
   bool boolPrivateAcc = false;
   bool boolDisableSharing = false;
   bool boolHideInteraction = false;
 
   @override
+  void initState() {
+    super.initState();
+    boolPrivateAcc = widget.authService.myUser.isPrivateAccount ?? false;
+    boolDisableSharing = widget.authService.myUser.isDisableSharing ?? false;
+    boolHideInteraction =
+        widget.authService.myUser.isHideContentInteraction ?? false;
+
+    print('initPrivateAccount: ' + boolPrivateAcc.toString());
+    print('initDisableSharing: ' + boolDisableSharing.toString());
+    print('initHideInteraction: ' + boolHideInteraction.toString());
+  }
+
+  switchPrivacySettings(PrivacySwitches privacySwitch, bool switchBool) {
+    bool hasError = false;
+    switch (privacySwitch) {
+      case PrivacySwitches.privateAccount:
+        _profileDBService
+            .updatePrivacySettings(privacySwitch, switchBool)
+            .then((err) {
+          if (!err) {
+            setState(() => boolPrivateAcc = switchBool);
+            hasError = false;
+            widget.authService.myUser.isPrivateAccount = switchBool;
+          } else {
+            hasError = true;
+          }
+        });
+        break;
+      case PrivacySwitches.disableSharing:
+        _profileDBService
+            .updatePrivacySettings(privacySwitch, switchBool)
+            .then((err) {
+          if (!err) {
+            setState(() => boolDisableSharing = switchBool);
+            widget.authService.myUser.isDisableSharing = switchBool;
+          } else {
+            hasError = true;
+          }
+        });
+        // TODO: Handle this case.
+        break;
+      case PrivacySwitches.hideInteraction:
+        _profileDBService
+            .updatePrivacySettings(privacySwitch, switchBool)
+            .then((err) {
+          if (!err) {
+            setState(() => boolHideInteraction = switchBool);
+            widget.authService.myUser.isHideContentInteraction = switchBool;
+          } else {
+            hasError = true;
+          }
+        });
+        // TODO: Handle this case.
+        break;
+    }
+    if (hasError) {
+      toast(
+          'Failed to update privacy settings. Please check your network connection and try again.');
+    } else {
+      toast('Updated Privacy Settings');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
+    // final AuthService _authService = Provider.of<AuthService>(context);
+    _profileDBService = Provider.of<ProfileDBService>(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -102,7 +177,8 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
                       Switch(
                         value: boolPrivateAcc,
                         onChanged: (bool value) {
-                          setState(() => boolPrivateAcc = value);
+                          switchPrivacySettings(
+                              PrivacySwitches.privateAccount, value);
                         },
                       ),
 //switch
@@ -174,7 +250,8 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
                     Switch(
                       value: boolDisableSharing,
                       onChanged: (bool value) {
-                        setState(() => boolDisableSharing = value);
+                        switchPrivacySettings(
+                            PrivacySwitches.disableSharing, value);
                       },
                     )
                   ],
@@ -216,7 +293,8 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
                     Switch(
                       value: boolHideInteraction,
                       onChanged: (bool value) {
-                        setState(() => boolHideInteraction = value);
+                        switchPrivacySettings(
+                            PrivacySwitches.hideInteraction, value);
                       },
                     ),
                   ],
