@@ -963,10 +963,22 @@ class DatabaseService {
     }
   }
 
+  // Future<void> dummyUpdateAllPrivacy() async {
+  //   await usersPrivateCollection.get().then((snap) async {
+  //     snap.docs.forEach((doc) async {
+  //       await usersPrivateCollection.doc(doc.id).update({
+  //         'isPrivateAccount': false,
+  //         'isDisableSharing': false,
+  //         'isHideInteraction': false,
+  //       });
+  //     });
+  //   });
+  // }
+
   Future<void> dummyUpdateAllPrivacy() async {
-    await usersPrivateCollection.get().then((snap) async {
+    await usersPublicCollection.get().then((snap) async {
       snap.docs.forEach((doc) async {
-        await usersPrivateCollection.doc(doc.id).update({
+        await usersPublicCollection.doc(doc.id).update({
           'isPrivateAccount': false,
           'isDisableSharing': false,
           'isHideInteraction': false,

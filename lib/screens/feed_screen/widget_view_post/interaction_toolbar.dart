@@ -1,5 +1,6 @@
 import 'package:share/share.dart';
 import 'package:versify/models/feed_model.dart';
+import 'package:versify/providers/feeds/all_posts_provider.dart';
 import 'package:versify/providers/feeds/view_post_gift_provider.dart';
 import 'package:versify/providers/feeds/view_post_like_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
@@ -56,6 +57,8 @@ class InteractionBar extends StatelessWidget {
 
     final DatabaseService _databaseService =
         Provider.of<DatabaseService>(context);
+    final AllPostsView _allPostsViewProvider =
+        Provider.of<AllPostsView>(context, listen: false);
 
     // getSavePostLocal(feed.documentID).then((res) {
     //   _likeProvider.initialSave(res);
@@ -126,8 +129,6 @@ class InteractionBar extends StatelessWidget {
                       enableDrag: false,
                       context: context,
                       builder: (context) {
-                        
-
                         return GiftComingSoon();
 
                         // return ChangeNotifierProvider<GiftProvider>.value(
@@ -189,50 +190,84 @@ class InteractionBar extends StatelessWidget {
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: Theme.of(context).dialogBackgroundColor,
-                  content: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            height: 15,
-                            width: 15,
-                            child: CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                    Theme.of(context).primaryColor),
-                                strokeWidth: 0.5)),
-                        SizedBox(width: 15),
-                        Text(
-                          'Preparing shareable link...',
-                          style: TextStyle(
-                            fontFamily: 'Nunito',
-                            color: _themeProvider.primaryTextColor,
-                          ),
+                if (feed.isDisableSharing == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Theme.of(context).dialogBackgroundColor,
+                    content: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        'Oops! Action too quick. Please try again.',
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          color: _themeProvider.primaryTextColor,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  behavior: SnackBarBehavior.fixed,
-                ));
-                DynamicLinkService()
-                    .createPostDynamicLink(feed.documentID)
-                    .then((res) async {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  Share.share(
-                    _isVisitProfile
-                        ? 'I have been using Versify for awhile now. Come and check out this amazing blog post on the Versify app!\n\nBlog link:\n$res'
-                        : 'I am a writer at Versify! Read one of my blogs on the Versify app!\n\nBlog link:\n$res',
-                    subject: 'Check out this blogs on the Versify App!',
-                  );
-                });
+                  ));
+                } else if (feed.isDisableSharing) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Theme.of(context).dialogBackgroundColor,
+                    content: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        'Sharing is disabled for this post',
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          color: _themeProvider.primaryTextColor,
+                        ),
+                      ),
+                    ),
+                  ));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Theme.of(context).dialogBackgroundColor,
+                    content: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height: 15,
+                              width: 15,
+                              child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor),
+                                  strokeWidth: 0.5)),
+                          SizedBox(width: 15),
+                          Text(
+                            'Preparing shareable link...',
+                            style: TextStyle(
+                              fontFamily: 'Nunito',
+                              color: _themeProvider.primaryTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    behavior: SnackBarBehavior.fixed,
+                  ));
+                  DynamicLinkService()
+                      .createPostDynamicLink(feed.documentID)
+                      .then((res) async {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    Share.share(
+                      _isVisitProfile
+                          ? 'I have been using Versify for awhile now. Come and check out this amazing blog post on the Versify app!\n\nBlog link:\n$res'
+                          : 'I am a writer at Versify! Read one of my blogs on the Versify app!\n\nBlog link:\n$res',
+                      subject: 'Check out this blogs on the Versify App!',
+                    );
+                  });
+                }
               },
               child: SizedBox(
                 height: 40,
                 width: 80,
                 child: Icon(
-                  Icons.near_me_outlined,
+                  feed.isDisableSharing == null
+                      ? Icons.near_me_outlined
+                      : feed.isDisableSharing
+                          ? Icons.near_me_disabled_outlined
+                          : Icons.near_me_outlined,
                   color: _themeProvider.primaryTextColor.withOpacity(0.8),
                   size: 28,
                 ),

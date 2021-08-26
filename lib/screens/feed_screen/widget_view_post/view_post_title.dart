@@ -55,6 +55,8 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
         await _profileDBService
             .getProfileData(profileUID: widget.feed.userID)
             .then((userProfile) {
+          widget.feed.isDisableSharing = userProfile.isDisableSharing ?? false;
+          widget.feed.isHideInteraction = userProfile.isHideContentInteraction ?? false;
           if (widget.pageViewType == PageViewType.allPosts) {
             _allPostsView.newViewPostUser(userProfile);
           } else {
@@ -222,7 +224,8 @@ class _ViewPostTitleState extends State<ViewPostTitle> {
                         if (_authService.isUserAnonymous) {
                           //dialog cannot perform action - need sign up
                           NotificationOverlay().showNormalImageDialog(context,
-                              body: 'You can\'t follow them without an account. Sign up now!',
+                              body:
+                                  'You can\'t follow them without an account. Sign up now!',
                               buttonText: 'Sign-up',
                               clickFunc: null,
                               imagePath: 'assets/images/user.png',

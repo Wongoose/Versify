@@ -75,9 +75,13 @@ class ProfileDBService {
                 },
             usersPublicFollowID: _doc.id,
             isFollowing: (_doc['followers'] as List).contains(this.uid),
+            isPrivateAccount: _doc['isPrivateAccount'] ?? false,
+            isDisableSharing: _doc['isDisableSharing'] ?? false,
+            isHideContentInteraction: _doc['isHideInteraction'] ?? false,
           );
         } else {
           //current user not following
+          //change to public follow if possible
           return await usersPrivateCollection.doc(profileUID).get().then((doc) {
             return MyUser(
               userUID: doc.id,
@@ -96,6 +100,9 @@ class ProfileDBService {
                   },
               usersPublicFollowID: null,
               isFollowing: false,
+              isPrivateAccount: doc['isPrivateAccount'] ?? false,
+              isDisableSharing: doc['isDisableSharing'] ?? false,
+              isHideContentInteraction: doc['isHideInteraction'] ?? false,
             );
           });
         }

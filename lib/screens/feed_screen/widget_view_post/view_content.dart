@@ -134,92 +134,112 @@ class ViewPostContent extends StatelessWidget {
                   )),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(1, 10, 0, 0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Consumer<ViewPostLikeProvider>(
-                builder: (context, likeProvider, _) {
-                  return GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => {
-                      likeProvider.likeTrigger(),
-                      // setState(() {
-                      //   _likedPost = !_likedPost;
-                      // }),
-                      Vibration.vibrate(duration: 5),
-                    },
-                    child: SizedBox(
-                      height: 30,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            feed.numberOfLikes.toString(),
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: _themeProvider.primaryTextColor),
-                          ),
-                          SizedBox(width: 3),
-                          Icon(
-                            likeProvider.isLiked
-                                ? AntDesign.heart
-                                : AntDesign.hearto,
-                            color: Colors.red,
-                            size: 16,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(width: 20),
-              Container(
-                height: 30,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      feed.numberOfViews.toString(),
-                      style: TextStyle(
-                          fontSize: 11, color: _themeProvider.primaryTextColor),
-                    ),
-                    SizedBox(width: 3),
-                    Icon(
-                      AntDesign.eyeo,
-                      color: _themeProvider.primaryTextColor.withOpacity(0.8),
-                      size: 20,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 20),
-              GestureDetector(
-                onTap: () => {},
-                child: Container(
-                  height: 30,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '3',
-                        style: TextStyle(
-                            fontSize: 11,
-                            color: _themeProvider.primaryTextColor),
-                      ),
-                      SizedBox(width: 3),
-                      Icon(
-                        Icons.near_me_outlined,
-                        color: _themeProvider.primaryTextColor.withOpacity(0.8),
-                        size: 20,
-                      ),
-                    ],
+          padding: EdgeInsets.fromLTRB(1, 10, 0, 10),
+          child: feed.isHideInteraction == null
+              ? Text(
+                  'Likes, views, and shares are hidden in this post.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: _themeProvider.secondaryTextColor,
                   ),
-                ),
-              ),
-            ],
-          ),
+                )
+              : feed.isHideInteraction
+                  ? Text(
+                      'Likes, views, and shares are hidden in this post.',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: _themeProvider.secondaryTextColor,
+                      ),
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Consumer<ViewPostLikeProvider>(
+                          builder: (context, likeProvider, _) {
+                            return GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () => {
+                                likeProvider.likeTrigger(),
+                                // setState(() {
+                                //   _likedPost = !_likedPost;
+                                // }),
+                                Vibration.vibrate(duration: 5),
+                              },
+                              child: SizedBox(
+                                height: 30,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      feed.numberOfLikes.toString(),
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color:
+                                              _themeProvider.primaryTextColor),
+                                    ),
+                                    SizedBox(width: 3),
+                                    Icon(
+                                      likeProvider.isLiked
+                                          ? AntDesign.heart
+                                          : AntDesign.hearto,
+                                      color: Colors.red,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(width: 20),
+                        Container(
+                          height: 30,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                feed.numberOfViews.toString(),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: _themeProvider.primaryTextColor),
+                              ),
+                              SizedBox(width: 3),
+                              Icon(
+                                AntDesign.eyeo,
+                                color: _themeProvider.primaryTextColor
+                                    .withOpacity(0.8),
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () => {},
+                          child: Container(
+                            height: 30,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '3',
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: _themeProvider.primaryTextColor),
+                                ),
+                                SizedBox(width: 3),
+                                Icon(
+                                  Icons.near_me_outlined,
+                                  color: _themeProvider.primaryTextColor
+                                      .withOpacity(0.8),
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
         )
       ],
     );

@@ -23,7 +23,10 @@ class Feed {
   bool isLiked;
   bool hasUpdatelike = false;
 
+//not parsed
   bool hasViewed;
+  bool isDisableSharing;
+  bool isHideInteraction;
 
   Feed({
     this.hasViewed,
