@@ -23,7 +23,7 @@ class PostFeedWidget extends StatelessWidget {
 
   PostFeedWidget({this.index, this.feed, this.isWelcome, this.isGrey});
 
-  final List<Map<String, Color>> _colorScheme = [
+   final List<Map<String, Color>> _colorScheme = [
     {
       //purple
       'primary': Color(0xFFcc99ff),
@@ -38,18 +38,7 @@ class PostFeedWidget extends StatelessWidget {
       //blue
       'primary': Color(0xFF99ccff),
       'secondary': Color(0xFFdaeaff),
-    },
-    {
-      //orange
-      'primary': Color(0xFF61C0BF),
-      'secondary': Colors.amber[700],
-    },
-    {
-      //purple
-      'primary': Colors.deepPurpleAccent,
-      'secondary': Colors.deepPurpleAccent,
-    },
-  ];
+    },];
   String _content = '';
 
   void showVerseDialog({BuildContext context, int colorIndex}) {

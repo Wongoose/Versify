@@ -17,7 +17,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   final List<PageModel> onboardingPagesList = [
     PageModel(
-      imagePath: 'assets/images/versify_logo_circle.png',
+      imagePath: 'assets/images/purple_circle_v1.png',
       title: 'Welcome,',
       info:
           'This is where blogging begins. Explore and express your identity in Christ with Versify!',

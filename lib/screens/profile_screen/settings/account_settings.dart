@@ -6,6 +6,7 @@ import 'package:versify/screens/profile_screen/edit_profile_folder/edit_specific
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_privacy.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
+import 'package:versify/screens/profile_screen/settings/widgets/webviewer.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/wrapper.dart';
 import 'package:flutter/cupertino.dart';
@@ -420,53 +421,79 @@ class _AccountSettingsState extends State<AccountSettings> {
                 ),
               ),
               SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.book,
-                      size: 16.5,
-                      color: Theme.of(context).primaryColor.withOpacity(0.6),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Terms & Conditions',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color:
-                            _themeProvider.primaryTextColor.withOpacity(0.87),
-                        fontWeight: FontWeight.w500,
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsWebViewer(
+                                webViewUrl:
+                                    'https://versify.flycricket.io/terms.html',
+                                webViewerType: WebViewerType.termsAndConditions,
+                              )));
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.book,
+                        size: 16.5,
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
-                    ),
-                    Expanded(child: Container()),
-                  ],
+                      SizedBox(width: 10),
+                      Text(
+                        'Terms & Conditions',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Expanded(child: Container()),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.privacy_tip,
-                      size: 16.5,
-                      color: Theme.of(context).primaryColor.withOpacity(0.6),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Privacy Policy',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color:
-                            _themeProvider.primaryTextColor.withOpacity(0.87),
-                        fontWeight: FontWeight.w500,
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsWebViewer(
+                                webViewUrl:
+                                    'https://versify.flycricket.io/privacy.html',
+                                webViewerType: WebViewerType.privacypolicy,
+                              )));
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.privacy_tip,
+                        size: 16.5,
+                        color: Theme.of(context).primaryColor.withOpacity(0.6),
                       ),
-                    ),
-                    Expanded(child: Container()),
-                  ],
+                      SizedBox(width: 10),
+                      Text(
+                        'Privacy Policy',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.87),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Expanded(child: Container()),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 10),

@@ -16,7 +16,7 @@ class Loading extends StatelessWidget {
             // SizedBox(height: 15),
             SpinKitDoubleBounce(
               duration: Duration(milliseconds: 2000),
-              color: Colors.pink[50],
+              color: Color(0xFFf7eaff),
               size: 100,
             ),
             Container(
@@ -27,7 +27,7 @@ class Loading extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 child: Image(
                   height: 80,
-                  image: AssetImage('assets/images/versify_logo_circle.png'),
+                  image:AssetImage('assets/images/purple_circle_v1.png'),
                 ),
               ),
             ),

@@ -33,7 +33,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
               SizedBox(height: 20),
               Image(
                 height: 300,
-                image: AssetImage('assets/images/versify_logo_circle.png'),
+                image:AssetImage('assets/images/purple_circle_v1.png'),
               ),
               // Container(
               //   alignment: Alignment.center,

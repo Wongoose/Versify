@@ -25,7 +25,7 @@ class SplashLoading extends StatelessWidget {
         child: Image(
           height: 150,
           width: 150,
-          image: AssetImage('assets/images/versify_logo_circle.png'),
+          image:AssetImage('assets/images/purple_circle_v1.png'),
         ),
       ),
     );

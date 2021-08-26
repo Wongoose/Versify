@@ -54,6 +54,7 @@ dependencies:
   shimmer_animation: ^2.0.0
   overlay_support: ^1.2.1
   image_picker: ^0.8.0+3
+  webview_flutter: ^2.0.12
   # esys_flutter_share: ^1.0.2
   # scroll_bottom_navigation_bar: 
   # skeleton_loader: 
@@ -77,7 +78,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/versify_icon_v3.png"
+  image_path: "assets/images/purple_square_v1.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec`
