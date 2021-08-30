@@ -52,6 +52,9 @@ class DatabaseService {
   final CollectionReference reportedPostsCollection =
       FirebaseFirestore.instance.collection('reportedPosts');
 
+  final CollectionReference reportAProblemCollection =
+      FirebaseFirestore.instance.collection('reportProblem');
+
   Future firestoreInit() async {
     print('firestore iNIT RAN!');
     return await getSeenDocs().then((value) async {
@@ -963,6 +966,16 @@ class DatabaseService {
     }
   }
 
+  Future<void> reportAProblem(
+      {String reportDescription, String username, String userID}) async {
+    reportAProblemCollection.add({
+      'description': reportDescription,
+      'timestamp': FieldValue.serverTimestamp(),
+      'userID': userID,
+      'username': username,
+    });
+  }
+
   // Future<void> dummyUpdateAllPrivacy() async {
   //   await usersPrivateCollection.get().then((snap) async {
   //     snap.docs.forEach((doc) async {
@@ -974,18 +987,6 @@ class DatabaseService {
   //     });
   //   });
   // }
-
-  Future<void> dummyUpdateAllPrivacy() async {
-    await usersPublicCollection.get().then((snap) async {
-      snap.docs.forEach((doc) async {
-        await usersPublicCollection.doc(doc.id).update({
-          'isPrivateAccount': false,
-          'isDisableSharing': false,
-          'isHideInteraction': false,
-        });
-      });
-    });
-  }
 
   // Future<void> updateAllPostWithFields() async {
   //   await allPostsCollection

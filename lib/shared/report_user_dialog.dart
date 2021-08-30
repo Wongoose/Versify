@@ -1,4 +1,5 @@
 import 'package:versify/models/user_model.dart';
+import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/database.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,9 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context);
 
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -44,7 +48,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
             style: TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.w600,
-              color: _thankYou ? Colors.blue : Colors.redAccent,
+              color: _thankYou ? Colors.blue : _themeProvider.primaryTextColor,
             ),
           ),
         ),
@@ -61,7 +65,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
             width: 60,
             child: _thankYou
                 ? Text(
-                    'Thank you for submitting your report. This user will be flagged for review immediately.',
+                    'Thank you for keeping the Versify community safe. This user will be flagged for review immediately.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -78,7 +82,12 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                 value: _checksMap[ReportUser.offTopic],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportUser.offTopic] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -94,7 +103,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -109,7 +118,12 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportUser.disrespectful] =
                                         value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -125,7 +139,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -139,7 +153,12 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                 value: _checksMap[ReportUser.copyAccount],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportUser.copyAccount] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -155,7 +174,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -169,7 +188,12 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                 value: _checksMap[ReportUser.others],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportUser.others] = value),
-                                activeColor: Colors.black.withOpacity(0.7),
+                                activeColor: _themeProvider.primaryTextColor
+                                    .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -185,7 +209,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                     maxLines: null,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -201,7 +225,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                             'What\'s wrong?',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black45,
+                              color: _themeProvider.secondaryTextColor,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -232,28 +256,35 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                                       fontSize: 10,
                                       color: currentLength > maxLength
                                           ? Colors.red
-                                          : Colors.black54,
+                                          : _themeProvider.secondaryTextColor,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
                               );
                             },
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: _themeProvider.primaryTextColor),
                             decoration: InputDecoration(
                               // prefixText:
                               //     widget.editType == EditType.username ? '@ ' : '',
 
                               prefixStyle: TextStyle(
-                                  color: Colors.black45, fontSize: 15),
+                                  color: _themeProvider.secondaryTextColor,
+                                  fontSize: 15),
                               isDense: true,
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.black26, width: 0.5),
+                                    color: _themeProvider.primaryTextColor
+                                        .withOpacity(0.26),
+                                    width: 0.5),
                               ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.black26, width: 0.5),
+                                    color: _themeProvider.primaryTextColor
+                                        .withOpacity(0.26),
+                                    width: 0.5),
                               ),
                             ),
                           ),
@@ -303,13 +334,15 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
                         style: TextStyle(
                           color: Colors.redAccent,
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       replacement: SizedBox(
                         height: 15,
                         width: 15,
-                        child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
                           strokeWidth: 0.5,
                         ),
                       ),
@@ -327,7 +360,7 @@ class _ReportPostDUsergState extends State<ReportUserDialog> {
               child: Text(
                 _thankYou ? 'Okay' : 'Cancel',
                 style: TextStyle(
-                  color: Colors.black45,
+                  color: _themeProvider.secondaryTextColor,
                   fontSize: 16,
                 ),
               ),

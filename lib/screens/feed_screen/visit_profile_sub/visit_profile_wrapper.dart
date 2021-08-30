@@ -90,7 +90,8 @@ class VisitProfileWrapper extends StatelessWidget {
               label: Text(''),
               onPressed: () {
                 showModalBottomSheet(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).dialogBackgroundColor,
+                    clipBehavior: Clip.hardEdge,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
@@ -143,8 +144,11 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
   Widget build(BuildContext context) {
     MyUser _userProfile = widget.profileProvider.userProfile;
     ProfileDBService _profileDBService = Provider.of<ProfileDBService>(context);
+    final ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Container(
+      color: Colors.transparent,
       margin: EdgeInsets.fromLTRB(4, 4, 4, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +159,10 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {
                 if (widget.visitProfile) {
                   MyUser _reportUser = widget.profileProvider.userProfile;
@@ -192,14 +199,17 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {},
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Block',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: _themeProvider.primaryTextColor,
                     fontSize: 16,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,
@@ -216,7 +226,10 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
               height: 60,
               child: TextButton(
                 style: TextButton.styleFrom(
-                    padding: EdgeInsets.all(15), primary: Colors.white),
+                  padding: EdgeInsets.all(15),
+                  primary: Theme.of(context).dialogBackgroundColor,
+                  backgroundColor: Theme.of(context).dialogBackgroundColor,
+                ),
                 onPressed: () async {
                   setState(() => _followLoading = true);
 
@@ -247,7 +260,7 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
                     child: Text(
                       _userProfile.isFollowing ? 'Unfollow' : 'Follow',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: _themeProvider.primaryTextColor,
                         fontSize: 16,
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
@@ -273,14 +286,17 @@ class _BottomSheetActionsState extends State<BottomSheetActions> {
             height: 60,
             child: TextButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(15), primary: Colors.white),
+                padding: EdgeInsets.all(15),
+                primary: Theme.of(context).dialogBackgroundColor,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
+              ),
               onPressed: () {},
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Share this profile',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: _themeProvider.primaryTextColor,
                     fontSize: 16,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w600,

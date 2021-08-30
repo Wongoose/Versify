@@ -6,6 +6,7 @@ import 'package:versify/screens/profile_screen/edit_profile_folder/edit_specific
 import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_privacy.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
+import 'package:versify/screens/profile_screen/settings/account_report_problem.dart';
 import 'package:versify/screens/profile_screen/settings/widgets/webviewer.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/wrapper.dart';
@@ -317,13 +318,13 @@ class _AccountSettingsState extends State<AccountSettings> {
               SizedBox(height: 10),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                // onTap: () => Navigator.push(
-                //     context,
-                //     CupertinoPageRoute(
-                //       builder: (context) => EditRowPage(
-                //           editType: EditType.socialLinks,
-                //           socialLink: 'instagram'),
-                //     )),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => AccountReportProblem(),
+                      ));
+                },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                   child: Row(

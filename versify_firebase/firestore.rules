@@ -122,6 +122,31 @@ service cloud.firestore {
             authenticated();
 
         }
+        //reportUsers
+        match /reportedUsers/{compileReportID} {
+            allow read: if
+            authenticated();
+
+            allow create, update: if
+            authenticated();
+
+            allow delete: if
+            authenticated();
+
+        }
+
+        //reportAProblem
+        match /reportProblem/{reportID} {
+            allow read: if
+            authenticated();
+
+            allow create, update: if
+            authenticated();
+
+            allow delete: if
+            authenticated();
+
+        }
     }
 
     //functions

@@ -65,7 +65,7 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
             width: 60,
             child: _thankYou
                 ? Text(
-                    'Thank you for submitting your report. This post will be flagged for review immediately.',
+                    'Thank you for keeping the Versify community safe. This post will be flagged for review immediately.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -82,8 +82,13 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 value: _checksMap[ReportFeed.violence],
                                 onChanged: (value) => setState(() =>
                                     _checksMap[ReportFeed.violence] = value),
+                                focusColor: _themeProvider.primaryTextColor,
                                 activeColor: _themeProvider.primaryTextColor
                                     .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -115,6 +120,10 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     _checksMap[ReportFeed.sensitive] = value),
                                 activeColor: _themeProvider.primaryTextColor
                                     .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -146,6 +155,10 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     _checksMap[ReportFeed.political] = value),
                                 activeColor: _themeProvider.primaryTextColor
                                     .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -178,6 +191,10 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                         value),
                                 activeColor: _themeProvider.primaryTextColor
                                     .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -209,6 +226,10 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     _checksMap[ReportFeed.language] = value),
                                 activeColor: _themeProvider.primaryTextColor
                                     .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -240,6 +261,10 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                     _checksMap[ReportFeed.others] = value),
                                 activeColor: _themeProvider.primaryTextColor
                                     .withOpacity(0.7),
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => _themeProvider.primaryTextColor
+                                        .withOpacity(0.7)),
+                                checkColor: Theme.of(context).backgroundColor,
                               ),
                               SizedBox(width: 15),
                               Expanded(
@@ -309,7 +334,10 @@ class _ReportPostDialogState extends State<ReportPostDialog> {
                                 ),
                               );
                             },
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _themeProvider.primaryTextColor,
+                            ),
                             decoration: InputDecoration(
                               // prefixText:
                               //     widget.editType == EditType.username ? '@ ' : '',
