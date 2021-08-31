@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/home/bottom_nav_provider.dart';
 import 'package:versify/providers/create_post/content_body_provider.dart';
+import 'package:versify/providers/home/dynamic_link_provider.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/feeds/feed_list_provider.dart';
 import 'package:versify/providers/feeds/all_posts_provider.dart';
@@ -140,6 +141,9 @@ class VersifyApp extends StatelessWidget {
 
             final Wrapper wrapperScreen = Wrapper();
 
+            final DynamicLinkProvider _dynamicLinkProvider =
+                DynamicLinkProvider();
+
             JsonAllBadgesStorage _jsonAllBadgesStorage;
 
             EditProfileProvider _editProfileProvider;
@@ -156,8 +160,10 @@ class VersifyApp extends StatelessWidget {
               // setState(() => _getFeedDataMain = DatabaseService().getFeedData);
             }
             AuthService _authService = AuthService();
-            DynamicLinkService _dynamicLinkService =
-                DynamicLinkService(authService: _authService);
+            DynamicLinkService _dynamicLinkService = DynamicLinkService(
+              authService: _authService,
+              dynamicLinkProvider: _dynamicLinkProvider,
+            );
 
             return StreamProvider<MyUser>.value(
               initialData: null,
@@ -207,6 +213,8 @@ class VersifyApp extends StatelessWidget {
 
                     ChangeNotifierProvider<ThemeProvider>.value(
                         value: _themeProvider),
+                    ChangeNotifierProvider<DynamicLinkProvider>.value(
+                        value: _dynamicLinkProvider),
                     ChangeNotifierProvider<TutorialProvider>.value(
                         value: _tutorialProvider),
                     ChangeNotifierProvider<ProfileDataProvider>.value(

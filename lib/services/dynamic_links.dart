@@ -3,6 +3,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
+import 'package:versify/providers/home/dynamic_link_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
@@ -11,7 +12,8 @@ import 'package:versify/z-dynamic_link/wrapper_dynamic_links.dart';
 
 class DynamicLinkService {
   final AuthService authService;
-  DynamicLinkService({this.authService});
+  final DynamicLinkProvider dynamicLinkProvider;
+  DynamicLinkService({this.dynamicLinkProvider, this.authService});
   // void addContext(BuildContext context) {
   //   context = context;
   // }
@@ -179,6 +181,7 @@ class DynamicLinkService {
       );
       //add navigate to DynamicLink Quick Sign In
       authService.logout().then((_) {
+          dynamicLinkProvider.updatedEmailSignin(newEmail);
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       });

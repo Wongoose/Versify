@@ -41,6 +41,9 @@ class _AccountVerificationState extends State<AccountVerification> {
   bool canResendToken = false;
   bool _successSendVerification = false;
 
+  bool updateEmailHasError = false;
+  String errMessage;
+
   void initState() {
     super.initState();
 
@@ -77,9 +80,27 @@ class _AccountVerificationState extends State<AccountVerification> {
           });
         } catch (err) {
           print('Error verify email: ' + err.toString());
-          toast('Failed: ${err.message}.');
-          Navigator.pop(context);
-          Navigator.pop(context);
+          // switch (err.code) {
+          //   case "INVALID_NEW_EMAIL":
+          //     break;
+          // }
+          if (err.message.toString().contains("INVALID_NEW_EMAIL")) {
+            toast(
+                'Failed: Invalid email. Please check your email and try again.');
+            setState(() {
+              updateEmailHasError = true;
+              errMessage =
+                  "Verification failed: ${widget.parsedText} is an invalid email. Please try again.";
+            });
+          } else {
+            toast('Failed: ${err.message}.');
+            setState(() {
+              updateEmailHasError = true;
+              errMessage = "Verification failed: ${err.message}";
+            });
+          }
+          // Navigator.pop(context);
+          // Navigator.pop(context);
         }
       } else {
         _authService.resetPasswordWithEmail(_authService.getCurrentUser.email);
@@ -383,7 +404,7 @@ class _AccountVerificationState extends State<AccountVerification> {
                       ? 'Enter 6-digit OTP'
                       : widget.accEditType == AccountEditType.password
                           ? 'Reset password'
-                          : 'Verification email',
+                          : 'Email verification',
                   style: TextStyle(
                     fontSize: 14,
                     color: _themeProvider.secondaryTextColor,
@@ -441,7 +462,9 @@ class _AccountVerificationState extends State<AccountVerification> {
                             : widget.accEditType == AccountEditType.password
                                 ? 'A password reset email was sent to ${_authService.getCurrentUser.email}. Please check your inbox and follow the steps to reset your password. '
                                 : 'Follow the the steps in the verification email that we have sent to ${widget.parsedText}. Your email will be updated after it is verified.'
-                        : 'Sending...',
+                        : updateEmailHasError
+                            ? errMessage
+                            : 'Sending...',
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
