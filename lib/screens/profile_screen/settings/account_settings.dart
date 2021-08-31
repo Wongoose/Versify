@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
@@ -353,15 +354,17 @@ class _AccountSettingsState extends State<AccountSettings> {
               // SizedBox(height: 30),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                // onTap: () => Navigator.push(
-                //     context,
-                //     CupertinoPageRoute(
-                //       builder: (context) => EditRowPage(
-                //           editType: EditType.socialLinks, socialLink: 'tiktok'),
-                //     )),
+                onTap: () async {
+                  String _url =
+                      "mailto:versifyapp@gmail.com?subject=❗HELP!%20(Versify's%20Individual%20Support%20Service)&body=How%20can%20we%20help%20you?\n\nDescription:\n\n";
+
+                  await canLaunch(_url)
+                      ? await launch(_url)
+                      : throw 'Could not launch $_url';
+                },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                  child: Row(
+                  child: Row( 
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
