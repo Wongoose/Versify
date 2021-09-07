@@ -8,6 +8,7 @@ import 'package:versify/screens/profile_screen/settings/account_edit_row.dart';
 import 'package:versify/screens/profile_screen/settings/account_privacy.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_report_problem.dart';
+import 'package:versify/screens/profile_screen/settings/account_verify_new_email.dart';
 import 'package:versify/screens/profile_screen/settings/widgets/webviewer.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/wrapper.dart';
@@ -144,15 +145,34 @@ class _AccountSettingsState extends State<AccountSettings> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => AccountEditRow(
-                          editType:
-                              _authService.currentSignInProvider == 'google.com'
-                                  ? AccountEditType.google
-                                  : AccountEditType.email),
-                    )),
+                onTap: () {
+                  if (_authService.currentSignInProvider == 'google.com') {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => AccountEditRow(
+                            editType: AccountEditType.google,
+                          ),
+                        ));
+                  } else if (_authService.currentSignInProvider == 'password') {
+                    if (_authService.isEmailVerified) {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => AccountEditRow(
+                              editType: AccountEditType.email,
+                            ),
+                          ));
+                    } else {
+                      //verify email address
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => AccountVerifyNewEmail(),
+                          ));
+                    }
+                  }
+                },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                   child: Row(
@@ -180,6 +200,15 @@ class _AccountSettingsState extends State<AccountSettings> {
                         ),
                       ),
                       Expanded(child: Container()),
+                      _authService.currentSignInProvider == 'password' &&
+                              _authService.isEmailVerified == false
+                          ? Icon(
+                              Icons.warning_rounded,
+                              color: Colors.redAccent,
+                              size: 15,
+                            )
+                          : Container(),
+                      SizedBox(width: 10),
                       Text(
                         _authService.getCurrentUser.email,
                         style: TextStyle(
@@ -364,7 +393,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                  child: Row( 
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(

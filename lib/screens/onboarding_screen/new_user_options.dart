@@ -43,7 +43,6 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
             builder: (context) {
               return UpdatedEmailSignIn(_dynamicLinkProvider.updatedEmail);
             });
-        _dynamicLinkProvider.updatedEmail = null;
       }
     });
   }
@@ -258,7 +257,7 @@ class _UpdatedEmailSignInState extends State<UpdatedEmailSignIn> {
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     final DynamicLinkProvider _dynamicLinkProvider =
-        Provider.of<DynamicLinkProvider>(context, listen: true);
+        Provider.of<DynamicLinkProvider>(context, listen: false);
     final AuthService _authService = Provider.of<AuthService>(context);
 
     return Padding(
@@ -384,6 +383,7 @@ class _UpdatedEmailSignInState extends State<UpdatedEmailSignIn> {
                         : null, //return null when it is valid
                     obscureText: true,
                     onChanged: (val) {
+                      _dynamicLinkProvider.resetUpdatedEmail();
                       setState(() {
                         password = val;
                         error = '';

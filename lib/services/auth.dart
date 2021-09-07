@@ -1,8 +1,10 @@
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:versify/services/dynamic_links.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,6 +25,8 @@ class AuthService {
       return true;
     }
   }
+
+  bool get isEmailVerified => authUser.emailVerified;
 
   User get getCurrentUser => _auth.currentUser;
 
@@ -169,7 +173,11 @@ class AuthService {
 
     await _auth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .catchError((err) {
+        .then((userCredential) async {
+//send verification to email when sign up
+      await verifyEmailAddress();
+      toast('A verification email was sent to your inbox');
+    }).catchError((err) {
       String errorCode = "";
       String errorMessage = '';
 
@@ -186,9 +194,10 @@ class AuthService {
       }
       returnVal = {
         'errorCode': errorCode,
-        'errorMessage': err.message,
+        'errorMessage': errorMessage,
       };
     });
+
     return returnVal;
   }
 
@@ -234,6 +243,25 @@ class AuthService {
   Future<void> resetPasswordWithEmail(String email) async {
     print('resetPasswordWithEmail | RAN: ' + email);
     _auth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> verifyEmailAddress() async {
+    print('authService | verifyEmailAddress');
+    DynamicLinkService()
+        .createVerifyEmailDynamicLink(authUser.email)
+        .then((dynamicLinkUrl) {
+      _auth.currentUser.sendEmailVerification(ActionCodeSettings(
+        url: dynamicLinkUrl,
+        androidInstallApp: false,
+        handleCodeInApp: false,
+        androidPackageName: 'com.wongoose.versify',
+        dynamicLinkDomain: 'versify.wongoose.com',
+      ));
+    });
+  }
+
+  Future<void> userReload() async{
+    await _auth.currentUser.reload();
   }
 
   Future<void> logout() async {

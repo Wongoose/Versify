@@ -103,7 +103,18 @@ class _AccountVerificationState extends State<AccountVerification> {
           // Navigator.pop(context);
         }
       } else {
-        _authService.resetPasswordWithEmail(_authService.getCurrentUser.email);
+        try {
+          _authService
+              .resetPasswordWithEmail(_authService.getCurrentUser.email)
+              .then((_) {
+            setState(() => _successSendVerification = true);
+          });
+        } catch (err) {
+          setState(() {
+            updateEmailHasError = true;
+            errMessage = "Failed to password reset email: ${err.message}";
+          });
+        }
       }
     });
   }
