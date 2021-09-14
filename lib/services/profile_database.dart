@@ -456,6 +456,9 @@ class ProfileDBService {
           usersPrivateCollection.doc(this.uid).update({
             'isPrivateAccount': switchBool,
           });
+
+          //publicCollection
+          
           break;
         case PrivacySwitches.disableSharing:
           usersPrivateCollection.doc(this.uid).update({

@@ -192,6 +192,21 @@ class Wrapper extends StatelessWidget {
       //phone number or email not the same (update FB)
       requiresUpdate = true;
     }
+
+    //Filtering
+    authServiceMyUser.phoneNumber = authServiceMyUser.phoneNumber != null
+        ? authServiceMyUser.phoneNumber.isEmpty
+            ? null
+            : authServiceMyUser.phoneNumber
+        : null;
+
+    authServiceMyUser.email = authServiceMyUser.email != null
+        ? authServiceMyUser.email.isEmpty
+            ? null
+            : authServiceMyUser.email
+        : null;
+
+    //Setting
     whetherHasAccUser.phoneNumber = authServiceMyUser.phoneNumber;
     whetherHasAccUser.email = authServiceMyUser.email;
 
