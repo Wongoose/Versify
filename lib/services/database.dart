@@ -775,6 +775,9 @@ class DatabaseService {
           'totalFollowers': 0,
           'followers': [],
           'latestPost': FieldValue.serverTimestamp(),
+          'isPrivateAccount': false,
+          'isDisableSharing': false,
+          'isHideInteraction': false,
         });
         print('firestoreCreateAccount | FINISH');
         return CreateAcc.newAccount;

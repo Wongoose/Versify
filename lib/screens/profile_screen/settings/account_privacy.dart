@@ -41,7 +41,11 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
     switch (privacySwitch) {
       case PrivacySwitches.privateAccount:
         _profileDBService
-            .updatePrivacySettings(privacySwitch, switchBool)
+            .updatePrivacySettings(
+          privacySwitch: privacySwitch,
+          switchBool: switchBool,
+          user: widget.authService.myUser,
+        )
             .then((err) {
           if (!err) {
             setState(() => boolPrivateAcc = switchBool);
@@ -54,7 +58,11 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
         break;
       case PrivacySwitches.disableSharing:
         _profileDBService
-            .updatePrivacySettings(privacySwitch, switchBool)
+            .updatePrivacySettings(
+          privacySwitch: privacySwitch,
+          switchBool: switchBool,
+          user: widget.authService.myUser,
+        )
             .then((err) {
           if (!err) {
             setState(() => boolDisableSharing = switchBool);
@@ -63,11 +71,14 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
             hasError = true;
           }
         });
-        // TODO: Handle this case.
         break;
       case PrivacySwitches.hideInteraction:
         _profileDBService
-            .updatePrivacySettings(privacySwitch, switchBool)
+            .updatePrivacySettings(
+          privacySwitch: privacySwitch,
+          switchBool: switchBool,
+          user: widget.authService.myUser,
+        )
             .then((err) {
           if (!err) {
             setState(() => boolHideInteraction = switchBool);

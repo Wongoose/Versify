@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/profile_blogs_provider.dart';
@@ -34,30 +35,30 @@ class ProfileDBService {
 
   CollectionReference privateAllFollowingCollection;
 
-  Future<void> profileDBInit() async {
+  void profileDBInit() {
     String _allFollowingCollectionPath =
         '${usersPrivateCollection.path}/${this.uid}/allFollowing';
     privateAllFollowingCollection =
         FirebaseFirestore.instance.collection(_allFollowingCollectionPath);
 
-    await privateAllFollowingCollection.get().then((snaps) {
+    privateAllFollowingCollection.get().then((snaps) {
       //add .where createdTimestamp
       DocumentSnapshot _followingDoc = snaps.docs.last;
       _myCurrentFollowingDoc = _followingDoc.id;
     });
   }
 
-  Future<MyUser> getProfileData({String profileUID}) async {
+  Future<MyUser> getProfileData({String profileUID}) {
     print('getProfileData RAN');
     try {
-      return await usersPublicCollection
+      return usersPublicCollection
           .where('followers', arrayContains: this.uid)
           .where('userID', isEqualTo: profileUID)
           .get()
-          .then((snaps) async {
-        if (snaps.docs.length > 0) {
+          .then((snap) {
+        if (snap.docs.length > 0) {
           //current user is following
-          DocumentSnapshot _doc = snaps.docs.last;
+          DocumentSnapshot _doc = snap.docs.last;
           return MyUser(
             userUID: _doc['userID'],
             username: _doc['username'],
@@ -82,9 +83,14 @@ class ProfileDBService {
         } else {
           //current user not following
           //change to public follow if possible
-          return await usersPrivateCollection.doc(profileUID).get().then((doc) {
+          return usersPublicCollection
+              .where("userID", isEqualTo: profileUID)
+              .limit(1)
+              .get()
+              .then((snap) {
+            DocumentSnapshot doc = snap.docs.last;
             return MyUser(
-              userUID: doc.id,
+              userUID: doc['userID'],
               username: doc['username'],
               description: doc['description'] ?? '',
               profileImageUrl: doc['profileImageUrl'] ??
@@ -98,7 +104,7 @@ class ProfileDBService {
                     'youtube': null,
                     'website': null,
                   },
-              usersPublicFollowID: null,
+              usersPublicFollowID: doc.id,
               isFollowing: false,
               isPrivateAccount: doc['isPrivateAccount'] ?? false,
               isDisableSharing: doc['isDisableSharing'] ?? false,
@@ -107,8 +113,8 @@ class ProfileDBService {
           });
         }
       });
-    } catch (e) {
-      print('Error while getting profile data: ' + e.toString());
+    } catch (err) {
+      print('Error while getting profile data: ' + err.toString());
       return null;
     }
   }
@@ -453,28 +459,69 @@ class ProfileDBService {
   }
 
   Future<bool> updatePrivacySettings(
-      PrivacySwitches privacySwitch, bool switchBool) async {
+      {@required MyUser user,
+      PrivacySwitches privacySwitch,
+      bool switchBool}) async {
     try {
+      // if (user.publicCollectionList.isEmpty) {
+      //   //getAllPublicCollectionDocID and Save
+      //   print("updatePrivacySettings | authUser PublicCollectionList is EMPTY");
+      //   List<String> _tempList = [];
+      //   usersPublicCollection
+      //       .where("userID", isEqualTo: this.uid)
+      //       .get()
+      //       .then((snap) {
+      //     snap.docs.forEach((DocumentSnapshot doc) {
+      //       _tempList.add(doc.id);
+      //     });
+      //     //update user publicCollectionlist
+      //     user.publicCollectionList = _tempList;
+      //     print(
+      //         "updatePrivacySettings | authUser PublicCollectionList has been updated: \n" +
+      //             user.publicCollectionList.toString());
+      //   }).catchError((err) {
+      //     //hasError
+      //     return true;
+      //   });
+      // } else {
+      print("updatePrivacySettings | authUser PublicCollectionList has DATA");
       switch (privacySwitch) {
         case PrivacySwitches.privateAccount:
           usersPrivateCollection.doc(this.uid).update({
             'isPrivateAccount': switchBool,
           });
 
-          //publicCollection
-
+          // user.publicCollectionList.forEach((publicCollectionID) {
+          //   usersPublicCollection.doc(publicCollectionID).update({
+          //     'isPrivateAccount': switchBool,
+          //   });
+          // });
           break;
+
         case PrivacySwitches.disableSharing:
           usersPrivateCollection.doc(this.uid).update({
             'isDisableSharing': switchBool,
           });
+          // user.publicCollectionList.forEach((publicCollectionID) {
+          //   usersPublicCollection.doc(publicCollectionID).update({
+          //     'isDisableSharing': switchBool,
+          //   });
+          // });
           break;
+
         case PrivacySwitches.hideInteraction:
           usersPrivateCollection.doc(this.uid).update({
             'isHideInteraction': switchBool,
           });
+          // user.publicCollectionList.forEach((publicCollectionID) {
+          //   usersPublicCollection.doc(publicCollectionID).update({
+          //     'isHideInteraction': switchBool,
+          //   });
+          // });
+
           break;
       }
+      // }
       return false;
     } catch (err) {
 //hasError

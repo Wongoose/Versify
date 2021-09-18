@@ -14,8 +14,12 @@ class JsonFollowingStorage {
   List<String> tempListLastModified = [];
   DateTime jsonLastModified;
 
+  SharedPreferences prefs;
+
   Future<void> jsonInit() async {
     print('JSON initstate!');
+    prefs = await SharedPreferences.getInstance();
+
     await getApplicationDocumentsDirectory().then((Directory directory) {
       dir = directory;
       jsonFollowingFile = new File(dir.path + "/" + fileName);
@@ -60,6 +64,14 @@ class JsonFollowingStorage {
     } else {
       //userDetails don't  exist
       print('JSON No details of $uid exist');
+      List<String> _followingList =
+          prefs.getStringList('sortedFollowingList') ?? [];
+
+      _followingList.removeWhere((element) => element == uid);
+
+      prefs.setStringList('sortedFollowingList', _followingList);
+
+      print('Deleted user ID from sorted pref uid: ' + uid);
       return null;
     }
   }
@@ -98,7 +110,6 @@ class JsonFollowingStorage {
 
   Future<void> sortFollowingList({DateTime timestamp, String uid}) async {
     print('sortFollowingList RAN');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> _followingList =
         prefs.getStringList('sortedFollowingList') ?? []; //list of uids sorted
 
