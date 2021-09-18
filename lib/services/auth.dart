@@ -87,8 +87,9 @@ class AuthService {
   }
 
   MyUser _userFromFB(User firebaseUser) {
-    print(
-        'Stream User Changes | hashCode: ' + firebaseUser.hashCode.toString());
+    print('Stream User Changes | uid: ' + firebaseUser.uid);
+    print('Stream User Changes | phone: ' +
+        (firebaseUser.phoneNumber ?? 'is null'));
     if (firebaseUser != null) {
       this.authUser = firebaseUser;
       this.userUID = firebaseUser.uid;
@@ -245,22 +246,34 @@ class AuthService {
     _auth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> verifyEmailAddress() async {
+  Future<bool> verifyEmailAddress() async {
     print('authService | verifyEmailAddress');
-    DynamicLinkService()
-        .createVerifyEmailDynamicLink(authUser.email)
-        .then((dynamicLinkUrl) {
-      _auth.currentUser.sendEmailVerification(ActionCodeSettings(
-        url: dynamicLinkUrl,
-        androidInstallApp: false,
-        handleCodeInApp: false,
-        androidPackageName: 'com.wongoose.versify',
-        dynamicLinkDomain: 'versify.wongoose.com',
-      ));
-    });
+
+    try {
+      return DynamicLinkService()
+          .createVerifyEmailDynamicLink(authUser.email)
+          .then((dynamicLinkUrl) {
+        return _auth.currentUser
+            .sendEmailVerification(ActionCodeSettings(
+          url: dynamicLinkUrl,
+          androidInstallApp: false,
+          handleCodeInApp: false,
+          androidPackageName: 'com.wongoose.versify',
+          dynamicLinkDomain: 'versify.wongoose.com',
+        ))
+            .then((_) {
+          return true;
+        });
+      });
+    } catch (err) {
+      if (err == "too-many-requests") {
+        toast(err.message);
+      }
+      return false;
+    }
   }
 
-  Future<void> userReload() async{
+  Future<void> userReload() async {
     await _auth.currentUser.reload();
   }
 

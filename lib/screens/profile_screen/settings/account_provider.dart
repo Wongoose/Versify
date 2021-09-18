@@ -26,8 +26,8 @@ class AccountSettingsProvider extends ChangeNotifier {
     //   email: user.email,
     // );
     print('initSettingsUser | with credentials...\n' +
-        'phoneNumber is: ${user.phoneNumber}\n' +
-        'email is: ${user.email}\n');
+        '...phoneNumber is: ${user.phoneNumber}\n' +
+        '...email is: ${user.email}\n');
   }
 
   void updateProfileData() {

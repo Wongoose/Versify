@@ -311,7 +311,11 @@ class ProfileDBService {
       print('WhetherhasAccount RAN | $userID');
 
       return await usersPrivateCollection.doc(userID).get().then((doc) {
-        print(doc.exists);
+        print('whetherHasAccountRAN | document exists is: ' +
+            doc.exists.toString());
+        print(
+            'whetherHasAccountRan | doc[phone] is: ' + doc['phone'].toString());
+
         if (doc.exists) {
           return MyUser(
             userUID: doc.id,
@@ -458,7 +462,7 @@ class ProfileDBService {
           });
 
           //publicCollection
-          
+
           break;
         case PrivacySwitches.disableSharing:
           usersPrivateCollection.doc(this.uid).update({

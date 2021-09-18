@@ -124,9 +124,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                       ),
                       Expanded(child: Container()),
                       Text(
-                        _authService.getCurrentUser.phoneNumber == null
-                            ? 'none'
-                            : _authService.getCurrentUser.phoneNumber,
+                        _authService.getCurrentUser.phoneNumber != null
+                            ? _authService.getCurrentUser.phoneNumber.isNotEmpty
+                                ? _authService.getCurrentUser.phoneNumber
+                                : "none"
+                            : "none",
                         style: TextStyle(
                           fontSize: 14,
                           color: _themeProvider.secondaryTextColor,

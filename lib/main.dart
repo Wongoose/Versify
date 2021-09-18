@@ -77,6 +77,10 @@ class VersifyApp extends StatelessWidget {
       ],
     );
     precacheImage(AssetImage("assets/images/logo_circle.png"), context);
+    precacheImage(AssetImage("assets/images/purple_circle_v1.png"), context);
+    precacheImage(AssetImage("assets/images/relatable.png"), context);
+    precacheImage(AssetImage("assets/images/community.png"), context);
+    precacheImage(AssetImage("assets/images/get-started.png"), context);
     precacheImage(
         AssetImage("assets/images/backgrounds/r-love_background.jpg"), context);
     precacheImage(
@@ -168,6 +172,7 @@ class VersifyApp extends StatelessWidget {
             return StreamProvider<MyUser>.value(
               initialData: null,
               value: _authService.user,
+              catchError: (context, error) => error,
               child: Consumer<MyUser>(builder: (context, user, _) {
                 print('Stream was triggered in MAIN.dart with user hashcode');
                 //parse anything to database service

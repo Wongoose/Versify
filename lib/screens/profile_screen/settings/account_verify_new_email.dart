@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/dynamic_links.dart';
+import 'package:versify/shared/constants.dart';
 
 class AccountVerifyNewEmail extends StatelessWidget {
   @override
@@ -15,69 +16,9 @@ class AccountVerifyNewEmail extends StatelessWidget {
       showDialog(
           context: context,
           builder: (context) {
-            return SimpleDialog(
-              title: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Verify Email',
-                  style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w600,
-                    color: _themeProvider.primaryTextColor,
-                  ),
-                ),
-              ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(30, 15, 30, 10),
-                  alignment: Alignment.center,
-                  width: 40,
-                  child: Text(
-                    'A Verification Email will be sent to your inbox.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                // Divider(thickness: 0.5, height: 0),
-                Container(
-                  margin: EdgeInsets.all(0),
-                  height: 60,
-                  child: FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.padded,
-                    onPressed: () {
-                      _authService.verifyEmailAddress();
-                    },
-                    child: Text(
-                      'Yes, verify email.',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                Divider(thickness: 0.5, height: 0),
-                Container(
-                  margin: EdgeInsets.all(0),
-                  height: 60,
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: _themeProvider.secondaryTextColor,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            return VerifyEmailDialog(
+              authService: _authService,
+              themeProvider: _themeProvider,
             );
           });
     }
@@ -177,6 +118,115 @@ class AccountVerifyNewEmail extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class VerifyEmailDialog extends StatefulWidget {
+  final ThemeProvider themeProvider;
+  final AuthService authService;
+  VerifyEmailDialog({this.themeProvider, this.authService});
+
+  @override
+  _VerifyEmailDialogState createState() => _VerifyEmailDialogState();
+}
+
+class _VerifyEmailDialogState extends State<VerifyEmailDialog> {
+  bool loading = false;
+  bool successSendEmail;
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      title: Align(
+        alignment: Alignment.center,
+        child: Text(
+          'Verify Email',
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w600,
+            color: widget.themeProvider.primaryTextColor,
+          ),
+        ),
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      children: [
+        Container(
+          padding: EdgeInsets.fromLTRB(30, 15, 30, 10),
+          alignment: Alignment.center,
+          width: 40,
+          child: Text(
+            successSendEmail != null
+                ? successSendEmail
+                    ? 'We have sent a verification email to ${widget.authService.getCurrentUser.email}. Please follow the steps in the email.'
+                    : 'Failed to complete verification procedure. Please try again'
+                : 'A Verification Email will be sent to your inbox.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(0),
+          height: 60,
+          child: FlatButton(
+            materialTapTargetSize: MaterialTapTargetSize.padded,
+            onPressed: () {
+              if (loading) {
+                //cannot click
+              } else if (successSendEmail == null) {
+                setState(() => loading = true);
+                widget.authService.verifyEmailAddress().then((success) {
+                  setState(() => loading = false);
+                  if (success) {
+                    setState(() => successSendEmail = true);
+                  } else {
+                    setState(() => successSendEmail = false);
+                  }
+                });
+              } else if (successSendEmail) {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+              }
+            },
+            child: loading
+                ? CircleLoading()
+                : Text(
+                    successSendEmail != null
+                        ? successSendEmail
+                            ? 'Okay'
+                            : 'Close'
+                        : 'Yes, verify email.',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+          ),
+        ),
+        loading ? Container() : Divider(thickness: 0.5, height: 0),
+        loading || successSendEmail != null
+            ? Container()
+            : Container(
+                margin: EdgeInsets.all(0),
+                height: 60,
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: widget.themeProvider.secondaryTextColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+      ],
     );
   }
 }

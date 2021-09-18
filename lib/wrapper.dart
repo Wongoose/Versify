@@ -83,7 +83,7 @@ class Wrapper extends StatelessWidget {
                   _authService.getCurrentSignInProvider();
 
                   //validate and update firebase (phone and email)
-                  return FutureBuilder<void>(
+                  return FutureBuilder<MyUser>(
                       future: validateUserPhoneAndEmail(
                         authService: _authService,
                         authServiceMyUser: _authService.myUser,
@@ -179,45 +179,65 @@ class Wrapper extends StatelessWidget {
     }
   }
 
-  Future<void> validateUserPhoneAndEmail({
+  Future<MyUser> validateUserPhoneAndEmail({
     @required AuthService authService,
     @required MyUser authServiceMyUser,
     @required MyUser whetherHasAccUser,
     @required ProfileDBService profileDBService,
   }) async {
+    print('WRAPPER: validateUserPhoneAndEmail | Function called!');
+    print('...authHasAccUserPhone is: ' +
+        (authServiceMyUser.phoneNumber ?? 'is null'));
+    print('...whetherHasAccUserPhone is: ' +
+        (whetherHasAccUser.phoneNumber ?? 'is null'));
+
     bool requiresUpdate = false;
 
     if (authServiceMyUser.phoneNumber != whetherHasAccUser.phoneNumber ||
         authServiceMyUser.email != whetherHasAccUser.email) {
       //phone number or email not the same (update FB)
+      print('validateUserPhoneAndEmail | phone or email not the same');
+      print('validateUserPhoneAndEmail | AuthPhone: ' +
+              authServiceMyUser.phoneNumber ??
+          'is null');
+      print(
+          'validateUserPhoneAndEmail | AuthEmail: ' + authServiceMyUser.email ??
+              'is null');
       requiresUpdate = true;
     }
 
     //Filtering
-    authServiceMyUser.phoneNumber = authServiceMyUser.phoneNumber != null
-        ? authServiceMyUser.phoneNumber.isEmpty
-            ? null
-            : authServiceMyUser.phoneNumber
-        : null;
+    // authServiceMyUser.phoneNumber = authServiceMyUser.phoneNumber != null
+    //     ? authServiceMyUser.phoneNumber.isEmpty
+    //         ? null
+    //         : authServiceMyUser.phoneNumber
+    //     : null;
 
-    authServiceMyUser.email = authServiceMyUser.email != null
-        ? authServiceMyUser.email.isEmpty
-            ? null
-            : authServiceMyUser.email
-        : null;
+    // authServiceMyUser.email = authServiceMyUser.email != null
+    //     ? authServiceMyUser.email.isEmpty
+    //         ? null
+    //         : authServiceMyUser.email
+    //     : null;
 
-    //Setting
+    //Updating whetherHasAccUser with valid email and phone
     whetherHasAccUser.phoneNumber = authServiceMyUser.phoneNumber;
     whetherHasAccUser.email = authServiceMyUser.email;
 
-    authServiceMyUser = whetherHasAccUser;
-    authService.myUser = authServiceMyUser;
+    // authServiceMyUser = whetherHasAccUser;
+    //Finalize authService.myUser
+    authService.myUser = whetherHasAccUser;
 
     if (requiresUpdate) {
       await profileDBService.updatedValidatedPhoneAndEmail(
         phone: authService.myUser.phoneNumber,
         email: authService.myUser.email,
       );
+      print(
+          'WRAPPER: validateUserPhoneAndEmail | Function END Updated firebase!');
+      return authService.myUser;
+    } else {
+      print('WRAPPER: validateUserPhoneAndEmail | Function END!');
+      return authService.myUser;
     }
   }
 

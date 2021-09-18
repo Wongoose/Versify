@@ -197,7 +197,7 @@ class _AccountVerificationState extends State<AccountVerification> {
       await _auth.currentUser.updatePhoneNumber(credential).then((_) {
         if (_auth.currentUser != null) {
           print(
-              'Success Code Verification! | phone: ${_authService.myUser.phoneNumber}');
+              'Success Code Verification! | phone: ${_authService.getCurrentUser.phoneNumber}');
 
           _profileDBService.updatePhoneVerification(
             phone: _authService.getCurrentUser.phoneNumber,
