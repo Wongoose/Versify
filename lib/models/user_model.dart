@@ -2,7 +2,7 @@ class MyUser {
   final String userUID;
   final Map socialLinks;
   final bool completeLogin;
-  List<String> publicCollectionList = [];
+  List<dynamic> myPublicDocIds = [];
 
   String profileImageUrl;
   String description;
@@ -23,7 +23,7 @@ class MyUser {
   bool isHideContentInteraction;
 
   MyUser({
-    this.publicCollectionList,
+    this.myPublicDocIds,
     this.completeLogin,
     this.profileImageUrl,
     this.socialLinks,

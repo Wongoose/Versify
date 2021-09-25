@@ -737,25 +737,39 @@ class DatabaseService {
       @required bool completeLogin}) async {
     try {
       print('firestoreCreateAccount | with uid: $userUID');
-      return usersPrivateCollection.doc(userUID).set({
+      return usersPublicCollection.add({
+        'userID': userUID,
         'username': username ?? null,
-        'description': null,
-        'profileImageUrl': null,
         'phone': phone ?? null,
         'email': email ?? null,
         'totalFollowers': 0,
-        'totalFollowing': 0,
-        'tagRatings': ['love10', 'peace30'],
-        'tagTimestamps': {
-          'love': FieldValue.serverTimestamp(),
-          'peace': FieldValue.serverTimestamp(),
-        },
-        'socialLinks': null,
-        'completeLogin': completeLogin ?? false,
+        'followers': [],
+        'latestPost': FieldValue.serverTimestamp(),
         'isPrivateAccount': false,
         'isDisableSharing': false,
         'isHideInteraction': false,
-      }).then((_) async {
+      }).then((publicDoc) async {
+        await usersPrivateCollection.doc(userUID).set({
+          'username': username ?? null,
+          'description': null,
+          'profileImageUrl': null,
+          'phone': phone ?? null,
+          'email': email ?? null,
+          'myPublicDocIds': FieldValue.arrayUnion([publicDoc.id]),
+          'totalFollowers': 0,
+          'totalFollowing': 0,
+          'tagRatings': ['love10', 'peace30'],
+          'tagTimestamps': {
+            'love': FieldValue.serverTimestamp(),
+            'peace': FieldValue.serverTimestamp(),
+          },
+          'socialLinks': null,
+          'completeLogin': completeLogin ?? false,
+          'isPrivateAccount': false,
+          'isDisableSharing': false,
+          'isHideInteraction': false,
+        });
+
         final String _allFollowingCollectionPath =
             '${usersPrivateCollection.path}/$userUID/allFollowing';
 
@@ -767,18 +781,6 @@ class DatabaseService {
           'usersFollowing': [],
         });
 
-        usersPublicCollection.add({
-          'userID': userUID,
-          'username': username ?? null,
-          'phone': phone ?? null,
-          'email': email ?? null,
-          'totalFollowers': 0,
-          'followers': [],
-          'latestPost': FieldValue.serverTimestamp(),
-          'isPrivateAccount': false,
-          'isDisableSharing': false,
-          'isHideInteraction': false,
-        });
         print('firestoreCreateAccount | FINISH');
         return CreateAcc.newAccount;
       });
@@ -976,6 +978,19 @@ class DatabaseService {
       'timestamp': FieldValue.serverTimestamp(),
       'userID': userID,
       'username': username,
+    });
+  }
+
+  Future<void> dummyAddPublicDocIdsToPrivate() async {
+    usersPublicCollection.get().then((snap) {
+      snap.docs.forEach((doc) {
+        String privateUserID = doc["userID"];
+        try {
+          usersPrivateCollection.doc(privateUserID).update({
+            "myPublicDocIds": FieldValue.arrayUnion([doc.id]),
+          });
+        } catch (err) {}
+      });
     });
   }
 

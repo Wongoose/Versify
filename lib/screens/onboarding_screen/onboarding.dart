@@ -76,6 +76,7 @@ class _OnBoardingState extends State<OnBoarding> {
                     alignment: Alignment.center,
                     child: GestureDetector(
                         onTap: () {
+                          // DatabaseService().dummyAddPublicDocIdsToPrivate();
                           // DatabaseService().dummyUpdateAllPrivacy();
                         },
                         child: Image.asset(_page.imagePath,

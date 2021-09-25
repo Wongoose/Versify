@@ -331,6 +331,7 @@ class ProfileDBService {
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
             phoneNumber: doc['phone'],
             email: doc['email'],
+            myPublicDocIds: doc['myPublicDocIds'],
             socialLinks: doc['socialLinks'] ??
                 {
                   'instagram': null,
@@ -463,27 +464,6 @@ class ProfileDBService {
       PrivacySwitches privacySwitch,
       bool switchBool}) async {
     try {
-      // if (user.publicCollectionList.isEmpty) {
-      //   //getAllPublicCollectionDocID and Save
-      //   print("updatePrivacySettings | authUser PublicCollectionList is EMPTY");
-      //   List<String> _tempList = [];
-      //   usersPublicCollection
-      //       .where("userID", isEqualTo: this.uid)
-      //       .get()
-      //       .then((snap) {
-      //     snap.docs.forEach((DocumentSnapshot doc) {
-      //       _tempList.add(doc.id);
-      //     });
-      //     //update user publicCollectionlist
-      //     user.publicCollectionList = _tempList;
-      //     print(
-      //         "updatePrivacySettings | authUser PublicCollectionList has been updated: \n" +
-      //             user.publicCollectionList.toString());
-      //   }).catchError((err) {
-      //     //hasError
-      //     return true;
-      //   });
-      // } else {
       print("updatePrivacySettings | authUser PublicCollectionList has DATA");
       switch (privacySwitch) {
         case PrivacySwitches.privateAccount:
@@ -491,33 +471,36 @@ class ProfileDBService {
             'isPrivateAccount': switchBool,
           });
 
-          // user.publicCollectionList.forEach((publicCollectionID) {
-          //   usersPublicCollection.doc(publicCollectionID).update({
-          //     'isPrivateAccount': switchBool,
-          //   });
-          // });
+          user.myPublicDocIds.forEach((publicDocID) {
+            usersPublicCollection.doc(publicDocID).update({
+              'isPrivateAccount': switchBool,
+            });
+          });
+
           break;
 
         case PrivacySwitches.disableSharing:
           usersPrivateCollection.doc(this.uid).update({
             'isDisableSharing': switchBool,
           });
-          // user.publicCollectionList.forEach((publicCollectionID) {
-          //   usersPublicCollection.doc(publicCollectionID).update({
-          //     'isDisableSharing': switchBool,
-          //   });
-          // });
+          user.myPublicDocIds.forEach((publicDocID) {
+            usersPublicCollection.doc(publicDocID).update({
+              'isDisableSharing': switchBool,
+            });
+          });
+
           break;
 
         case PrivacySwitches.hideInteraction:
           usersPrivateCollection.doc(this.uid).update({
             'isHideInteraction': switchBool,
           });
-          // user.publicCollectionList.forEach((publicCollectionID) {
-          //   usersPublicCollection.doc(publicCollectionID).update({
-          //     'isHideInteraction': switchBool,
-          //   });
-          // });
+
+          user.myPublicDocIds.forEach((publicDocID) {
+            usersPublicCollection.doc(publicDocID).update({
+              'isHideInteraction': switchBool,
+            });
+          });
 
           break;
       }
@@ -525,6 +508,7 @@ class ProfileDBService {
       return false;
     } catch (err) {
 //hasError
+      print("ERROR updatePrivacySettings DB | message is: " + err.toString());
       return true;
     }
   }

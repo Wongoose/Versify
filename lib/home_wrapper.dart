@@ -130,6 +130,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
                           builder: (context, pageViewProvider, _) {
                             return GestureDetector(
                               onTap: () async {
+                               
                                 if (_feedTypeProvider.currentFeedType ==
                                     FeedType.following) {
                                   await _followingController.animateTo(0.0,

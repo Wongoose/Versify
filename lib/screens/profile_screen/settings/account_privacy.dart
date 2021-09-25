@@ -40,6 +40,7 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
     bool hasError = false;
     switch (privacySwitch) {
       case PrivacySwitches.privateAccount:
+        setState(() => boolPrivateAcc = switchBool);
         _profileDBService
             .updatePrivacySettings(
           privacySwitch: privacySwitch,
@@ -48,15 +49,16 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
         )
             .then((err) {
           if (!err) {
-            setState(() => boolPrivateAcc = switchBool);
             hasError = false;
             widget.authService.myUser.isPrivateAccount = switchBool;
           } else {
+            setState(() => boolPrivateAcc = !switchBool);
             hasError = true;
           }
         });
         break;
       case PrivacySwitches.disableSharing:
+        setState(() => boolDisableSharing = switchBool);
         _profileDBService
             .updatePrivacySettings(
           privacySwitch: privacySwitch,
@@ -65,14 +67,15 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
         )
             .then((err) {
           if (!err) {
-            setState(() => boolDisableSharing = switchBool);
             widget.authService.myUser.isDisableSharing = switchBool;
           } else {
+            setState(() => boolDisableSharing = !switchBool);
             hasError = true;
           }
         });
         break;
       case PrivacySwitches.hideInteraction:
+        setState(() => boolHideInteraction = switchBool);
         _profileDBService
             .updatePrivacySettings(
           privacySwitch: privacySwitch,
@@ -81,9 +84,9 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
         )
             .then((err) {
           if (!err) {
-            setState(() => boolHideInteraction = switchBool);
             widget.authService.myUser.isHideContentInteraction = switchBool;
           } else {
+            setState(() => boolHideInteraction = !switchBool);
             hasError = true;
           }
         });
