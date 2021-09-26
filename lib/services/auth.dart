@@ -40,6 +40,10 @@ class AuthService {
     });
   }
 
+  void updateAuthMyUser(MyUser user) {
+    myUser = user;
+  }
+
   Future<bool> signInAnon() async {
     //method setup
     print('SignInAnon() | RAN');
@@ -87,19 +91,28 @@ class AuthService {
   }
 
   MyUser _userFromFB(User firebaseUser) {
-    print('Stream User Changes | uid: ' + firebaseUser.uid);
-    print('Stream User Changes | phone: ' +
-        (firebaseUser.phoneNumber ?? 'is null'));
+    print("Stream User Changes | firebaseUser exists: " +
+        (firebaseUser != null).toString());
     if (firebaseUser != null) {
+      print('Stream User Changes | uid: ' + firebaseUser.uid);
+      print('Stream User Changes | phone: ' +
+          (firebaseUser.phoneNumber ?? 'is null'));
+      print(
+          'Stream User Changes | email: ' + (firebaseUser.email ?? 'is null'));
       this.authUser = firebaseUser;
       this.userUID = firebaseUser.uid;
-      this.myUser = MyUser(
+      // this.myUser = MyUser(
+      //   userUID: firebaseUser.uid,
+      //   phoneNumber: firebaseUser.phoneNumber,
+      //   email: firebaseUser.email,
+      // );
+      return MyUser(
         userUID: firebaseUser.uid,
         phoneNumber: firebaseUser.phoneNumber,
         email: firebaseUser.email,
       );
-      return this.myUser;
     } else {
+      print('Stream User Changes | NO USER');
       this.userUID = null;
       return null;
     }

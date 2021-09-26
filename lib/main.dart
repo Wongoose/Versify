@@ -174,7 +174,7 @@ class VersifyApp extends StatelessWidget {
               value: _authService.user,
               catchError: (context, error) => error,
               child: Consumer<MyUser>(builder: (context, user, _) {
-                print('Stream was triggered in MAIN.dart with user hashcode');
+                print('Stream was triggered in MAIN.dart');
                 //parse anything to database service
                 //Rebuilds everytime user auth changes
 

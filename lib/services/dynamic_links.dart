@@ -98,7 +98,7 @@ class DynamicLinkService {
         });
       } else {
         ProfileDBService()
-            .whetherHasAccount(authService.authUser.uid)
+            .whetherHasAccount(authService.getCurrentUser.uid)
             .then((newUser) async {
           if (newUser != null) {
             //hsa firestore documents (authenticated)

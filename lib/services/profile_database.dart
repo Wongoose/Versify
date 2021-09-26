@@ -312,25 +312,27 @@ class ProfileDBService {
     prefs.setStringList('sortedFollowingList', _followingList);
   }
 
-  Future<MyUser> whetherHasAccount(String userID) async {
+  Future<MyUser> whetherHasAccount(String userID) {
     try {
       print('WhetherhasAccount RAN | $userID');
 
-      return await usersPrivateCollection.doc(userID).get().then((doc) {
+      return usersPrivateCollection.doc(userID).get().then((doc) {
         print('whetherHasAccountRAN | document exists is: ' +
             doc.exists.toString());
         print(
             'whetherHasAccountRan | doc[phone] is: ' + doc['phone'].toString());
+        print(
+            'whetherHasAccountRan | doc[email] is: ' + doc['email'].toString());
 
         if (doc.exists) {
           return MyUser(
             userUID: doc.id,
             username: doc['username'],
-            description: doc['description'] ?? '',
+            description: doc['description'] ?? "",
             profileImageUrl: doc['profileImageUrl'] ??
                 'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
-            phoneNumber: doc['phone'],
-            email: doc['email'],
+            phoneNumber: doc['phone'] ?? "",
+            email: doc['email'] ?? "",
             myPublicDocIds: doc['myPublicDocIds'],
             socialLinks: doc['socialLinks'] ??
                 {
@@ -348,11 +350,12 @@ class ProfileDBService {
             isHideContentInteraction: doc['isHideInteraction'] ?? false,
           );
         } else {
+          // document does not exist
           return null;
         }
       });
-    } catch (e) {
-      print('error while signInUser: ' + e.toString());
+    } catch (err) {
+      print('error while whetherHasAccountRan: ' + err.toString());
       return null;
     }
   }
@@ -369,26 +372,26 @@ class ProfileDBService {
     }
   }
 
-  Future<void> updateEditedProfile(MyUser user) async {
+  Future<void> updateEditedProfile(MyUser editingUser) async {
     try {
       await usersPrivateCollection.doc(this.uid).update({
-        'username': user.username,
-        'description': user.description,
-        'phone': user.phoneNumber,
-        'email': user.email,
-        'socialLinks': user.socialLinks,
+        'username': editingUser.username,
+        'description': editingUser.description,
+        'phone': editingUser.phoneNumber,
+        'email': editingUser.email,
+        'socialLinks': editingUser.socialLinks,
       });
       await usersPublicCollection
-          .where('userID', isEqualTo: user.userUID)
+          .where('userID', isEqualTo: editingUser.userUID)
           .get()
           .then((snaps) {
         snaps.docs.forEach((doc) async {
           usersPublicCollection.doc(doc.id).update({
-            'username': user.username,
-            'description': user.description,
-            'phone': user.phoneNumber,
-            'email': user.email,
-            'socialLinks': user.socialLinks,
+            'username': editingUser.username,
+            'description': editingUser.description,
+            'phone': editingUser.phoneNumber,
+            'email': editingUser.email,
+            'socialLinks': editingUser.socialLinks,
           });
         });
       });
@@ -464,7 +467,7 @@ class ProfileDBService {
       PrivacySwitches privacySwitch,
       bool switchBool}) async {
     try {
-      print("updatePrivacySettings | authUser PublicCollectionList has DATA");
+      print("updatePrivacySettings | RAN!");
       switch (privacySwitch) {
         case PrivacySwitches.privateAccount:
           usersPrivateCollection.doc(this.uid).update({

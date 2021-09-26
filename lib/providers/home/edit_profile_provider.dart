@@ -79,9 +79,14 @@ class EditProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> confirmUpdate() async {
-    await profileDB.updateEditedProfile(_myUser).then((_) {
-      notifyListeners();
-    });
+  Future<bool> confirmUpdate() async {
+    try {
+      return profileDB.updateEditedProfile(_myUser).then((_) {
+        notifyListeners();
+        return true;
+      });
+    } catch (err) {
+      return false;
+    }
   }
 }

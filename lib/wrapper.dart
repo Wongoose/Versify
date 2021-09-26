@@ -21,14 +21,42 @@ import 'package:versify/shared/splash_loading.dart';
 import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
 import 'models/user_model.dart';
 
-class Wrapper extends StatelessWidget {
+class Wrapper extends StatefulWidget {
   final Function completePickTutorials;
 
   Wrapper({this.completePickTutorials});
 
   @override
+  _WrapperState createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  MyUser _cacheUser = MyUser(userUID: null);
+  Future<MyUser> _futureInit;
+  MyUser _streamUser;
+  ProfileDBService _profileDBService;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkUser();
+    });
+  }
+
+  void checkUser() {
+    if (_streamUser != null) {
+      if (_streamUser.userUID != _cacheUser.userUID) {
+        _futureInit = _profileDBService.whetherHasAccount(_streamUser.userUID);
+        _cacheUser = _streamUser;
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final MyUser user = Provider.of<MyUser>(context, listen: true);
+    _streamUser = Provider.of<MyUser>(context, listen: true);
+    _profileDBService = Provider.of<ProfileDBService>(context, listen: false);
 
     final AuthService _authService =
         Provider.of<AuthService>(context, listen: false);
@@ -41,9 +69,6 @@ class Wrapper extends StatelessWidget {
 
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: false);
-
-    final ProfileDBService _profileDBService =
-        Provider.of<ProfileDBService>(context, listen: false);
 
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
@@ -66,13 +91,15 @@ class Wrapper extends StatelessWidget {
 
     if (_tutorialProvider.pickTopics) {
       //tutorial pick topics
-      return IntroPickTopics(completePickTutorials);
+      return IntroPickTopics(widget.completePickTutorials);
     } else {
-      if (user != null) {
-        print('Wrapper stream user: ' + user.userUID.toString());
-        print('Hash: ' + hashCode.toString());
+      if (_streamUser != null) {
+        checkUser();
+        print('Wrapper stream user: ' + _streamUser.userUID.toString());
+        print('Hash: ' + _streamUser.hashCode.toString());
+
         return FutureBuilder<MyUser>(
-            future: _profileDBService.whetherHasAccount(user.userUID),
+            future: _futureInit,
             //change whetherHasAcc function to return MyUser
             builder: (context, myUserSnap) {
               if (myUserSnap.connectionState == ConnectionState.done) {
@@ -83,17 +110,20 @@ class Wrapper extends StatelessWidget {
                   _authService.getCurrentSignInProvider();
 
                   //validate and update firebase (phone and email)
+
+                  Future<MyUser> _validateFuture = validateUserPhoneAndEmail(
+                    authService: _authService,
+                    // authServiceMyUser: _authService.myUser,
+                    whetherHasAccUser: myUserSnap.data,
+                    profileDBService: _profileDBService,
+                  );
                   return FutureBuilder<MyUser>(
-                      future: validateUserPhoneAndEmail(
-                        authService: _authService,
-                        authServiceMyUser: _authService.myUser,
-                        whetherHasAccUser: myUserSnap.data,
-                        profileDBService: _profileDBService,
-                      ),
-                      builder: (context, res) {
-                        if (res.connectionState == ConnectionState.done) {
+                      future: _validateFuture,
+                      builder: (context, authUserSnap) {
+                        if (authUserSnap.connectionState ==
+                            ConnectionState.done) {
                           _accountSettingsProvider
-                              .initSettingsUser(_authService.myUser);
+                              .initSettingsUser(authUserSnap.data);
                           if (_authService.isUserAnonymous) {
                             print(myUserSnap.data.userUID +
                                 "| is signInAnonymous");
@@ -152,6 +182,7 @@ class Wrapper extends StatelessWidget {
                   } else {
                     //user authenticated not-anonymous but no firestore document
                     //part of sign up process
+                    //whetherHasAccount cannot creat MyUser Model
                     return CreateNewUsername();
                   }
                 }
@@ -181,28 +212,29 @@ class Wrapper extends StatelessWidget {
 
   Future<MyUser> validateUserPhoneAndEmail({
     @required AuthService authService,
-    @required MyUser authServiceMyUser,
+    // @required MyUser authServiceMyUser,
     @required MyUser whetherHasAccUser,
     @required ProfileDBService profileDBService,
   }) async {
     print('WRAPPER: validateUserPhoneAndEmail | Function called!');
-    print('...authHasAccUserPhone is: ' +
-        (authServiceMyUser.phoneNumber ?? 'is null'));
+    print('...authPhone is: ' +
+        (authService.getCurrentUser.phoneNumber ?? 'is null'));
     print('...whetherHasAccUserPhone is: ' +
         (whetherHasAccUser.phoneNumber ?? 'is null'));
 
     bool requiresUpdate = false;
 
-    if (authServiceMyUser.phoneNumber != whetherHasAccUser.phoneNumber ||
-        authServiceMyUser.email != whetherHasAccUser.email) {
+    if (authService.getCurrentUser.phoneNumber !=
+            whetherHasAccUser.phoneNumber ||
+        authService.getCurrentUser.email != whetherHasAccUser.email) {
       //phone number or email not the same (update FB)
       print('validateUserPhoneAndEmail | phone or email not the same');
       print('validateUserPhoneAndEmail | AuthPhone: ' +
-              authServiceMyUser.phoneNumber ??
+              authService.getCurrentUser.phoneNumber ??
           'is null');
-      print(
-          'validateUserPhoneAndEmail | AuthEmail: ' + authServiceMyUser.email ??
-              'is null');
+      print('validateUserPhoneAndEmail | AuthEmail: ' +
+              authService.getCurrentUser.email ??
+          'is null');
       requiresUpdate = true;
     }
 
@@ -220,17 +252,18 @@ class Wrapper extends StatelessWidget {
     //     : null;
 
     //Updating whetherHasAccUser with valid email and phone
-    whetherHasAccUser.phoneNumber = authServiceMyUser.phoneNumber;
-    whetherHasAccUser.email = authServiceMyUser.email;
+    whetherHasAccUser.phoneNumber = authService.getCurrentUser.phoneNumber;
+    whetherHasAccUser.email = authService.getCurrentUser.email;
 
     // authServiceMyUser = whetherHasAccUser;
-    //Finalize authService.myUser
-    authService.myUser = whetherHasAccUser;
+
+    //IMPORTANT: Updated finalize authService.myUser
+    authService.updateAuthMyUser(whetherHasAccUser);
 
     if (requiresUpdate) {
       await profileDBService.updatedValidatedPhoneAndEmail(
-        phone: authService.myUser.phoneNumber,
-        email: authService.myUser.email,
+        phone: authService.getCurrentUser.phoneNumber,
+        email: authService.getCurrentUser.email,
       );
       print(
           'WRAPPER: validateUserPhoneAndEmail | Function END Updated firebase!');
@@ -240,21 +273,4 @@ class Wrapper extends StatelessWidget {
       return authService.myUser;
     }
   }
-
-  // Future<void> getAuthLocal(MyUser user) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String prefsUID = prefs.getString('userUID');
-  //   String prefsResidenceID;
-  //   String prefsHouseID;
-
-  //   if (prefsUID != null && user.userUID == prefsUID) {
-  //     print('WRAPPER auth got from local!');
-  //     prefsResidenceID = prefs.getString('residenceID');
-  //     prefsHouseID = prefs.getString('householdID');
-
-  //     _profileDBService.updateExistingIDs(prefsHouseID, prefsResidenceID);
-  //   } else {
-  //     await _profileDBService.initNewUser();
-  //   }
-  // }
 }

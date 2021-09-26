@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/home/edit_profile_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
@@ -30,9 +31,10 @@ class _EditProfileState extends State<EditProfile> {
                 child: Text(
                   'Unsaved changes',
                   style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w600,
-                      color: _themeProvider.primaryTextColor,),
+                    fontSize: 23,
+                    fontWeight: FontWeight.w600,
+                    color: _themeProvider.primaryTextColor,
+                  ),
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -165,20 +167,26 @@ class _EditProfileState extends State<EditProfile> {
                 if (_editProfileProvider.hasChanges) {
                   DateTime _tempLastUpdated = _authService.myUser.lastUpdated;
                   _editProfileProvider.user.lastUpdated = _tempLastUpdated;
-                  _authService.myUser = _editProfileProvider.user;
-                  // MyUser(
-                  //   userUID: _editProfileProvider.user.userUID,
-                  //   username: _editProfileProvider.user.username,
-                  //   description: _editProfileProvider.user.description,
-                  //   phoneNumber: _editProfileProvider.user.phoneNumber,
-                  //   email: _editProfileProvider.user.email,
-                  //   socialLinks: _editProfileProvider.user.socialLinks,
-                  //   isFollowing: _editProfileProvider.user.isFollowing ?? false,
-                  // );
+                  toast("Updating new profile...");
 
                   //updateProfileDB
-                  _editProfileProvider.confirmUpdate();
-                  Navigator.pop(context);
+                  _editProfileProvider.confirmUpdate().then((success) {
+                    if (success) {
+                      // CONFIRM UPDATE authService.myUser
+                      _authService.myUser.profileImageUrl =
+                          _editProfileProvider.user.profileImageUrl;
+                      _authService.myUser.username =
+                          _editProfileProvider.user.username;
+                      _authService.myUser.description =
+                          _editProfileProvider.user.description;
+                      _authService.myUser.socialLinks =
+                          _editProfileProvider.user.socialLinks;
+                      toast("Profile updated");
+                      Navigator.pop(context);
+                    } else {
+                      toast("Failed to update profile. Please try again.");
+                    }
+                  });
                 }
               },
             ),

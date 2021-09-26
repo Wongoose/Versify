@@ -36,7 +36,7 @@ class _AccountPrivacyState extends State<AccountPrivacy> {
     print('initHideInteraction: ' + boolHideInteraction.toString());
   }
 
-  switchPrivacySettings(PrivacySwitches privacySwitch, bool switchBool) {
+  void switchPrivacySettings(PrivacySwitches privacySwitch, bool switchBool) {
     bool hasError = false;
     switch (privacySwitch) {
       case PrivacySwitches.privateAccount:

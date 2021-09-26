@@ -1,7 +1,7 @@
 class MyUser {
   final String userUID;
-  final Map socialLinks;
   final bool completeLogin;
+  Map socialLinks;
   List<dynamic> myPublicDocIds = [];
 
   String profileImageUrl;
