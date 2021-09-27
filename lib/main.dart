@@ -163,6 +163,9 @@ class VersifyApp extends StatelessWidget {
             void refreshFeeds() {
               // setState(() => _getFeedDataMain = DatabaseService().getFeedData);
             }
+
+            _themeProvider.initPreferences();
+
             AuthService _authService = AuthService();
             DynamicLinkService _dynamicLinkService = DynamicLinkService(
               authService: _authService,
