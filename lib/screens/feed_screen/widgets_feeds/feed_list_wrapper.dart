@@ -19,15 +19,12 @@ class FeedListWrapper extends StatefulWidget {
 }
 
 class _FeedListWrapperState extends State<FeedListWrapper> {
-  Widget _followingFeed;
-  Widget _forYouFeed;
+  Map<int, double> forYouDynamicItemExtentList = {};
+  Map<int, double> followingDynamicItemExtentList = {};
 
-  void initState() {
-    super.initState();
-    print('FEED WRAPPER INITSTATE');
-    _followingFeed =
-        FollowingFeedList(feedListController: widget.followingController);
-    _forYouFeed = ForYouFeedList(feedListController: widget.forYouController);
+  void dispose() {
+    super.dispose();
+    print("FEED WRAPPER is disposed!");
   }
 
   @override
@@ -43,9 +40,17 @@ class _FeedListWrapperState extends State<FeedListWrapper> {
       return TutorialFeedList();
     } else {
       if (_feedTypeProvider.currentFeedType == FeedType.following) {
-        return _followingFeed;
+        return FollowingFeedList(
+          feedListController: widget.followingController,
+          dynamicItemExtentList: followingDynamicItemExtentList,
+        );
+        // return _followingFeed;
       } else if (_feedTypeProvider.currentFeedType == FeedType.forYou) {
-        return _forYouFeed;
+        return ForYouFeedList(
+          feedListController: widget.forYouController,
+          dynamicItemExtentList: forYouDynamicItemExtentList,
+        );
+        // return _forYouFeed;
       } else {
         return Loading();
       }

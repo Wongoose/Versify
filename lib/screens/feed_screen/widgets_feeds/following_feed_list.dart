@@ -15,8 +15,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class FollowingFeedList extends StatefulWidget {
   final ScrollController feedListController;
+  Map<int, double> dynamicItemExtentList;
 
-  FollowingFeedList({this.feedListController});
+  FollowingFeedList({this.feedListController, this.dynamicItemExtentList});
 
   @override
   _FollowingFeedListState createState() => _FollowingFeedListState();
@@ -29,7 +30,7 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
   bool _firstInit = true;
   bool isScrollingDown = false;
   double _prevScrollPosition = 0;
-  Map<int, double> _dynamicItemExtentList = {};
+  // Map<int, double> widget.dynamicItemExtentList = {};
   int _prevIndexFromPageView = 0;
 
   //providers
@@ -37,6 +38,10 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
   DatabaseService _databaseService;
   FeedListProvider _feedListProvider;
   BottomNavProvider _bottomNavProvider;
+
+  void dispose() {
+    super.dispose();
+  }
 
   final List<Map<String, Color>> _colorScheme = [
     {
@@ -55,7 +60,7 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
       'secondary': Color(0xFFdaeaff),
     },
   ];
-  
+
   // FeedTypeProvider _feedTypeProvider;
   // double _localExtent = 0;
 
@@ -69,12 +74,14 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
   void scrollPositionAfterView(int index) {
     double _currentItemExtent = 0;
     for (var i = 0; i < index; i++) {
-      _currentItemExtent += _dynamicItemExtentList[i];
+      _currentItemExtent += widget.dynamicItemExtentList[i];
     }
     print('Current Item Extent: ' + _currentItemExtent.toString());
 
-    widget.feedListController.animateTo(_currentItemExtent - 50,
-        duration: Duration(milliseconds: 100), curve: Curves.easeInOutExpo);
+    widget.feedListController.jumpTo(_currentItemExtent - 50);
+
+    // widget.feedListController.animateTo(_currentItemExtent - 50,
+    // duration: Duration(milliseconds: 100), curve: Curves.easeInOutExpo);
   }
 
   _FollowingFeedListState() {
@@ -317,19 +324,43 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
                     );
                   },
                   itemBuilder: (context, index) {
-                    return SizeProviderWidget(
-                      onChildSize: (size) {
-                        print(
-                            'Feed Widget height is: ' + size.height.toString());
-                        _dynamicItemExtentList[index] = size.height;
-                        // print(_dynamicItemExtentList);
-                      },
-                      child: PostFeedWidget(
+                    if (widget.dynamicItemExtentList[index] == null) {
+                      print("First build index " + index.toString());
+                      return SizeProviderWidget(
+                        //when change between following and forYou may not render hence size is null
+                        onChildSize: (size) {
+                          print('Feed Widget height is: ' +
+                              size.height.toString());
+                          widget.dynamicItemExtentList[index] = size.height;
+                          // print(widget.dynamicItemExtentList);
+                        },
+                        child: PostFeedWidget(
+                            isGrey: false,
+                            isWelcome: false,
+                            index: index,
+                            feed: _feedListProvider.followingData[index]),
+                      );
+                    } else {
+                      print("Rebuild index " + index.toString());
+                      return PostFeedWidget(
                           isGrey: false,
                           isWelcome: false,
                           index: index,
-                          feed: _feedListProvider.followingData[index]),
-                    );
+                          feed: _feedListProvider.followingData[index]);
+                    }
+                    // return SizeProviderWidget(
+                    //   onChildSize: (size) {
+                    //     print(
+                    //         'Feed Widget height is: ' + size.height.toString());
+                    //     widget.dynamicItemExtentList[index] = size.height;
+                    //     // print(widget.dynamicItemExtentList);
+                    //   },
+                    //   child: PostFeedWidget(
+                    //       isGrey: false,
+                    //       isWelcome: false,
+                    //       index: index,
+                    //       feed: _feedListProvider.followingData[index]),
+                    // );
                   },
                 ),
               );
@@ -365,7 +396,7 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
   Future<void> _onRefresh() async {
     print('Refresh Ran with postsView: ' + _allPostsView.toString());
     _allPostsView.followingClearViews();
-    _dynamicItemExtentList.clear();
+    widget.dynamicItemExtentList.clear();
     _feedListProvider.followingDataClear();
 
     print('Following Views:' + _allPostsView.followingViews.toString());

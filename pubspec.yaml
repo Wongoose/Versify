@@ -55,6 +55,7 @@ dependencies:
   overlay_support: ^1.2.1
   image_picker: ^0.8.0+3
   webview_flutter: ^2.0.12
+  scrollable_positioned_list: ^0.1.10
   # esys_flutter_share: ^1.0.2
   # scroll_bottom_navigation_bar: 
   # skeleton_loader: 

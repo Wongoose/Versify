@@ -538,16 +538,16 @@ class DatabaseService {
 
     print('getNewFeeds: ' + tempList.toString());
 
-    getSortedFollowing().then((sortedFollowingList) {
-      //get from shared preferences or Firebase if null
-      tempList.forEach((feed) async {
-        if (sortedFollowingList.contains(feed.userID)) {
-          //if is following
-          await jsonFollowingStorage.updateUserDetailsWithUid(
-              uid: feed.userID, timestamp: feed.postedTimestamp);
-        }
-      });
-    });
+    // getSortedFollowing().then((sortedFollowingList) {
+    //   //get from shared preferences or Firebase if null
+    //   tempList.forEach((feed) async {
+    //     if (sortedFollowingList.contains(feed.userID)) {
+    //       //if is following, update following details
+    //       await jsonFollowingStorage.updateUserDetailsWithUid(
+    //           uid: feed.userID, timestamp: feed.postedTimestamp);
+    //     }
+    //   });
+    // });
 
     feedListProvider.updateForYouData(tempList);
   }

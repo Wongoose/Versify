@@ -1,3 +1,4 @@
+// import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:versify/main.dart';
 import 'package:versify/models/feed_model.dart';
 import 'package:versify/providers/home/bottom_nav_provider.dart';
@@ -17,8 +18,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ForYouFeedList extends StatefulWidget {
   final ScrollController feedListController;
+  Map<int, double> dynamicItemExtentList;
 
-  ForYouFeedList({this.feedListController});
+  ForYouFeedList({this.feedListController, this.dynamicItemExtentList});
 
   @override
   _ForYouFeedListState createState() => _ForYouFeedListState();
@@ -31,7 +33,7 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
   bool _firstInit = true;
   bool isScrollingDown = false;
   double _prevScrollPosition = 0;
-  Map<int, double> _dynamicItemExtentList = {};
+  // Map<int, double> widget.dynamicItemExtentList = {};
   int _prevIndexFromPageView = 0;
 
   //providers
@@ -39,6 +41,15 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
   DatabaseService _databaseService;
   FeedListProvider _feedListProvider;
   BottomNavProvider _bottomNavProvider;
+
+  // final ItemScrollController itemScrollController = ItemScrollController();
+  // final ItemPositionsListener itemPositionsListener =
+  //     ItemPositionsListener.create();
+
+  void dispose() {
+    super.dispose();
+    print("FORYOU FEEDLIST has been disposed");
+  }
 
   final List<Map<String, Color>> _colorScheme = [
     {
@@ -70,12 +81,13 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
   void scrollPositionAfterView(int index) {
     double _currentItemExtent = 0;
     for (var i = 0; i < index; i++) {
-      _currentItemExtent += _dynamicItemExtentList[i];
+      _currentItemExtent += widget.dynamicItemExtentList[i];
     }
     print('Current Item Extent: ' + _currentItemExtent.toString());
 
-    widget.feedListController.animateTo(_currentItemExtent - 50,
-        duration: Duration(milliseconds: 100), curve: Curves.easeInOutExpo);
+    widget.feedListController.jumpTo(_currentItemExtent - 50);
+    // widget.feedListController.animateTo(_currentItemExtent - 50,
+    //     duration: Duration(milliseconds: 100), curve: Curves.easeInOutExpo);
   }
 
   _ForYouFeedListState() {
@@ -349,21 +361,83 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
                   );
                 },
                 itemBuilder: (context, index) {
-                  return SizeProviderWidget(
-                    //when change between following and forYou may not render hence size is null
-                    onChildSize: (size) {
-                      print('Feed Widget height is: ' + size.height.toString());
-                      _dynamicItemExtentList[index] = size.height;
-                      // print(_dynamicItemExtentList);
-                    },
-                    child: PostFeedWidget(
+                  if (widget.dynamicItemExtentList[index] == null) {
+                    print("First build index " + index.toString());
+                    return SizeProviderWidget(
+                      //when change between following and forYou may not render hence size is null
+                      onChildSize: (size) {
+                        print(
+                            'Feed Widget height is: ' + size.height.toString());
+                        widget.dynamicItemExtentList[index] = size.height;
+                        // print(widget.dynamicItemExtentList);
+                      },
+                      child: PostFeedWidget(
+                          isGrey: false,
+                          isWelcome: false,
+                          index: index,
+                          feed: _feedListProvider.forYouData[index]),
+                    );
+                  } else {
+                    print("Rebuild index " + index.toString());
+                    return PostFeedWidget(
                         isGrey: false,
                         isWelcome: false,
                         index: index,
-                        feed: _feedListProvider.forYouData[index]),
-                  );
+                        feed: _feedListProvider.forYouData[index]);
+                  }
                 },
               ),
+              // ScrollablePositionedList.separated(
+              //   // primary: false,
+              //   addAutomaticKeepAlives: true,
+              //   itemCount: _feedListProvider.forYouData.length,
+              //   itemScrollController: itemScrollController,
+              //   itemPositionsListener: itemPositionsListener,
+              //   separatorBuilder: (BuildContext context, int index) {
+              //     int _colorIndex = 0;
+              //     int _nextIndex = index + 1;
+              //     int _nextColorIndex;
+
+              //     if (index > 2) {
+              //       _colorIndex = index % 3;
+              //     } else {
+              //       _colorIndex = index;
+              //     }
+              //     if (_nextIndex > 2) {
+              //       _nextColorIndex = _nextIndex % 3;
+              //     } else {
+              //       _nextColorIndex = _nextIndex;
+              //     }
+              //     return Align(
+              //       alignment: Alignment.centerLeft,
+              //       child: Container(
+              //         margin: EdgeInsets.fromLTRB(5.5, 0, 0, 0),
+              //         alignment: Alignment.centerLeft,
+              //         height: 8,
+              //         width: 8,
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           gradient: LinearGradient(
+              //             begin: Alignment.topCenter,
+              //             end: Alignment.bottomCenter,
+              //             colors: [
+              //               _colorScheme[_colorIndex]['primary'],
+              //               _colorScheme[_nextColorIndex]['primary']
+              //             ],
+              //           ),
+              //           color: _colorScheme[_colorIndex]['primary'],
+              //         ),
+              //       ),
+              //     );
+              //   },
+              //   itemBuilder: (context, index) {
+              //     return PostFeedWidget(
+              //         isGrey: false,
+              //         isWelcome: false,
+              //         index: index,
+              //         feed: _feedListProvider.forYouData[index]);
+              //   },
+              // ),
             );
           },
         );
@@ -399,7 +473,7 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
   Future<void> _onRefresh() async {
     print('Refresh Ran with postsView: ' + _allPostsView.toString());
     _allPostsView.forYouClearViews();
-    _dynamicItemExtentList.clear();
+    widget.dynamicItemExtentList.clear();
     _feedListProvider.forYouDataClear();
 
     print('ForYou Views:' + _allPostsView.forYouViews.toString());
@@ -433,6 +507,89 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
     postedTimestamp: DateTime.now(),
   );
 }
+
+// class ListViewSeparated extends StatelessWidget {
+//   const ListViewSeparated({
+//     Key key,
+//     @required FeedListProvider feedListProvider,
+//     @required List<Map<String, Color>> colorScheme,
+//     @required Map<int, double> dynamicItemExtentList,
+//   })  : _feedListProvider = feedListProvider,
+//         _colorScheme = colorScheme,
+//         dynamicItemExtentList = dynamicItemExtentList,
+//         super(key: key);
+
+//   final FeedListProvider _feedListProvider;
+//   final List<Map<String, Color>> _colorScheme;
+//   final Map<int, double> widget.dynamicItemExtentList;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.separated(
+//       primary: false,
+//       addAutomaticKeepAlives: true,
+//       itemCount: _feedListProvider.forYouData.length,
+//       scrollDirection: Axis.vertical,
+//       // controller: widget.feedListController,
+//       // physics: BouncingScrollPhysics(),
+//       separatorBuilder: (BuildContext context, int index) {
+//         int _colorIndex = 0;
+//         int _nextIndex = index + 1;
+//         int _nextColorIndex;
+
+//         if (index > 2) {
+//           _colorIndex = index % 3;
+//         } else {
+//           _colorIndex = index;
+//         }
+//         if (_nextIndex > 2) {
+//           _nextColorIndex = _nextIndex % 3;
+//         } else {
+//           _nextColorIndex = _nextIndex;
+//         }
+//         return Align(
+//           alignment: Alignment.centerLeft,
+//           child: Container(
+//             margin: EdgeInsets.fromLTRB(5.5, 0, 0, 0),
+//             alignment: Alignment.centerLeft,
+//             height: 8,
+//             width: 8,
+//             decoration: BoxDecoration(
+//               shape: BoxShape.circle,
+//               gradient: LinearGradient(
+//                 begin: Alignment.topCenter,
+//                 end: Alignment.bottomCenter,
+//                 colors: [
+//                   _colorScheme[_colorIndex]['primary'],
+//                   _colorScheme[_nextColorIndex]['primary']
+//                 ],
+//               ),
+//               color: _colorScheme[_colorIndex]['primary'],
+//             ),
+//           ),
+//         );
+//       },
+//       itemBuilder: (context, index) {
+//         print('New postFeedWidget');
+//         return
+//             // SizeProviderWidget(
+//             //   //when change between following and forYou may not render hence size is null
+//             //   onChildSize: (size) {
+//             //     print('Feed Widget height is: ' + size.height.toString());
+//             //     widget.dynamicItemExtentList[index] = size.height;
+//             //     // print(widget.dynamicItemExtentList);
+//             //   },
+//             // child:
+//             PostFeedWidget(
+//                 isGrey: false,
+//                 isWelcome: false,
+//                 index: index,
+//                 feed: _feedListProvider.forYouData[index]);
+//         // );
+//       },
+//     );
+//   }
+// }
 
 class SizeProviderWidget extends StatefulWidget {
   final Widget child;
