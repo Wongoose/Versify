@@ -1,24 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:versify/home_wrapper.dart';
-import 'package:versify/providers/home/theme_data_provider.dart';
-import 'package:versify/providers/home/tutorial_provider.dart';
-import 'package:versify/screens/onboarding_screen/new_user_options.dart';
-import 'package:versify/screens/onboarding_screen/pick_topics.dart';
-import 'package:versify/screens/onboarding_screen/create_new_username.dart';
-import 'package:versify/providers/home/profile_data_provider.dart';
-import 'package:versify/screens/profile_screen/settings/account_provider.dart';
-import 'package:versify/services/all_badges_json_storage.dart';
-import 'package:versify/services/auth.dart';
+import 'package:versify/screens/home/home_wrapper.dart';
+import 'package:versify/providers/providers_home/theme_data_provider.dart';
+import 'package:versify/providers/providers_home/tutorial_provider.dart';
+import 'package:versify/screens/app_register/new_user_options.dart';
+import 'package:versify/screens/app_register/pick_topics.dart';
+import 'package:versify/screens/app_register/create_new_username.dart';
+import 'package:versify/screens/profile/settings/account_provider.dart';
+import 'package:versify/services/json_storage/all_badges_json_storage.dart';
+import 'package:versify/services/firebase/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:versify/services/profile_database.dart';
-import 'package:versify/services/users_following_json_storage.dart';
-import 'package:versify/shared/loading.dart';
+import 'package:versify/services/firebase/profile_database.dart';
+import 'package:versify/services/json_storage/users_following_json_storage.dart';
+import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:versify/shared/splash_loading.dart';
-import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatefulWidget {

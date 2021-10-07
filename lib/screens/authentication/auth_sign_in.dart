@@ -1,6 +1,6 @@
-import 'package:versify/services/auth.dart';
-import 'package:versify/shared/constants.dart';
-import 'package:versify/shared/loading.dart';
+import 'package:versify/services/firebase/auth.dart';
+import 'package:versify/shared/widgets/widgets_all_loading.dart';
+import 'package:versify/shared/helper/helper_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
