@@ -20,7 +20,7 @@ class ViewPostContent extends StatelessWidget {
   final bool readMoreVisible;
   final bool fromDynamicLink;
 
-  ViewPostContent(
+  const ViewPostContent(
       {@required this.likeProvider,
       @required this.content,
       @required this.listMapContent,

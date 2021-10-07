@@ -436,7 +436,7 @@ class _MainProfilePageState extends State<MainProfilePage> {
         // });
       } else {
         await _profileDBService
-            .whetherHasAccount(_userProfile.userUID)
+            .whetherUserHasFirestoreAccount(_userProfile.userUID)
             .then((newUserProfile) {
           DateTime _tempLastUpdated = _authService.myUser.lastUpdated;
           newUserProfile.lastUpdated = _tempLastUpdated;

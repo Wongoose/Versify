@@ -3,7 +3,7 @@ import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import 'package:versify/services/firebase/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 
 class ContentBody extends StatelessWidget {
   final bool isFocus;

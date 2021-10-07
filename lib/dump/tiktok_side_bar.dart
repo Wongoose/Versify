@@ -1,6 +1,6 @@
 import 'package:versify/providers/providers_feeds/view_post_like_provider.dart';
 import 'package:versify/screens/blogs_feed/widgets_feeds/all_comments.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -9,7 +9,7 @@ import 'package:versify/providers/providers_home/profile_pageview_provider.dart'
 import 'package:versify/services/firebase/auth.dart';
 import 'package:versify/services/others/notification.dart';
 import 'package:versify/services/firebase/profile_database.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

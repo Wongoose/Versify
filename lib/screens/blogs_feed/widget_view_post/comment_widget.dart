@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:vibration/vibration.dart';
 
 class Comment extends StatefulWidget {

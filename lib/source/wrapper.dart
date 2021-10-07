@@ -1,6 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:versify/screens/home/home_wrapper.dart';
-import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import 'package:versify/providers/providers_home/tutorial_provider.dart';
 import 'package:versify/screens/app_register/new_user_options.dart';
 import 'package:versify/screens/app_register/pick_topics.dart';
@@ -11,22 +9,19 @@ import 'package:versify/services/firebase/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/services/firebase/profile_database.dart';
 import 'package:versify/services/json_storage/users_following_json_storage.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'models/user_model.dart';
+import '../models/user_model.dart';
 
 class Wrapper extends StatefulWidget {
-  final Function completePickTutorials;
-
-  Wrapper({this.completePickTutorials});
-
   @override
   _WrapperState createState() => _WrapperState();
 }
 
 class _WrapperState extends State<Wrapper> {
-  MyUser _cacheUser = MyUser(userUID: null);
+  MyUser _cacheUser = MyUser();
   Future<MyUser> _futureInit;
   MyUser _streamUser;
   ProfileDBService _profileDBService;
@@ -35,14 +30,15 @@ class _WrapperState extends State<Wrapper> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkUser();
+      // checkUser();
     });
   }
 
   void checkUser() {
     if (_streamUser != null) {
       if (_streamUser.userUID != _cacheUser.userUID) {
-        _futureInit = _profileDBService.whetherHasAccount(_streamUser.userUID);
+        _futureInit = _profileDBService
+            .whetherUserHasFirestoreAccount(_streamUser.userUID);
         _cacheUser = _streamUser;
       }
     }
@@ -65,10 +61,7 @@ class _WrapperState extends State<Wrapper> {
     final TutorialProvider _tutorialProvider =
         Provider.of<TutorialProvider>(context, listen: false);
 
-    final ThemeProvider _themeProvider =
-        Provider.of<ThemeProvider>(context, listen: false);
-
-    AccountSettingsProvider _accountSettingsProvider =
+    final AccountSettingsProvider _accountSettingsProvider =
         Provider.of<AccountSettingsProvider>(context, listen: false);
 
     SystemChrome.setEnabledSystemUIOverlays(
@@ -85,79 +78,90 @@ class _WrapperState extends State<Wrapper> {
     );
 
     if (_tutorialProvider.pickTopics) {
-      //tutorial pick topics
-      return IntroPickTopics(widget.completePickTutorials);
+      // tutorial pick topics
+      return IntroPickTopics(_authService);
     } else {
-      if (_streamUser != null) {
-        checkUser();
-        print('Wrapper stream user: ' + _streamUser.userUID.toString());
-        print('Hash: ' + _streamUser.hashCode.toString());
+      if (_streamUser.streamStatus == StreamMyUserStatus.success) {
+        // checkUser();
+        print(purplePen(
+            "Wrapper | has auth user with ID: ${_streamUser.userUID}"));
 
         return FutureBuilder<MyUser>(
-            future: _futureInit,
-            //change whetherHasAcc function to return MyUser
+            future: _profileDBService
+                .whetherUserHasFirestoreAccount(_streamUser.userUID),
             builder: (context, myUserSnap) {
               if (myUserSnap.connectionState == ConnectionState.done) {
                 if (myUserSnap.data != null) {
-                  //has user document in firestore
-                  _authService.hasFirestoreDocuments = true;
+                  // User has document in firestore
+                  print(greenPen(
+                      "Wrapper() whetherUserHasFirestoreAccount | TRUE"));
 
+                  _authService.hasFirestoreDocuments = true;
                   _authService.getCurrentSignInProvider();
 
-                  //validate and update firebase (phone and email)
+                  return Material(
+                    clipBehavior: Clip.antiAlias,
+                    
+                      child: Center(
+                        child: Text(
+                    "User has firestore account",
+                    style: TextStyle(color: Colors.white, fontSize: 30),
+                  ),
+                      ));
 
-                  Future<MyUser> _validateFuture = validateUserPhoneAndEmail(
-                    authService: _authService,
-                    // authServiceMyUser: _authService.myUser,
-                    whetherHasAccUser: myUserSnap.data,
-                    profileDBService: _profileDBService,
-                  );
-                  return FutureBuilder<MyUser>(
-                      future: _validateFuture,
-                      builder: (context, authUserSnap) {
-                        if (authUserSnap.connectionState ==
-                            ConnectionState.done) {
-                          _accountSettingsProvider
-                              .initSettingsUser(authUserSnap.data);
-                          if (_authService.isUserAnonymous) {
-                            print(myUserSnap.data.userUID +
-                                "| is signInAnonymous");
-                            // _authService.myUser = myUserSnap.data;
+                  // validate and update firebase (phone and email)
+                  // final Future<MyUser> _validateFuture =
+                  //     validateUserPhoneAndEmail(
+                  //   authService: _authService,
+                  //   whetherHasAccUser: myUserSnap.data,
+                  //   profileDBService: _profileDBService,
+                  // );
+                  // return FutureBuilder<MyUser>(
+                  //     future: _validateFuture,
+                  //     builder: (context, authUserSnap) {
+                  //       if (authUserSnap.connectionState ==
+                  //           ConnectionState.done) {
+                  //         _accountSettingsProvider
+                  //             .initSettingsUser(authUserSnap.data);
+                  //         if (_authService.isUserAnonymous) {
+                  //           print(myUserSnap.data.userUID +
+                  //               "| is signInAnonymous");
+                  //           // _authService.myUser = myUserSnap.data;
 
-                            initSharedPrefs(
-                                logInUserID: myUserSnap.data.userUID);
-                            _profileDBService.profileDBInit();
-                            _jsonFollowingStorage.jsonInit(); //diff accounts
-                            _jsonAllBadgesStorage.jsonInit();
+                  //           initSharedPrefs(
+                  //               logInUserID: myUserSnap.data.userUID);
+                  //           _profileDBService.profileDBInit();
+                  //           _jsonFollowingStorage.jsonInit(); //diff accounts
+                  //           _jsonAllBadgesStorage.jsonInit();
 
-                            return new HomeWrapper();
-                          } else {
-                            if (myUserSnap.data.completeLogin == true) {
-                              //oldUser compelte login
-                              print(myUserSnap.data.userUID +
-                                  "| is completeLogin = true");
-                              // _authService.myUser = myUserSnap.data;
+                  //           return new HomeWrapper();
+                  //         } else {
+                  //           if (myUserSnap.data.completeLogin == true) {
+                  //             //oldUser compelte login
+                  //             print(myUserSnap.data.userUID +
+                  //                 "| is completeLogin = true");
+                  //             // _authService.myUser = myUserSnap.data;
 
-                              initSharedPrefs(
-                                  logInUserID: myUserSnap.data.userUID);
-                              _profileDBService.profileDBInit();
-                              _jsonFollowingStorage.jsonInit(); //diff accounts
-                              _jsonAllBadgesStorage.jsonInit();
+                  //             initSharedPrefs(
+                  //                 logInUserID: myUserSnap.data.userUID);
+                  //             _profileDBService.profileDBInit();
+                  //             _jsonFollowingStorage.jsonInit(); //diff accounts
+                  //             _jsonAllBadgesStorage.jsonInit();
 
-                              // return DynamicLinkPost(
-                              //   postId: '5ACsnQ8gciM6nO85qCCp',
-                              //   onPopExitApp: false,
-                              // );
-                              return new HomeWrapper();
-                            } else {
-                              //not complete login
-                              return CreateNewUsername();
-                            }
-                          }
-                        } else {
-                          return SplashLoading();
-                        }
-                      });
+                  //             // return DynamicLinkPost(
+                  //             //   postId: '5ACsnQ8gciM6nO85qCCp',
+                  //             //   onPopExitApp: false,
+                  //             // );
+                  //             return new HomeWrapper();
+                  //           } else {
+                  //             //not complete login
+                  //             return CreateNewUsername();
+                  //           }
+                  //         }
+                  //       } else {
+                  //         return SplashLoading();
+                  //       }
+                  //     });
                 } else {
                   // no user document but authenticated
                   _authService.hasFirestoreDocuments = false;
@@ -185,8 +189,11 @@ class _WrapperState extends State<Wrapper> {
                 return SplashLoading();
               }
             });
-      } else {
+      } else if (_streamUser.streamStatus == StreamMyUserStatus.none) {
+        print(purplePen("Wrapper | Directed to Sign In screen"));
         return OnBoardingNewUser(boardingUserDetails: false);
+      } else {
+        return SplashLoading();
       }
     }
   }

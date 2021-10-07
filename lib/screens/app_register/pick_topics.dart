@@ -6,10 +6,13 @@ import 'package:versify/services/firebase/auth.dart';
 import 'package:versify/services/firebase/database.dart';
 import 'package:versify/providers/providers_home/tutorial_provider.dart';
 import 'package:versify/services/firebase/profile_database.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 
 class IntroPickTopics extends StatefulWidget {
-  final Function completePickTutorials;
-  IntroPickTopics(this.completePickTutorials);
+  final AuthService authService;
+
+  const IntroPickTopics(this.authService);
 
   @override
   _IntroPickTopicsState createState() => _IntroPickTopicsState();
@@ -19,17 +22,17 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
   bool _loading = false;
 
   //providers
-  DatabaseService _dbService;
+  DatabaseService _databaseService;
   TutorialProvider _tutorialProvider;
 
   void updateSelectionTopics(List<String> topicInterests) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      bool _success = await _dbService.completeSelectionTopics(topicInterests);
+      final bool _success =
+          await _databaseService.completeSelectionTopics(topicInterests);
 
       if (_success) {
         //Navigate
         _tutorialProvider.updateProgress(TutorialProgress.pickTopicsDone);
-        widget.completePickTutorials();
       } else {
         toast('Oops! Please try again.');
       }
@@ -38,20 +41,21 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    print(purplePen(
+        "pickTopics | report user is authenticated: ${widget.authService.isUserAuthenticated}"));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final AuthService _authService = Provider.of<AuthService>(context);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context);
 
-    _dbService = Provider.of<DatabaseService>(context);
+    _databaseService = Provider.of<DatabaseService>(context);
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
-
-    print('Whole rebuild with dbService | ${_dbService.toString()}');
-    print('authUserID is: ' + _authService.userUID.toString() ?? 'none');
-    // print('authUser is: ' + _authService.authUser.uid.toString());
-    print('dbUser is: ' + _dbService.uid.toString());
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -60,7 +64,7 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
         elevation: 0.5,
         centerTitle: true,
         title: Text(
-          'Pick your topics',
+          "Pick your topics",
           style: TextStyle(
             fontSize: 17.5,
             fontWeight: FontWeight.w600,
@@ -76,40 +80,39 @@ class _IntroPickTopicsState extends State<IntroPickTopics> {
             onPressed: () async {
               if (!_loading) {
                 setState(() => _loading = true);
-                List<String> _listOfTopicInterests =
+                final List<String> _listOfTopicInterests =
                     _tutorialProvider.listOfSelectedTopics;
 
-                if (!_authService.isUserAuthenticated) {
-                  //user not signed in
-                  _authService.signInAnon().then((successSignIn) async {
-                    if (successSignIn) {
-                      //create usersPrivateCollection not public follow
-                      _dbService
-                          .firestoreCreateAnonAccount(
-                        userUID: _authService.authUser.uid,
-                        username: _authService.authUser.uid,
-                        completeLogin: false,
-                      )
-                          .then((_) {
-                        updateSelectionTopics(_listOfTopicInterests);
-                      });
-                    }
-                  });
-                } else {
+                if (widget.authService.isUserAuthenticated) {
                   await _profileDBService
-                      .whetherHasAccount(_authService.authUser.uid)
+                      .whetherUserHasFirestoreAccount(
+                          widget.authService.authUser.uid)
                       .then((myUser) async {
                     //create usersPrivateCollection not public follow
 
                     if (myUser == null) {
-                      await _dbService.firestoreCreateAnonAccount(
-                        userUID: _authService.authUser.uid,
-                        username: _authService.authUser.uid,
+                      await _databaseService.firestoreCreateAnonAccount(
+                        userUID: widget.authService.authUser.uid,
+                        username: widget.authService.authUser.uid,
                         completeLogin: false,
                       );
                     }
                     updateSelectionTopics(_listOfTopicInterests);
                   });
+                } else {
+                  //user not signed in
+                  final ReturnValue result =
+                      await widget.authService.signInAnon();
+
+                  if (result.success) {
+                    //create usersPrivateCollection not public follow
+                    await _databaseService.firestoreCreateAnonAccount(
+                      userUID: widget.authService.authUser.uid,
+                      username: widget.authService.authUser.uid,
+                      completeLogin: false,
+                    );
+                    updateSelectionTopics(_listOfTopicInterests);
+                  }
                 }
               }
             },

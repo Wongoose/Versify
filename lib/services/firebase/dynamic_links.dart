@@ -7,6 +7,7 @@ import 'package:versify/providers/providers_home/dynamic_link_provider.dart';
 import 'package:versify/services/firebase/auth.dart';
 import 'package:versify/services/firebase/profile_database.dart';
 import 'package:versify/dynamic_links/dynamic_link_post.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 
 class DynamicLinkService {
   final AuthService authService;
@@ -79,24 +80,23 @@ class DynamicLinkService {
 
       if (!authService.isUserAuthenticated) {
         //not signed in
-        await authService.signInAnon().then((res) async {
-          if (res) {
-            authService.hasFirestoreDocuments = false;
+        final ReturnValue result = await authService.signInAnon();
+        if (result.success) {
+          authService.hasFirestoreDocuments = false;
 
-            _navigateAfterHandleLink(
-              deepLink: deepLink,
-              isPost: isPost,
-              isProfile: isProfile,
-              isResetEmail: isResetEmail,
-              isVerifyEmail: isVerifyEmail,
-              context: context,
-              onPopExitApp: onPopExitApp,
-            );
-          }
-        });
+          _navigateAfterHandleLink(
+            deepLink: deepLink,
+            isPost: isPost,
+            isProfile: isProfile,
+            isResetEmail: isResetEmail,
+            isVerifyEmail: isVerifyEmail,
+            context: context,
+            onPopExitApp: onPopExitApp,
+          );
+        }
       } else {
         ProfileDBService()
-            .whetherHasAccount(authService.getCurrentUser.uid)
+            .whetherUserHasFirestoreAccount(authService.getCurrentUser.uid)
             .then((newUser) async {
           if (newUser != null) {
             //hsa firestore documents (authenticated)

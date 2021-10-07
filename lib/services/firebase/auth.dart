@@ -1,10 +1,10 @@
-import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
-import 'package:versify/services/firebase/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:versify/services/firebase/dynamic_links.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -44,7 +44,7 @@ class AuthService {
     myUser = user;
   }
 
-  Future<bool> signInAnon() async {
+  Future<ReturnValue> signInAnon() async {
     //method setup
     print('SignInAnon() | RAN');
 
@@ -73,16 +73,16 @@ class AuthService {
             completeLogin: false,
           );
           myUser = _user;
-          return true;
+          return ReturnValue(true, "success");
         } else {
-          print('No User ID');
-          return false;
+          print(redPen("signInAnon() | FAILED with error: No User ID"));
+          return ReturnValue(false, "No User ID");
         }
       });
       // FirebaseUser user = result.user;
-    } on FirebaseAuthException catch (e) {
-      print('SignInAnon() | Error: ${e.toString()}');
-      return false;
+    } on FirebaseAuthException catch (err) {
+      print(redPen("signInAnon() | FAILED with catch error: $err"));
+      return ReturnValue(false, "Failed to sign in to app. Please try again.");
     }
   }
 
@@ -91,16 +91,14 @@ class AuthService {
   }
 
   MyUser _userFromFB(User firebaseUser) {
-    print("Stream User Changes | firebaseUser exists: " +
-        (firebaseUser != null).toString());
+    print("Stream User Changes | firebaseUser exists: ${firebaseUser != null}");
     if (firebaseUser != null) {
-      print('Stream User Changes | uid: ' + firebaseUser.uid);
-      print('Stream User Changes | phone: ' +
-          (firebaseUser.phoneNumber ?? 'is null'));
+      print('Stream User Changes | uid: ${firebaseUser.uid}');
       print(
-          'Stream User Changes | email: ' + (firebaseUser.email ?? 'is null'));
-      this.authUser = firebaseUser;
-      this.userUID = firebaseUser.uid;
+          'Stream User Changes | phone: ${firebaseUser.phoneNumber ?? 'is null'}');
+      print('Stream User Changes | email: ${firebaseUser.email ?? 'is null'}');
+      authUser = firebaseUser;
+      userUID = firebaseUser.uid;
       // this.myUser = MyUser(
       //   userUID: firebaseUser.uid,
       //   phoneNumber: firebaseUser.phoneNumber,
@@ -110,11 +108,12 @@ class AuthService {
         userUID: firebaseUser.uid,
         phoneNumber: firebaseUser.phoneNumber,
         email: firebaseUser.email,
+        streamStatus: StreamMyUserStatus.success,
       );
     } else {
       print('Stream User Changes | NO USER');
-      this.userUID = null;
-      return null;
+      userUID = null;
+      return MyUser(streamStatus: StreamMyUserStatus.none);
     }
   }
 

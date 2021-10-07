@@ -2,7 +2,7 @@ import 'package:versify/providers/providers_feeds/input_comments_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 
 class InputComment extends StatefulWidget {
   final FocusNode focusNode;

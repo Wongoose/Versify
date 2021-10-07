@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:versify/models/onboarding_page_model.dart';
-import 'package:versify/services/firebase/database.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_functions.dart';
+import '../../source/wrapper.dart';
 
 class OnBoarding extends StatefulWidget {
-  final Function completeBoarding;
-
-  OnBoarding({this.completeBoarding});
-
   @override
   _OnBoardingState createState() => _OnBoardingState();
 }
@@ -39,41 +36,29 @@ class _OnBoardingState extends State<OnBoarding> {
       imagePath: 'assets/images/get-started.png',
       title: 'Get Started!',
       info:
-          'We can\'t wait for you to join us and share the wonders of God through blogging!',
+          "We can't wait for you to join us and share the wonders of God through blogging!",
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: Color(0xFFffdee9),
-    //     systemNavigationBarDividerColor: Colors.white,
-    //     systemNavigationBarColor: Colors.white,
-    //   ),
-    // );
     return SafeArea(
       child: Scaffold(
         // backgroundColor: Color(0xFFffdee9),
         backgroundColor: Theme.of(context).splashColor,
-        appBar: null,
         body: PageView.builder(
           controller: _pageController,
           scrollDirection: Axis.horizontal,
           itemCount: onboardingPagesList.length,
           itemBuilder: (context, index) {
-            PageModel _page = onboardingPagesList[index];
-
+            final PageModel _page = onboardingPagesList[index];
             return Padding(
               padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(child: Container()),
                   Align(
-                    alignment: Alignment.center,
                     child: GestureDetector(
                         onTap: () {
                           // DatabaseService().dummyAddPublicDocIdsToPrivate();
@@ -124,8 +109,9 @@ class _OnBoardingState extends State<OnBoarding> {
                 Row(
                   children: onboardingPagesList
                       .map((pageModel) {
-                        bool isFocus = onboardingPagesList.indexOf(pageModel) ==
-                            _currentIndex;
+                        final bool isFocus =
+                            onboardingPagesList.indexOf(pageModel) ==
+                                _currentIndex;
                         return Container(
                           margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                           height: 2,
@@ -139,7 +125,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 GestureDetector(
                   onTap: () {
                     if (_currentIndex == 3) {
-                      widget.completeBoarding();
+                      refreshToWrapper(context);
                     } else {
                       _pageController.animateToPage(_currentIndex + 1,
                           duration: Duration(milliseconds: 300),

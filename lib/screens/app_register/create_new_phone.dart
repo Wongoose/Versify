@@ -13,7 +13,7 @@ import 'package:versify/services/firebase/database.dart';
 import 'package:versify/services/firebase/profile_database.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
-import 'package:versify/wrapper.dart';
+import 'package:versify/source/wrapper.dart';
 
 // ignore: must_be_immutable
 class CreateNewPhone extends StatefulWidget {

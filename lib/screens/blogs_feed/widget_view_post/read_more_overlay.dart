@@ -7,7 +7,7 @@ class ReadMoreOverlay extends StatelessWidget {
   final Function readMoreTap;
   final dynamic postsProvider;
 
-  ReadMoreOverlay({this.readMoreTap, this.postsProvider});
+  const ReadMoreOverlay({this.readMoreTap, this.postsProvider});
   @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider =

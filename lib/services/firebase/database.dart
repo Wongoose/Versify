@@ -961,7 +961,7 @@ class DatabaseService {
   //tutorial
   Future<bool> completeSelectionTopics(List<String> topicInterests) async {
     try {
-      await usersPrivateCollection.doc(this.uid).update({
+      await usersPrivateCollection.doc(uid).update({
         'topicInterests': topicInterests,
       });
       return true;

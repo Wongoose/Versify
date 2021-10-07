@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/services/others/notification.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 
 enum TutorialProgress {
   none,
@@ -37,18 +37,18 @@ class TutorialProvider extends ChangeNotifier {
   //   return viewedFirstPost == true && viewedSecondPost == false;
   // }
 
-  void updateTutorialComplete(bool completed) {
-    print('update TutorialComplete | completed: $completed');
-    if(completed){
+  // ignore: avoid_positional_boolean_parameters
+  void setTutorialComplete(bool completed) {
+    print(greenPen("setTutorialComplete | completed: $completed"));
+    if (completed) {
+      allCompleted = completed;
 
-    allCompleted = completed;
-
-    pickTopics = false;
-    refreshFeedList = false;
-    viewFirstPost = false;
-    viewSecondPost = false;
-    checkInDialog = false;
-    signUpProfileNotif = false;
+      pickTopics = false;
+      refreshFeedList = false;
+      viewFirstPost = false;
+      viewSecondPost = false;
+      checkInDialog = false;
+      signUpProfileNotif = false;
     }
   }
 
@@ -115,7 +115,7 @@ class TutorialProvider extends ChangeNotifier {
   }
 
   void topicClicked(String topic) {
-    bool isSelected = topicIsSelected(topic);
+    final bool isSelected = topicIsSelected(topic);
 
     if (isSelected) {
       listOfSelectedTopics.remove(topic);

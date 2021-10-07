@@ -1,3 +1,5 @@
+enum StreamMyUserStatus { error, success, loading, none }
+
 class MyUser {
   final String userUID;
   final bool completeLogin;
@@ -22,7 +24,10 @@ class MyUser {
   bool isDisableSharing;
   bool isHideContentInteraction;
 
+  StreamMyUserStatus streamStatus;
+
   MyUser({
+    this.streamStatus,
     this.myPublicDocIds,
     this.completeLogin,
     this.profileImageUrl,

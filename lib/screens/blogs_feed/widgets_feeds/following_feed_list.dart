@@ -5,7 +5,7 @@ import 'package:versify/providers/providers_feeds/all_posts_provider.dart';
 import 'package:versify/screens/blogs_feed/widgets_feeds/feed_list_wrapper.dart';
 import 'package:versify/screens/blogs_feed/widgets_feeds/post_feed_widget.dart';
 import 'package:versify/services/firebase/database.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

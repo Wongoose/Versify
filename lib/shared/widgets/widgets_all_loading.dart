@@ -6,9 +6,8 @@ class SplashLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
-
     return Scaffold(
-      backgroundColor: _theme.splashColor,
+      backgroundColor: Color(0xFFefdaff),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

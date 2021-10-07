@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ansicolor/ansicolor.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/providers_home/bottom_nav_provider.dart';
 import 'package:versify/providers/providers_create_post/content_body_provider.dart';
@@ -14,29 +12,32 @@ import 'package:versify/providers/providers_feeds/all_posts_provider.dart';
 import 'package:versify/providers/providers_feeds/feed_type_provider.dart';
 import 'package:versify/providers/providers_feeds/input_comments_provider.dart';
 import 'package:versify/providers/providers_feeds/post_swipe_up_provider.dart';
+import 'package:versify/providers/providers_home/theme_data_provider.dart';
+import 'package:versify/providers/providers_home/tutorial_provider.dart';
 import 'package:versify/screens/app_register/onboarding.dart';
 import 'package:versify/providers/providers_home/profile_data_provider.dart';
 import 'package:versify/screens/profile/settings/account_provider.dart';
-import 'package:versify/screens/profile/settings/account_settings.dart';
 import 'package:versify/services/json_storage/all_badges_json_storage.dart';
 import 'package:versify/services/firebase/auth.dart';
 import 'package:versify/services/firebase/database.dart';
 import 'package:versify/services/firebase/dynamic_links.dart';
 import 'package:versify/services/firebase/profile_database.dart';
+import 'package:versify/services/json_storage/shared_preferences.dart';
 import 'package:versify/services/json_storage/users_following_json_storage.dart';
-import 'package:versify/wrapper.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
+import 'package:versify/source/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'models/user_model.dart';
-import 'package:versify/providers/providers_home/tutorial_provider.dart';
-import 'package:versify/providers/providers_home/theme_data_provider.dart';
+import 'source/main_success_stream_wrapper.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  ansiColorDisabled = false;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(VersifyApp());
 }
@@ -46,11 +47,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
+  print(purplePen("Handling a background message: ${message.messageId}"));
 }
 
 class VersifyApp extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final Future<FirebaseApp> _initializeFirebaseApp = Firebase.initializeApp();
+  final ThemeProvider _themeProvider = ThemeProvider();
+  final MySharedPreferences _mySharedPreferences = MySharedPreferences();
 
   // This widget is the root of your application.
   @override
@@ -59,14 +62,6 @@ class VersifyApp extends StatelessWidget {
       SystemUiOverlay.top,
       SystemUiOverlay.bottom,
     ]);
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: Color(0xFFffdee9),
-    //     statusBarIconBrightness: Brightness.dark,
-    //     systemNavigationBarDividerColor: Colors.white,
-    //     systemNavigationBarColor: Color(0xFFffdee9),
-    //   ),
-    // );
 
     SystemChrome.setPreferredOrientations(
       [
@@ -74,6 +69,7 @@ class VersifyApp extends StatelessWidget {
         DeviceOrientation.portraitDown,
       ],
     );
+
     precacheImage(AssetImage("assets/images/logo_circle.png"), context);
     precacheImage(AssetImage("assets/images/purple_circle_v1.png"), context);
     precacheImage(AssetImage("assets/images/relatable.png"), context);
@@ -100,12 +96,19 @@ class VersifyApp extends StatelessWidget {
         context);
 
     return FutureBuilder(
-        future: _initialization,
+        future: Future.wait([
+          _initializeFirebaseApp,
+          _themeProvider.initPreferences(),
+          _mySharedPreferences.initMySharedPreferences(),
+        ]),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            print('Firebase Init ERROR');
+            print(redPen(
+                "main.dart | FutureBuilder futureinitializeFirebase FAILED with error: ${snapshot.error}"));
           }
           if (snapshot.connectionState == ConnectionState.done) {
+            print(purplePen("main.dart | initialized Firebase App!"));
+
             final PageController _followingPageViewController =
                 PageController();
             final PageController _forYouPageViewController = PageController();
@@ -120,9 +123,6 @@ class VersifyApp extends StatelessWidget {
 
             final FeedListProvider _feedListProvider =
                 FeedListProvider(viewsProvider: _allPostsProvider);
-
-            // final ProfileBlogsProvider _profileBlogsProvider =
-            //     ProfileBlogsProvider(viewsProvider: _profileAllPostsView);
 
             final BottomNavProvider _bottomNavProvider = BottomNavProvider();
             final PageViewProvider _pageViewProvider = PageViewProvider();
@@ -139,222 +139,139 @@ class VersifyApp extends StatelessWidget {
 
             final TutorialProvider _tutorialProvider = TutorialProvider();
 
-            final ThemeProvider _themeProvider = ThemeProvider();
-
-            final Wrapper wrapperScreen = Wrapper();
-
             final DynamicLinkProvider _dynamicLinkProvider =
                 DynamicLinkProvider();
+
+            final AccountSettingsProvider _accountSettingsProvider =
+                AccountSettingsProvider();
 
             JsonAllBadgesStorage _jsonAllBadgesStorage;
 
             EditProfileProvider _editProfileProvider;
-            AccountSettingsProvider _accountSettingsProvider;
 
             ProfileDataProvider _profileDataProvider;
 
             DatabaseService _firestoreDBService;
             ProfileDBService _profileDBService;
 
-            // Future<List<Feed>> Function() _getFeedDataMain; //define a function
-
-            void refreshFeeds() {
-              // setState(() => _getFeedDataMain = DatabaseService().getFeedData);
-            }
-
-            _themeProvider.initPreferences();
-
-            AuthService _authService = AuthService();
-            DynamicLinkService _dynamicLinkService = DynamicLinkService(
+            final AuthService _authService = AuthService();
+            final DynamicLinkService _dynamicLinkService = DynamicLinkService(
               authService: _authService,
               dynamicLinkProvider: _dynamicLinkProvider,
             );
 
             return StreamProvider<MyUser>.value(
-              initialData: null,
+              initialData: MyUser(streamStatus: StreamMyUserStatus.loading),
               value: _authService.user,
-              catchError: (context, error) => error,
+              catchError: (context, error) {
+                print(redPen(
+                    "main.dart StreamProvider<MyUser> | catchError: $error"));
+                return MyUser(streamStatus: StreamMyUserStatus.error);
+              },
+              // ignore: missing_return
               child: Consumer<MyUser>(builder: (context, user, _) {
-                print('Stream was triggered in MAIN.dart');
-                //parse anything to database service
-                //Rebuilds everytime user auth changes
-
+                print(purplePen("main.dart Consumer<MyUser> | Rebuild RAN!"));
+                // Rebuilds everytime user auth changes
                 // if user is different than before. Reset all feed and data required
-                if (user != null) {
-                  _firestoreDBService = DatabaseService(
-                    jsonFollowingStorage: _jsonFollowingStorage,
-                    feedListProvider: _feedListProvider,
-                    uid: user.userUID,
-                  );
 
-                  _profileDBService = ProfileDBService(
-                      // profileBlogsProvider: _profileBlogsProvider,
-                      uid: user.userUID);
+                switch (user.streamStatus) {
+                  case StreamMyUserStatus.error:
+                    // return an error page (Check connection and try again)
+                    return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        home: SplashLoading());
+                    break;
+                  case StreamMyUserStatus.success:
+                    print(greenPen(
+                        "StreamMyUserStatus | is SUCCESS - initializing providers..."));
+                    _firestoreDBService = DatabaseService(
+                      uid: user.userUID,
+                      jsonFollowingStorage: _jsonFollowingStorage,
+                      feedListProvider: _feedListProvider,
+                    );
 
-                  _editProfileProvider =
-                      EditProfileProvider(profileDB: _profileDBService);
+                    _profileDBService = ProfileDBService(uid: user.userUID);
 
-                  _accountSettingsProvider = AccountSettingsProvider();
+                    _editProfileProvider =
+                        EditProfileProvider(profileDB: _profileDBService);
+                    _profileDataProvider =
+                        ProfileDataProvider(authUserUID: user.userUID);
 
-                  _profileDataProvider =
-                      ProfileDataProvider(authUserUID: user.userUID);
-
-                  _jsonAllBadgesStorage =
-                      JsonAllBadgesStorage(uid: _authService.userUID);
-                } else {
-                  //not authenticated
-                  // initialize services for dynamicLink and tutorial
-                  _firestoreDBService = DatabaseService();
-                  _profileDBService = ProfileDBService();
+                    _jsonAllBadgesStorage =
+                        JsonAllBadgesStorage(uid: user.userUID);
+                    return MainSuccessStreamWrapper(
+                      authService: _authService,
+                      firestoreDBService: _firestoreDBService,
+                      profileDBService: _profileDBService,
+                      jsonFollowingStorage: _jsonFollowingStorage,
+                      jsonAllBadgesStorage: _jsonAllBadgesStorage,
+                      mySharedPreferences: _mySharedPreferences,
+                      themeProvider: _themeProvider,
+                      dynamicLinkProvider: _dynamicLinkProvider,
+                      tutorialProvider: _tutorialProvider,
+                      profileDataProvider: _profileDataProvider,
+                      editProfileProvider: _editProfileProvider,
+                      accountSettingsProvider: _accountSettingsProvider,
+                      postSwipeUpProvider: _postSwipeUpProvider,
+                      feedTypeProvider: _feedTypeProvider,
+                      contentBodyWidgets: _contentBodyWidgets,
+                      feedListProvider: _feedListProvider,
+                      allPostsProvider: _allPostsProvider,
+                      bottomNavProvider: _bottomNavProvider,
+                      pageViewProvider: _pageViewProvider,
+                      inputCommentsProvider: _inputCommentsProvider,
+                      dynamicLinkService: _dynamicLinkService,
+                    );
+                    break;
+                  case StreamMyUserStatus.none:
+                    // not authenticated
+                    // initialize services for dynamicLink and tutorial (later will be anon)
+                    print(greenPen(
+                        "StreamMyUserStatus | is NONE - not authenticated"));
+                    _firestoreDBService = DatabaseService();
+                    _profileDBService = ProfileDBService();
+                    return MainSuccessStreamWrapper(
+                      authService: _authService,
+                      firestoreDBService: _firestoreDBService,
+                      profileDBService: _profileDBService,
+                      jsonFollowingStorage: _jsonFollowingStorage,
+                      jsonAllBadgesStorage: _jsonAllBadgesStorage,
+                      mySharedPreferences: _mySharedPreferences,
+                      themeProvider: _themeProvider,
+                      dynamicLinkProvider: _dynamicLinkProvider,
+                      tutorialProvider: _tutorialProvider,
+                      profileDataProvider: _profileDataProvider,
+                      editProfileProvider: _editProfileProvider,
+                      accountSettingsProvider: _accountSettingsProvider,
+                      postSwipeUpProvider: _postSwipeUpProvider,
+                      feedTypeProvider: _feedTypeProvider,
+                      contentBodyWidgets: _contentBodyWidgets,
+                      feedListProvider: _feedListProvider,
+                      allPostsProvider: _allPostsProvider,
+                      bottomNavProvider: _bottomNavProvider,
+                      pageViewProvider: _pageViewProvider,
+                      inputCommentsProvider: _inputCommentsProvider,
+                      dynamicLinkService: _dynamicLinkService,
+                    );
+                    break;
+                  case StreamMyUserStatus.loading:
+                    print(greenPen(
+                        "StreamMyUserStatus | is LOADING - no myUser data yet"));
+                    return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        home: SplashLoading());
+                    break;
                 }
-                return MultiProvider(
-                  providers: [
-                    Provider<AuthService>.value(value: _authService),
-                    Provider<DatabaseService>.value(value: _firestoreDBService),
-                    Provider<ProfileDBService>.value(value: _profileDBService),
-                    Provider<JsonFollowingStorage>.value(
-                        value: _jsonFollowingStorage),
-                    Provider<JsonAllBadgesStorage>.value(
-                        value: _jsonAllBadgesStorage),
-
-                    ChangeNotifierProvider<ThemeProvider>.value(
-                        value: _themeProvider),
-                    ChangeNotifierProvider<DynamicLinkProvider>.value(
-                        value: _dynamicLinkProvider),
-                    ChangeNotifierProvider<TutorialProvider>.value(
-                        value: _tutorialProvider),
-                    ChangeNotifierProvider<ProfileDataProvider>.value(
-                        value: _profileDataProvider),
-                    ChangeNotifierProvider<EditProfileProvider>.value(
-                        value: _editProfileProvider),
-                    ChangeNotifierProvider<AccountSettingsProvider>.value(
-                        value: _accountSettingsProvider),
-                    ChangeNotifierProvider<PostSwipeUpProvider>.value(
-                        value: _postSwipeUpProvider),
-
-                    ChangeNotifierProvider<FeedTypeProvider>.value(
-                        value: _feedTypeProvider),
-                    ChangeNotifierProvider<ContentBodyProvider>.value(
-                        value: _contentBodyWidgets),
-                    ChangeNotifierProvider<FeedListProvider>.value(
-                        value: _feedListProvider),
-                    // ChangeNotifierProvider<ProfileBlogsProvider>.value(
-                    //     value: _profileBlogsProvider),
-                    ChangeNotifierProvider<AllPostsView>.value(
-                        value: _allPostsProvider),
-                    // ChangeNotifierProvider<ProfileAllPostsView>.value(
-                    //     value: _profileAllPostsView),
-                    ChangeNotifierProvider<BottomNavProvider>.value(
-                        value: _bottomNavProvider),
-                    ChangeNotifierProvider<PageViewProvider>.value(
-                        value: _pageViewProvider),
-                    ChangeNotifierProvider<InputCommentsProvider>.value(
-                        value: _inputCommentsProvider),
-                    Provider<RefreshFunc>.value(value: refreshFeeds),
-                    // FutureProvider<List<Feed>>.value(value: _getFeedDataMain()),
-                  ],
-                  child: OverlaySupport.global(
-                    child: Consumer<ThemeProvider>(
-                      builder: (context, state, _) {
-                        return MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          title: 'Versify',
-                          themeMode: state.currentTheme(),
-                          darkTheme: ThemeData(
-                            primaryColor: Color(0xFFcc99ff),
-                            accentColor: Color(0xFF33cccc),
-                            splashColor: Color(0xFFefdaff),
-                            textTheme: TextTheme(
-                                bodyText1: TextStyle(color: Colors.white),
-                                bodyText2: TextStyle(color: Colors.white)),
-                            fontFamily:
-                                GoogleFonts.getFont('Nunito Sans').fontFamily,
-                            canvasColor: Color(0xFF202020),
-                            // canvasColor: Color(0xFF0d090d),
-                            backgroundColor: Color(0xFF272727),
-                            // backgroundColor: Color(0xFF0d0a0c),
-                            dialogBackgroundColor: Colors.grey[900],
-                          ),
-                          theme: ThemeData(
-                            // colorScheme: ColorScheme.fromSwatch(),
-                            primaryColor: Color(0xFFcc99ff),
-                            accentColor: Color(0xFF33cccc),
-                            splashColor: Color(0xFFefdaff),
-                            fontFamily:
-                                GoogleFonts.getFont('Nunito Sans').fontFamily,
-                            canvasColor: Colors.white,
-                            backgroundColor: Colors.white,
-                            dialogBackgroundColor: Colors.white,
-                          ),
-                          builder: (context, child) {
-                            return MediaQuery(
-                              child: child,
-                              data: MediaQuery.of(context)
-                                  .copyWith(textScaleFactor: 1.0),
-                            );
-                          },
-                          home: VersifyHome(
-                              authService: _authService,
-                              dynamicLinkService: _dynamicLinkService),
-                          routes: {
-                            '/accountSettings': (context) => AccountSettings(),
-                            '/wrapper': (context) => wrapperScreen,
-                          },
-                        );
-                        // return MaterialApp(
-                        //   debugShowCheckedModeBanner: false,
-                        //   title: 'Versify',
-                        //   themeMode: state.currentTheme(),
-                        //   darkTheme: ThemeData(
-                        //     primaryColor: Color(0xFFff699F),
-                        //     accentColor: Color(0xFF61c0bf),
-                        //     splashColor: Color(0xFFffdee9),
-                        //     textTheme: TextTheme(
-                        //         bodyText1: TextStyle(color: Colors.white),
-                        //         bodyText2: TextStyle(color: Colors.white)),
-                        //     fontFamily:
-                        //         GoogleFonts.getFont('Nunito Sans').fontFamily,
-                        //     canvasColor: Color(0xFF0d090d),
-                        //     backgroundColor: Color(0xFF0d0a0c),
-                        //     dialogBackgroundColor: Colors.grey[900],
-                        //   ),
-                        //   theme: ThemeData(
-                        //     // colorScheme: ColorScheme.fromSwatch(),
-                        //     primaryColor: Color(0xFFff699F),
-                        //     accentColor: Color(0xFF61c0bf),
-                        //     splashColor: Color(0xFFffdee9),
-                        //     fontFamily:
-                        //         GoogleFonts.getFont('Nunito Sans').fontFamily,
-                        //     canvasColor: Colors.white,
-                        //     backgroundColor: Colors.white,
-                        //     dialogBackgroundColor: Colors.white,
-                        //   ),
-                        //   builder: (context, child) {
-                        //     return MediaQuery(
-                        //       child: child,
-                        //       data: MediaQuery.of(context)
-                        //           .copyWith(textScaleFactor: 1.0),
-                        //     );
-                        //   },
-                        //   home: VersifyHome(
-                        //       authService: _authService,
-                        //       dynamicLinkService: _dynamicLinkService),
-                        //   routes: {
-                        //     '/accountSettings': (context) => AccountSettings(),
-                        //     '/wrapper': (context) => wrapperScreen,
-                        //   },
-                        // );
-                      },
-                    ),
-                  ),
-                );
               }),
             );
+          } else {
+            print(purplePen("main.dart | initializing Firebase App LOADING"));
+
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: SplashLoading(),
+            );
           }
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: SplashLoading(),
-          );
         });
   }
 }
@@ -362,85 +279,91 @@ class VersifyApp extends StatelessWidget {
 class VersifyHome extends StatefulWidget {
   final AuthService authService;
   final DynamicLinkService dynamicLinkService;
-  VersifyHome({this.authService, this.dynamicLinkService});
+  final MySharedPreferences mySharedPreferences;
+
+  const VersifyHome(
+      {this.authService, this.dynamicLinkService, this.mySharedPreferences});
 
   @override
   _VersifyHomeState createState() => _VersifyHomeState();
 }
 
 class _VersifyHomeState extends State<VersifyHome> {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-  //providers
-  TutorialProvider _tutorialProvider;
+  // providers
+  TutorialProvider tutorialProvider;
 
+  // state
   bool _completedBoarding;
   bool _completedTutorial;
+  Future<void> _futureInitState;
 
-  Future<void> _saveDeviceToken() async {}
+  // functions
+  // Future<void> _saveDeviceToken() async {}
+  Future<void> myInitState() async {
+    // initState() Check OnBoarding and Tutorial SharedPreferences
+    print(purplePen("VersifyHome | myInitState RAN!"));
+    _completedBoarding = widget.mySharedPreferences.isCompletedBoarding;
+    _completedTutorial = widget.mySharedPreferences.isCompletedTutorial;
+
+    if (!_completedBoarding && !widget.authService.isUserAuthenticated) {
+      print(greenPen(
+          "VersifyHome | initState() User is new and unauthenticated - signing in anon()!"));
+      final ReturnValue result = await widget.authService.signInAnon();
+      if (!result.success) {
+        toast(result.value);
+      }
+    }
+
+    // update tutorialProvider after get SharedPreferences
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      tutorialProvider.setTutorialComplete(_completedTutorial);
+      // widget.authService.logout();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    print('Main App initState RAN!');
+    print(purplePen("VersifyHome | initState() RAN!"));
     if (Platform.isAndroid) {
-      _fcm.getToken().then((token) {
-        print('getToken | token is: $token');
+      firebaseMessaging.getToken().then((token) {
+        print(grayPen(
+            "VersifyHome | firebaseMessaging.getToken() with token: $token"));
       });
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('FirebaseMessaging | onMessage GOT');
-      print('Message Data: ${message.data}');
+      print(
+          purplePen("FirebaseMessaging | listen has message: ${message.data}"));
 
       if (message.notification != null) {
-        print('message also has a notification!');
-        print('Notification Title: ${message.notification.title}');
+        print(greenPen("FirebaseMessaging | Message has notification!"));
+        print(grayPen("Notification Title: ${message.notification.title}"));
 
         final SnackBar snackBar = SnackBar(
           content: Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(message.notification.title)),
+            padding: EdgeInsets.all(8),
+            child: Text(
+              message.notification.title,
+            ),
+          ),
         );
+
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        print(purplePen("FirebaseMessaging | snackBar SHOWN"));
       }
     });
 
-    //dynamic link
+    // initState() Dynamic Link
     widget.dynamicLinkService.handleDynamicLink(context);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      sharedPreferencesInit().then((result) {
-        if (result) {
-          //tutorial done
-          _tutorialProvider.updateTutorialComplete(true);
-        } else {
-          // tutorial not done
-          _tutorialProvider.updateTutorialComplete(false);
-        }
-        setState(() => _completedBoarding = result);
-      });
-    });
-
-    // widget.authService.logout();
-  }
-
-  void completeBoarding() {
-    setState(() => _completedBoarding = true);
-  }
-
-  void completePickTutorials() {
-    setState(() {});
+    _futureInitState = myInitState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("MAIN rebuilt!");
-    //tutorialProvider
-    _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
-    final ThemeProvider _themeProvider =
-        Provider.of<ThemeProvider>(context, listen: false);
+    tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
 
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
@@ -455,32 +378,20 @@ class _VersifyHomeState extends State<VersifyHome> {
       ),
     );
 
-    if (_completedBoarding != null) {
-      if (_completedBoarding == true) {
-        return Wrapper(completePickTutorials: completePickTutorials);
-      } else {
-        return OnBoarding(completeBoarding: completeBoarding);
-        //return boarding
-      }
-    } else {
-      return SplashLoading();
-    }
-  }
-
-  Future<bool> sharedPreferencesInit() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await deletePrefs(prefs);
-    bool result = prefs.getBool('completedBoarding') ?? false;
-
-    return result;
-  }
-
-  Future<void> deletePrefs(SharedPreferences prefs) async {
-    // prefs.remove('seenDocs');
-    // prefs.remove('sortedFollowingList');
-    prefs.remove('lastUpdated');
-    prefs.remove('deviceLatestBadgeTs');
-    //then get last updated from firestore
+    return FutureBuilder(
+      future: _futureInitState,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (_completedBoarding) {
+            return Wrapper();
+          } else {
+            return OnBoarding();
+          }
+        } else {
+          return SplashLoading();
+        }
+      },
+    );
   }
 }
 

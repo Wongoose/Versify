@@ -7,7 +7,7 @@ import 'package:versify/screens/profile/widgets_profile/profile_page_view.dart';
 import 'package:versify/providers/providers_home/profile_pageview_provider.dart';
 import 'package:versify/providers/providers_home/visit_profile_provider.dart';
 import 'package:versify/services/firebase/profile_database.dart';
-import 'package:versify/shared/helper/helper_widgets.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

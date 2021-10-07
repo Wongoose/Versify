@@ -5,6 +5,7 @@ import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/providers_home/profile_blogs_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/screens/profile/settings/account_privacy.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 
 enum ReportUser {
   offTopic,
@@ -312,17 +313,18 @@ class ProfileDBService {
     prefs.setStringList('sortedFollowingList', _followingList);
   }
 
-  Future<MyUser> whetherHasAccount(String userID) {
+  Future<MyUser> whetherUserHasFirestoreAccount(String userID) {
     try {
-      print('WhetherhasAccount RAN | $userID');
+      print(
+          purplePen("whetherUserHasFirestoreAccount | RAN with uid: $userID"));
 
       return usersPrivateCollection.doc(userID).get().then((doc) {
-        print('whetherHasAccountRAN | document exists is: ' +
+        print("whetherHasAccountRAN | document exists is: " +
             doc.exists.toString());
         print(
-            'whetherHasAccountRan | doc[phone] is: ' + doc['phone'].toString());
+            "whetherHasAccountRan | doc[phone] is: " + doc["phone"].toString());
         print(
-            'whetherHasAccountRan | doc[email] is: ' + doc['email'].toString());
+            "whetherHasAccountRan | doc[email] is: " + doc["email"].toString());
 
         if (doc.exists) {
           return MyUser(
