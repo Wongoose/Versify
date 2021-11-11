@@ -9,6 +9,7 @@ import 'package:versify/screens/blogs_feed/widgets_feeds/feed_list_wrapper.dart'
 import 'package:versify/screens/blogs_feed/widgets_feeds/post_feed_widget.dart';
 import 'package:versify/services/firebase/database.dart';
 import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -203,7 +204,6 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
     // _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _feedListProvider = Provider.of<FeedListProvider>(context, listen: true);
-    _refresh = Provider.of<RefreshFunc>(context);
     _bottomNavProvider = Provider.of<BottomNavProvider>(context, listen: false);
     _allPostsView = Provider.of<AllPostsView>(context, listen: false);
     // final List<Feed> feeds = Provider.of<List<Feed>>(context);
@@ -268,13 +268,11 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
 
             return SmartRefresher(
               key: PageStorageKey<String>('forYouFeedList'),
-              enablePullDown: true,
               enablePullUp: true,
               header: MaterialClassicHeader(
                 height: 40,
                 color: _theme.primaryColor,
                 backgroundColor: Colors.white,
-                distance: 50,
               ),
               physics: AlwaysScrollableScrollPhysics(),
               reverse: false,
@@ -457,18 +455,13 @@ class _ForYouFeedListState extends State<ForYouFeedList> {
   //   );
   // });
 
-  void _onLoading() async {
+  void _onLoading() {
     // monitor network fetch
     // if failed,use loadFailed(),if no data return,use LoadNodata()
-    if (_refresh != null) {
-      print('Loading Ran');
+    print(purplePen("forYouFeedList | _onLoading() RAN!"));
+    loadForYou();
 
-      await loadForYou();
-
-      // _refresh();
-
-      _refreshController.loadComplete();
-    }
+    _refreshController.loadComplete();
   }
 
   Future<void> _onRefresh() async {

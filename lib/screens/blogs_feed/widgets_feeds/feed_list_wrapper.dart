@@ -12,7 +12,7 @@ enum FeedType { following, forYou }
 class FeedListWrapper extends StatefulWidget {
   final ScrollController followingController;
   final ScrollController forYouController;
-  FeedListWrapper({this.followingController, this.forYouController});
+  const FeedListWrapper({this.followingController, this.forYouController});
 
   @override
   _FeedListWrapperState createState() => _FeedListWrapperState();

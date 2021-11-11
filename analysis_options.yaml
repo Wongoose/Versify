@@ -1,8 +1,8 @@
-# include: package:lint/analysis_options.yaml
+include: package:lint/analysis_options.yaml
 
-# linter:
-#   rules:
-#     prefer_const_constructors: false
-#     avoid_print: false
-#     argument_type_not_assignable: false
-#     undefined_operator: false
+linter:
+  rules:
+    prefer_const_constructors: false
+    avoid_print: false
+    argument_type_not_assignable: false
+    undefined_operator: false

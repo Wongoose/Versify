@@ -31,13 +31,11 @@ class AuthService {
   User get getCurrentUser => _auth.currentUser;
 
   Future<String> getCurrentSignInProvider() async {
-    return _auth.currentUser
-        .getIdTokenResult()
-        .then((IdTokenResult tokenResult) {
-      print('currentSignInProvider | is: ' + tokenResult?.signInProvider);
-      currentSignInProvider = tokenResult.signInProvider;
-      return tokenResult.signInProvider;
-    });
+    final IdTokenResult idTokenResult =
+        await _auth.currentUser.getIdTokenResult();
+
+    print("currentSignInProvider | is: ${idTokenResult?.signInProvider}");
+    return currentSignInProvider = idTokenResult.signInProvider;
   }
 
   void updateAuthMyUser(MyUser user) {
@@ -99,6 +97,7 @@ class AuthService {
       print('Stream User Changes | email: ${firebaseUser.email ?? 'is null'}');
       authUser = firebaseUser;
       userUID = firebaseUser.uid;
+
       // this.myUser = MyUser(
       //   userUID: firebaseUser.uid,
       //   phoneNumber: firebaseUser.phoneNumber,

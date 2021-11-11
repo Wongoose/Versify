@@ -1,46 +1,51 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:versify/models/feed_model.dart';
-import 'package:versify/providers/providers_feeds/all_posts_provider.dart';
-import 'package:versify/providers/providers_feeds/feed_type_provider.dart';
-import 'package:versify/providers/providers_home/theme_data_provider.dart';
-import 'package:versify/providers/providers_home/tutorial_provider.dart';
-import 'package:versify/screens/blogs_feed/widgets_feeds/feed_list_wrapper.dart';
-import 'package:versify/screens/blogs_feed/widgets_feeds/following_page_view.dart';
-import 'package:versify/screens/blogs_feed/widgets_feeds/for_you_page_view.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:versify/services/others/notification.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:google_fonts/google_fonts.dart";
+import "package:shimmer_animation/shimmer_animation.dart";
+import "package:versify/models/feed_model.dart";
+import "package:versify/providers/providers_feeds/all_posts_provider.dart";
+import "package:versify/providers/providers_feeds/feed_type_provider.dart";
+import "package:versify/providers/providers_home/theme_data_provider.dart";
+import "package:versify/screens/blogs_feed/widgets_feeds/feed_list_wrapper.dart";
+import "package:versify/screens/blogs_feed/widgets_feeds/following_page_view.dart";
+import "package:versify/screens/blogs_feed/widgets_feeds/for_you_page_view.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:provider/provider.dart";
+import "package:versify/services/others/notification.dart";
 
-class PostFeedWidget extends StatelessWidget {
+class PostFeedWidget extends StatefulWidget {
   final int index;
   final Feed feed;
   final bool isWelcome;
   final bool isGrey;
 
-  PostFeedWidget({this.index, this.feed, this.isWelcome, this.isGrey});
+  const PostFeedWidget({this.index, this.feed, this.isWelcome, this.isGrey});
 
+  @override
+  _PostFeedWidgetState createState() => _PostFeedWidgetState();
+}
+
+class _PostFeedWidgetState extends State<PostFeedWidget> {
   final List<Map<String, Color>> _colorScheme = [
     {
       //purple
-      'primary': Color(0xFFcc99ff),
-      'secondary': Color(0xFFefdaff),
+      "primary": Color(0xFFcc99ff),
+      "secondary": Color(0xFFefdaff),
     },
     {
       //biege
-      'primary': Color(0xFFffcc99),
-      'secondary': Color(0xFFffefda),
+      "primary": Color(0xFFffcc99),
+      "secondary": Color(0xFFffefda),
     },
     {
       //blue
-      'primary': Color(0xFF99ccff),
-      'secondary': Color(0xFFdaeaff),
+      "primary": Color(0xFF99ccff),
+      "secondary": Color(0xFFdaeaff),
     },
   ];
-  String _content = '';
+
+  String _content = "";
 
   void showVerseDialog({BuildContext context, int colorIndex}) {
     showDialog(
@@ -54,23 +59,22 @@ class PostFeedWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Hero(
-                  tag: 'featuredVerse$index',
+                  tag: "featuredVerse${widget.index}",
                   child: Container(
                     height: 30,
                     child: FittedBox(
-                      alignment: Alignment.center,
                       child: Container(
                         padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: _colorScheme[colorIndex]['secondary'],
+                          color: _colorScheme[colorIndex]["secondary"],
                         ),
                         child: Text(
-                          feed.featuredTopic ?? 'Featured',
+                          widget.feed.featuredTopic ?? "Featured",
                           style: TextStyle(
                             fontFamily:
-                                GoogleFonts.getFont('Nunito Sans').fontFamily,
+                                GoogleFonts.getFont("Nunito Sans").fontFamily,
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
@@ -88,7 +92,7 @@ class PostFeedWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(
-                        width: 2, color: _colorScheme[colorIndex]['primary']),
+                        width: 2, color: _colorScheme[colorIndex]["primary"]),
                   ),
                 ),
                 child: Padding(
@@ -101,11 +105,10 @@ class PostFeedWidget extends StatelessWidget {
                         child: SizedBox(
                           child: SingleChildScrollView(
                             child: Text(
-                              feed.featuredValue ?? '. . .',
+                              widget.feed.featuredValue ?? ". . .",
                               overflow: TextOverflow.fade,
-                              maxLines: null,
                               style: TextStyle(
-                                fontFamily: GoogleFonts.getFont('Philosopher')
+                                fontFamily: GoogleFonts.getFont("Philosopher")
                                     .fontFamily,
                                 fontSize: 14,
                                 height: 1.5,
@@ -126,7 +129,7 @@ class PostFeedWidget extends StatelessWidget {
               //   alignment: Alignment.center,
               //   width: 40,
               //   child: Text(
-              //     'If you go back now, you will lose all your writing data.',
+              //     "If you go back now, you will lose all your writing data.",
               //     textAlign: TextAlign.center,
               //     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               //   ),
@@ -139,7 +142,7 @@ class PostFeedWidget extends StatelessWidget {
               //     materialTapTargetSize: MaterialTapTargetSize.padded,
               //     onPressed: () {},
               //     child: Text(
-              //       'Discard',
+              //       "Discard",
               //       style: TextStyle(
               //         color: Colors.red,
               //         fontSize: 16,
@@ -157,7 +160,7 @@ class PostFeedWidget extends StatelessWidget {
               //       Navigator.pop(context);
               //     },
               //     child: Text(
-              //       'Keep',
+              //       "Keep",
               //       style: TextStyle(
               //         color: Colors.blue,
               //         fontSize: 16,
@@ -172,38 +175,26 @@ class PostFeedWidget extends StatelessWidget {
 
   void contentFromMap() {
     //should shift up to listViewBuilder
-    print('content From Map Called');
+    print("content From Map Called");
 
-    feed.listMapContent.forEach((mapContent) {
-      // print(mapContent);
-      switch (mapContent['type']) {
-        case 'quote':
-          break;
-        case 'text':
-          // print(mapContent['value'].toString());
-          _content += mapContent['value'].toString() + '\n';
-          break;
-        case '':
-          break;
+    widget.feed.listMapContent.forEach((mapContent) {
+      if (mapContent["type"] == "text") {
+        _content += "${mapContent["value"]}\n";
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData _theme = Theme.of(context);
-    final TutorialProvider _tutorialProvider =
-        Provider.of<TutorialProvider>(context, listen: false);
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
-
-    FeedTypeProvider _feedTypeProvider =
+    final FeedTypeProvider _feedTypeProvider =
         Provider.of<FeedTypeProvider>(context, listen: false);
-    FollowingPageView followingPageView =
+    final FollowingPageView followingPageView =
         Provider.of<FollowingPageView>(context, listen: false);
-    ForYouPageView forYouPageView =
+    final ForYouPageView forYouPageView =
         Provider.of<ForYouPageView>(context, listen: false);
-    AllPostsView allPostView =
+    final AllPostsView allPostView =
         Provider.of<AllPostsView>(context, listen: false);
 
     contentFromMap();
@@ -212,10 +203,10 @@ class PostFeedWidget extends StatelessWidget {
         _themeProvider.isDark ? Colors.white12 : Colors.grey[400];
 
     int _colorIndex = 0;
-    if (index > 2) {
-      _colorIndex = index % 3;
+    if (widget.index > 2) {
+      _colorIndex = widget.index % 3;
     } else {
-      _colorIndex = index;
+      _colorIndex = widget.index;
     }
 
     return Padding(
@@ -226,9 +217,9 @@ class PostFeedWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 if (_feedTypeProvider.currentFeedType == FeedType.forYou) {
-                  allPostView.forYouOnClick(index);
+                  allPostView.forYouOnClick(widget.index);
                 } else {
-                  allPostView.followingOnClick(index);
+                  allPostView.followingOnClick(widget.index);
                 }
                 Navigator.push(
                   context,
@@ -240,7 +231,7 @@ class PostFeedWidget extends StatelessWidget {
                     }
                   }),
                 );
-                if (isWelcome ?? false) {
+                if (widget.isWelcome ?? false) {
                   NotificationOverlay().welcomePostNotification();
                 }
               },
@@ -249,7 +240,7 @@ class PostFeedWidget extends StatelessWidget {
                 interval: Duration(milliseconds: 1000),
                 color: _themeProvider.isDark ? Colors.white : Colors.pink,
                 direction: ShimmerDirection.fromLTRB(),
-                enabled: isWelcome,
+                enabled: widget.isWelcome,
                 child: Container(
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
@@ -257,9 +248,9 @@ class PostFeedWidget extends StatelessWidget {
                     border: Border(
                       left: BorderSide(
                           width: 2,
-                          color: isGrey
+                          color: widget.isGrey
                               ? newGrey
-                              : _colorScheme[_colorIndex]['primary']),
+                              : _colorScheme[_colorIndex]["primary"]),
                     ),
                   ),
                   child: Padding(
@@ -280,16 +271,16 @@ class PostFeedWidget extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     gradient: LinearGradient(
                                       colors: [
-                                        isGrey
+                                        widget.isGrey
                                             ? newGrey
                                             : _colorScheme[_colorIndex]
-                                                ['primary'],
-                                        isGrey
+                                                ["primary"],
+                                        widget.isGrey
                                             ? newGrey
                                             : _colorScheme[_colorIndex][
                                                 _themeProvider.isDark
-                                                    ? 'secondary'
-                                                    : 'primary'],
+                                                    ? "secondary"
+                                                    : "primary"],
                                       ],
                                       stops: [0, 0.9],
                                     ),
@@ -304,7 +295,7 @@ class PostFeedWidget extends StatelessWidget {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: CachedNetworkImage(
-                                        color: isGrey
+                                        color: widget.isGrey
                                             ? Theme.of(context).backgroundColor
                                             : null,
                                         colorBlendMode: BlendMode.color,
@@ -312,8 +303,8 @@ class PostFeedWidget extends StatelessWidget {
                                         fit: BoxFit.cover,
                                         useOldImageOnUrlChange: false,
                                         // cacheKey: userProfile.userUID,
-                                        imageUrl: feed.profileImageUrl ??
-                                            'https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d',
+                                        imageUrl: widget.feed.profileImageUrl ??
+                                            "https://firebasestorage.googleapis.com/v0/b/goconnect-745e7.appspot.com/o/images%2Ffashion.png?alt=media&token=f2e8484d-6874-420c-9401-615063e53b8d",
                                         // progressIndicatorBuilder:
                                         //     (context, url, downloadProgress) {
                                         //   return SizedBox(
@@ -337,15 +328,15 @@ class PostFeedWidget extends StatelessWidget {
                                 SizedBox(width: 10),
                                 Container(
                                   child: Text(
-                                    feed.username,
+                                    widget.feed.username,
                                     style: TextStyle(
-                                      color: isGrey
+                                      color: widget.isGrey
                                           ? newGrey
                                           : _themeProvider.primaryTextColor
                                               .withOpacity(0.87),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Nunito',
+                                      fontFamily: "Nunito",
                                       // letterSpacing: 0.5,
                                     ),
                                   ),
@@ -355,9 +346,9 @@ class PostFeedWidget extends StatelessWidget {
                             Container(
                               child: Icon(
                                 Icons.verified_user,
-                                color: isGrey
+                                color: widget.isGrey
                                     ? newGrey
-                                    : _colorScheme[_colorIndex]['primary'],
+                                    : _colorScheme[_colorIndex]["primary"],
                                 size: 15,
                               ),
                             )
@@ -376,21 +367,21 @@ class PostFeedWidget extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      if (feed.featuredTopic != null) {
+                                      if (widget.feed.featuredTopic != null) {
                                         showVerseDialog(
                                             context: context,
                                             colorIndex: _colorIndex);
                                       }
                                     },
                                     child: Hero(
-                                      tag: 'featuredVerse$index',
+                                      tag: "featuredVerse${widget.index}",
                                       child: Shimmer(
                                         duration: Duration(milliseconds: 500),
                                         interval: Duration(milliseconds: 500),
                                         color: _themeProvider.isDark
                                             ? Colors.white
                                             : Colors.pink,
-                                        enabled: isWelcome,
+                                        enabled: widget.isWelcome,
                                         direction: ShimmerDirection.fromLTRB(),
                                         child: FittedBox(
                                           alignment: Alignment.center,
@@ -399,37 +390,37 @@ class PostFeedWidget extends StatelessWidget {
                                                 EdgeInsets.fromLTRB(8, 5, 8, 5),
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                              color: isGrey || isWelcome
+                                              color: widget.isGrey || widget.isWelcome
                                                   ? Colors.transparent
                                                   : _colorScheme[_colorIndex]
-                                                      ['secondary'],
+                                                      ["secondary"],
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               border: Border.all(
                                                 // color: _theme.primaryColor,
-                                                color: isGrey
+                                                color: widget.isGrey
                                                     ? newGrey
                                                     : _colorScheme[_colorIndex][
-                                                        isWelcome
-                                                            ? 'primary'
-                                                            : 'secondary'],
+                                                        widget.isWelcome
+                                                            ? "primary"
+                                                            : "secondary"],
                                               ),
                                             ),
                                             child: Text(
-                                              feed.featuredTopic ??
-                                                  'Blog singles',
+                                              widget.feed.featuredTopic ??
+                                                  "Blog singles",
                                               style: TextStyle(
                                                 fontFamily: GoogleFonts.getFont(
-                                                        'Nunito Sans')
+                                                        "Nunito Sans")
                                                     .fontFamily,
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w400,
-                                                color: isGrey
+                                                color: widget.isGrey
                                                     ? newGrey
-                                                    : isWelcome
+                                                    : widget.isWelcome
                                                         ? _colorScheme[
                                                                 _colorIndex]
-                                                            ['primary']
+                                                            ["primary"]
                                                         : Colors.black
                                                             .withOpacity(0.8),
                                               ),
@@ -443,11 +434,11 @@ class PostFeedWidget extends StatelessWidget {
                                   Expanded(
                                     child: SizedBox(
                                       child: Text(
-                                        feed.featuredValue ?? '. . .',
+                                        widget.feed.featuredValue ?? ". . .",
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           fontFamily:
-                                              GoogleFonts.getFont('Nunito Sans')
+                                              GoogleFonts.getFont("Nunito Sans")
                                                   .fontFamily,
                                           fontSize: 12,
                                           fontWeight: FontWeight.normal,
@@ -464,15 +455,15 @@ class PostFeedWidget extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: Text(
-                                  feed.title,
+                                  widget.feed.title,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: isGrey
+                                    color: widget.isGrey
                                         ? newGrey
                                         : _themeProvider.primaryTextColor,
                                     fontWeight: FontWeight.w700,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: "Nunito",
                                     fontSize: 18,
                                     letterSpacing: -0.3,
                                   ),
@@ -482,12 +473,12 @@ class PostFeedWidget extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: Text(
-                                  _content.replaceAll('\n', ' . '),
+                                  _content.replaceAll("\n", " . "),
                                   style: TextStyle(
                                     fontFamily:
-                                        GoogleFonts.getFont('Nunito Sans')
+                                        GoogleFonts.getFont("Nunito Sans")
                                             .fontFamily,
-                                    color: isGrey
+                                    color: widget.isGrey
                                         ? newGrey
                                         : _themeProvider.primaryTextColor,
                                     fontSize: 13,
@@ -502,16 +493,16 @@ class PostFeedWidget extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: Text(
-                                  'Read more...',
+                                  "Read more...",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w200,
                                     fontSize: 12,
-                                    color: isGrey
+                                    color: widget.isGrey
                                         ? newGrey
                                         : _colorScheme[_colorIndex][
                                             _themeProvider.isDark
-                                                ? 'secondary'
-                                                : 'primary'],
+                                                ? "secondary"
+                                                : "primary"],
                                   ),
                                 ),
                               ),
@@ -534,17 +525,17 @@ class PostFeedWidget extends StatelessWidget {
                               //                       BorderSide(
                               //                           color: _colorScheme[
                               //                                       _colorIndex]
-                              //                                   ['secondary']
+                              //                                   ["secondary"]
                               //                               .withOpacity(0.7))),
                               //                   borderRadius:
                               //                       BorderRadius.circular(5),
-                              //                   // color: _colorScheme[_colorIndex]['secondary']
+                              //                   // color: _colorScheme[_colorIndex]["secondary"]
                               //                   //     .withOpacity(0.3),
                               //                 ),
                               //                 child: Text(
                               //                   individualTag
                               //                           .toString()
-                              //                           .contains('#')
+                              //                           .contains("#")
                               //                       ? individualTag
                               //                           .toString()
                               //                           .replaceRange(
@@ -555,15 +546,15 @@ class PostFeedWidget extends StatelessWidget {
                               //                               individualTag
                               //                                   .toString()
                               //                                   .length,
-                              //                               '')
-                              //                       : '#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, '')}',
+                              //                               "")
+                              //                       : "#${individualTag.toString().replaceRange(individualTag.toString().length - 2, individualTag.toString().length, "")}",
                               //                   style: TextStyle(
-                              //                       fontFamily: GoogleFonts.getFont('Nunito Sans').fontFamily,
+                              //                       fontFamily: GoogleFonts.getFont("Nunito Sans").fontFamily,
                               //                       fontSize: 11,
                               //                       // color: Colors.white,
                               //                       color:
                               //                           _colorScheme[_colorIndex]
-                              //                                   ['secondary']
+                              //                                   ["secondary"]
                               //                               .withOpacity(0.7)),
                               //                 ),
                               //               ),

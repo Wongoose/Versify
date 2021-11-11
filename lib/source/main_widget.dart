@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:versify/main.dart';
+import 'package:versify/source/main_home.dart';
 import 'package:versify/providers/providers_home/dynamic_link_provider.dart';
 import 'package:versify/providers/providers_home/profile_data_provider.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';

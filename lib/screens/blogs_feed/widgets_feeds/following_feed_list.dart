@@ -198,7 +198,6 @@ class _FollowingFeedListState extends State<FollowingFeedList> {
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
     // _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _feedListProvider = Provider.of<FeedListProvider>(context, listen: true);
-    _refresh = Provider.of<RefreshFunc>(context);
     _bottomNavProvider = Provider.of<BottomNavProvider>(context, listen: false);
     _allPostsView = Provider.of<AllPostsView>(context, listen: false);
 

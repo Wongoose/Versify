@@ -23,21 +23,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 import 'package:versify/shared/widgets/widgets_all_loading.dart';
 import 'package:versify/services/others/notification.dart';
 
 class HomeWrapper extends StatefulWidget {
-  // RefreshFunc _refresh;
   @override
   _HomeWrapperState createState() => _HomeWrapperState();
 }
 
 class _HomeWrapperState extends State<HomeWrapper> {
-  final bottomNavController = PageController(initialPage: 1);
-  final ScrollController _forYouController =
-      ScrollController(initialScrollOffset: 0.0, keepScrollOffset: true);
-  final ScrollController _followingController =
-      ScrollController(initialScrollOffset: 0.0, keepScrollOffset: true);
+  final PageController bottomNavController = PageController(initialPage: 1);
+  final ScrollController _forYouController = ScrollController();
+  final ScrollController _followingController = ScrollController();
 
   DatabaseService _databaseService;
   Future _future;
@@ -57,21 +55,26 @@ class _HomeWrapperState extends State<HomeWrapper> {
     forYouPageView = ForYouPageView();
     followingPageView = FollowingPageView();
 
-    _future =
-        _databaseService != null ? _databaseService.firestoreInit() : null;
+    if (_databaseService != null) {
+      _future = _databaseService.firestoreInit();
+    } else {
+      _future = null;
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _feedTypeProvider.initAddPageViews(forYouPageView, followingPageView);
-      // userProfile = _profileDBService.getProfileData(uid: _databaseService.uid);
     });
-    // myScroll();
   }
 
+  @override
   Widget build(BuildContext context) {
     _feedTypeProvider = Provider.of<FeedTypeProvider>(context, listen: false);
     _databaseService = Provider.of<DatabaseService>(context, listen: false);
-    _future =
-        _databaseService != null ? _databaseService.firestoreInit() : null;
+    if (_databaseService != null) {
+      _future = _databaseService.firestoreInit();
+    } else {
+      _future = null;
+    }
 
     final PageController _profilePageViewController = PageController();
 
@@ -87,7 +90,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
     // final TutorialProvider _tutorialProvider =
     //     Provider.of<TutorialProvider>(context, listen: false);
 
-    print('HomeWidget Built!!! WOIII');
+    print(purplePen("HomeWrapper | INITIALIZED"));
 
     return FutureBuilder(
       future: _future,
@@ -121,38 +124,30 @@ class _HomeWrapperState extends State<HomeWrapper> {
                   backgroundColor: Theme.of(context).backgroundColor,
                   appBar: PreferredSize(
                     preferredSize: Size.fromHeight(kToolbarHeight),
-                    child: Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: [
-                        Consumer<PageViewProvider>(
-                          builder: (context, pageViewProvider, _) {
-                            return GestureDetector(
-                              onTap: () async {
-                               
-                                if (_feedTypeProvider.currentFeedType ==
-                                    FeedType.following) {
-                                  await _followingController.animateTo(0.0,
-                                      curve: Curves.fastLinearToSlowEaseIn,
-                                      duration: Duration(milliseconds: 1200));
-                                } else {
-                                  await _forYouController.animateTo(0.0,
-                                      curve: Curves.fastLinearToSlowEaseIn,
-                                      duration: Duration(milliseconds: 1200));
-                                }
-                              },
-                              child: pageViewProvider.pageIndex == 1
-                                  ? FeedListAppBar()
-                                  : HomeAppBar(
-                                      pageViewProvider: pageViewProvider),
-                            );
+                    child: Consumer<PageViewProvider>(
+                      builder: (context, pageViewProvider, _) {
+                        return GestureDetector(
+                          onTap: () async {
+                            if (_feedTypeProvider.currentFeedType ==
+                                FeedType.following) {
+                              await _followingController.animateTo(0.0,
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  duration: Duration(milliseconds: 1200));
+                            } else {
+                              await _forYouController.animateTo(0.0,
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  duration: Duration(milliseconds: 1200));
+                            }
                           },
-                        ),
-                      ],
+                          child: pageViewProvider.pageIndex == 1
+                              ? FeedListAppBar()
+                              : HomeAppBar(pageViewProvider: pageViewProvider),
+                        );
+                      },
                     ),
                   ),
                   body: Stack(
                     alignment: Alignment.bottomCenter,
-                    fit: StackFit.loose,
                     children: [
                       Container(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -170,8 +165,6 @@ class _HomeWrapperState extends State<HomeWrapper> {
                               onPageChanged: (index) =>
                                   pageViewProvider.pageChanged(index),
                               allowImplicitScrolling: true,
-                              scrollDirection: Axis.horizontal,
-                              pageSnapping: true,
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(0),
@@ -183,27 +176,27 @@ class _HomeWrapperState extends State<HomeWrapper> {
                                   forYouController: _forYouController,
                                 ),
                                 // AnonUserProfile(),
-                                _authService.isUserAnonymous
-                                    ? AnonUserProfile()
-                                    : Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                        child: ChangeNotifierProvider<
-                                            VisitProfileProvider>(
-                                          create: (_) => VisitProfileProvider(),
-                                          child: MainProfilePage(
-                                            bottomNavController:
-                                                bottomNavController,
-                                            visitProfile: false,
-                                            userID: _authService.myUser.userUID,
-                                            profileBlogsProvider:
-                                                _profileBlogsProvider,
-                                            profileAllPostsView:
-                                                _profileAllPostsView,
-                                            bottomNavVisible: true,
-                                          ),
-                                        ),
+                                if (_authService.isUserAnonymous)
+                                  AnonUserProfile()
+                                else
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    child: ChangeNotifierProvider<
+                                        VisitProfileProvider>(
+                                      create: (_) => VisitProfileProvider(),
+                                      child: MainProfilePage(
+                                        bottomNavController:
+                                            bottomNavController,
+                                        visitProfile: false,
+                                        userID: _authService.myUser.userUID,
+                                        profileBlogsProvider:
+                                            _profileBlogsProvider,
+                                        profileAllPostsView:
+                                            _profileAllPostsView,
+                                        bottomNavVisible: true,
                                       ),
+                                    ),
+                                  ),
                               ],
                             );
                           },
@@ -243,8 +236,7 @@ class HomeAppBar extends StatelessWidget {
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
 
-    print('HomeApp Bar BUILT with _authService uid: ' +
-        _authService.myUser.userUID);
+    print('HomeApp Bar BUILT with _authService uid: ${_authService.myUser.userUID}');
 
     return AppBar(
       elevation: 1,

@@ -54,9 +54,10 @@ class DatabaseService {
   final CollectionReference reportAProblemCollection =
       FirebaseFirestore.instance.collection('reportProblem');
 
+  // EDIT with new refresh algorithm
   Future firestoreInit() async {
     print('firestore iNIT RAN!');
-    return await getSeenDocs().then((value) async {
+    return  getSeenDocs().then((value) async {
       await getLastUpdated();
       return value;
     });

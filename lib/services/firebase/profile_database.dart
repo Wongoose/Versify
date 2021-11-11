@@ -362,11 +362,11 @@ class ProfileDBService {
     }
   }
 
-  Future<void> updatedValidatedPhoneAndEmail(
+  Future<void> updateSyncedPhoneAndEmail(
       {String phone, String email}) async {
     try {
-      await usersPrivateCollection.doc(this.uid).update({
-        'phone': phone ?? null,
+      await usersPrivateCollection.doc(uid).update({
+        'phone': phone,
         'email': email,
       });
     } catch (err) {
