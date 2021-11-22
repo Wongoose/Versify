@@ -18,14 +18,18 @@ class UsernameValidatingTextField extends StatefulWidget {
   });
 
   @override
-  _UsernameValidatingTextFieldState createState() => _UsernameValidatingTextFieldState();
+  _UsernameValidatingTextFieldState createState() =>
+      _UsernameValidatingTextFieldState();
 }
 
-class _UsernameValidatingTextFieldState extends State<UsernameValidatingTextField> {
+class _UsernameValidatingTextFieldState
+    extends State<UsernameValidatingTextField> {
   Timer _debounce;
   String _text;
   bool _validUsername = true;
   bool _validLoading = false;
+
+  AuthService _authService;
 
   Future<void> _checkForValidUsername(String username) async {
     DatabaseService().checkIfValidUsername(username).then((isValid) {
@@ -42,7 +46,7 @@ class _UsernameValidatingTextFieldState extends State<UsernameValidatingTextFiel
     });
   }
 
-  _onUsernameChanged(String username) {
+  void _onUsernameChanged(String username) {
     setState(() {
       _validUsername = false;
       _validLoading = true;
@@ -54,7 +58,7 @@ class _UsernameValidatingTextFieldState extends State<UsernameValidatingTextFiel
 
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(seconds: 1), () {
-      if (username != '') {
+      if (username != "" && username != (_authService.myUser?.username ?? "")) {
         _checkForValidUsername(username);
       }
     });
@@ -64,7 +68,7 @@ class _UsernameValidatingTextFieldState extends State<UsernameValidatingTextFiel
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
-    final AuthService _authService = Provider.of<AuthService>(context);
+    _authService = Provider.of<AuthService>(context);
     return TextFormField(
       autofocus: true,
       controller: widget.usernameController,
@@ -81,17 +85,18 @@ class _UsernameValidatingTextFieldState extends State<UsernameValidatingTextFiel
           _text = newVal;
         } else {
           Vibration.vibrate(duration: 200);
-          widget.usernameController.value = new TextEditingValue(
+          widget.usernameController.value = TextEditingValue(
               text: _text,
-              selection: new TextSelection(
+              selection: TextSelection(
                   baseOffset: 20,
                   extentOffset: 20,
                   affinity: TextAffinity.downstream,
                   isDirectional: false),
-              composing: new TextRange(start: 0, end: 20));
+              composing: TextRange(start: 0, end: 20));
 
           widget.usernameController.text = _text;
         }
+
         _onUsernameChanged(newVal);
       },
       buildCounter: (_, {currentLength, maxLength, isFocused}) {
@@ -118,32 +123,26 @@ class _UsernameValidatingTextFieldState extends State<UsernameValidatingTextFiel
         prefixText: '@ ',
         suffix: Visibility(
           visible: !_validLoading,
-          child: _text == _authService.myUser.username
+          replacement: SizedBox(
+            height: 15,
+            width: 15,
+            child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              strokeWidth: 0.5,
+            ),
+          ),
+          child: _validUsername
               ? Icon(
                   FontAwesomeIcons.checkCircle,
                   size: 18,
                   color: Colors.tealAccent[400],
                 )
-              : _validUsername
-                  ? Icon(
-                      FontAwesomeIcons.checkCircle,
-                      size: 18,
-                      color: Colors.tealAccent[400],
-                    )
-                  : Icon(
-                      Icons.cancel_outlined,
-                      size: 20,
-                      color: Colors.redAccent,
-                    ),
-          replacement: SizedBox(
-            height: 15,
-            width: 15,
-            child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor),
-              strokeWidth: 0.5,
-            ),
-          ),
+              : Icon(
+                  Icons.cancel_outlined,
+                  size: 20,
+                  color: Colors.redAccent,
+                ),
         ),
         prefixStyle:
             TextStyle(color: _themeProvider.secondaryTextColor, fontSize: 15),

@@ -217,7 +217,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                 : Container(),
                             SizedBox(width: 10),
                             Text(
-                              _authService.getCurrentUser.email,
+                              _authService.getCurrentUser.email ?? "none",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: _themeProvider.secondaryTextColor,

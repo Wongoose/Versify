@@ -42,7 +42,7 @@ class _EditRowPageState extends State<EditRowPage> {
       {@required bool validUsername, @required bool isSetState}) {
     _validUsername = validUsername;
     //does not consider isSetState
-    
+
     // if (isSetState) {
     //   setState(() {});
     // }
@@ -111,7 +111,8 @@ class _EditRowPageState extends State<EditRowPage> {
         _appBarTitle = widget.socialLink;
         _textTitle = 'Change link';
         _maxLength = 1000;
-        _textController.text = _editingUser.socialLinks[widget.socialLink];
+        _textController.text =
+            _editingUser.socialLinks[widget.socialLink].toString();
         break;
     }
 
