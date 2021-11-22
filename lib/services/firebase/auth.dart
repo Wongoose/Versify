@@ -51,7 +51,7 @@ class AuthService {
         if (result.user.uid != null) {
           print('User signed In Anon!');
           this.authUser = result.user;
-          MyUser _user = MyUser(
+          final MyUser _user = MyUser(
             userUID: result.user.uid,
             username: result.user.uid,
             description: null,
@@ -194,10 +194,8 @@ class AuthService {
       String errorCode = "";
       String errorMessage = '';
 
-      print('ERROR _auth.createUserWithEmailAndPassword | err message: ' +
-          err.message.toString() +
-          '\n err code is: ' +
-          err.code);
+      print(
+          "ERROR _auth.createUserWithEmailAndPassword | err message: ${err.message}\n err code is: ${err.code}");
 
       switch (err.code.toString()) {
         case "email-already-in-use":
@@ -214,47 +212,50 @@ class AuthService {
     return returnVal;
   }
 
-  Future<User> signInWithGoogle({bool newUser}) async {
-    // FirebaseAuth _auth = FirebaseAuth.instance;
-    User _user;
-    GoogleSignIn _googleSignIn = GoogleSignIn();
-    // bool _isSignIn = await _googleSignIn.isSignedIn();
-    if (newUser) {
-      _googleSignIn.signOut();
-    }
-    GoogleSignInAccount googleSignInAccount =
-        await _googleSignIn.signIn().catchError((onError) {
-      print('ERROR message is: $onError');
-    });
-    GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    UserCredential authResult =
-        await _auth.signInWithCredential(credential).catchError((err) {
-      switch (err.code.toString()) {
-        case "":
-          break;
+  Future<ReturnValue> signInWithGoogle({bool newUser}) async {
+    try {
+      print(purplePen("signInWithGoogle | STARTED!"));
+      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      // bool _isSignIn = await _googleSignIn.isSignedIn();
+      if (newUser) {
+        await _googleSignIn.signOut();
       }
-    });
+      final GoogleSignInAccount googleSignInAccount =
+          await _googleSignIn.signIn();
 
-    _user = authResult.user;
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
 
-    assert(!_user.isAnonymous);
-    assert(await _user.getIdToken() != null);
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    print("GoogleSignIn | User\'s Name: ${_user.displayName}");
-    print("GoogleSignin | User\'s Email ${_user.email}");
+      // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
 
-    return _user;
+      final UserCredential authResult =
+          await _auth.signInWithCredential(credential);
+
+      final User user = authResult.user;
+
+      // FOR DEBUGGING
+      assert(!user.isAnonymous);
+      assert(await user.getIdToken() != null);
+
+      print(greenPen("signInWithGoogle | SUCCESSFUL!"));
+      print(grayPen("Google account display name: ${user.displayName}"));
+      print(grayPen("Googl eaccount email ${user.email}"));
+
+      return ReturnValue(true, user.email);
+    } catch (err) {
+      print(redPen("signInWithGoogle | FAILED with catch error: $err"));
+      return ReturnValue(false,
+          "Something went wrong while signing in with Google. Please try again.");
+    }
   }
 
   Future<void> resetPasswordWithEmail(String email) async {
-    print('resetPasswordWithEmail | RAN: ' + email);
+    print('resetPasswordWithEmail | RAN: $email');
     _auth.sendPasswordResetEmail(email: email);
   }
 
@@ -279,7 +280,7 @@ class AuthService {
       });
     } catch (err) {
       if (err == "too-many-requests") {
-        toast(err.message);
+        toast(err.toString());
       }
       return false;
     }

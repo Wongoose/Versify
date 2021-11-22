@@ -233,8 +233,8 @@ class _SignInAuthState extends State<SignInAuth> {
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
                                       setState(() {
-                                         loading = true;
-                                         doneFirstValidation = true;
+                                        loading = true;
+                                        doneFirstValidation = true;
                                       });
                                       final ReturnValue result =
                                           await _authService
@@ -244,16 +244,13 @@ class _SignInAuthState extends State<SignInAuth> {
                                                   passwordTextController.text
                                                       .trim());
 
-                                      loading = false;
+                                      setState(() => loading = false);
                                       if (result.success) {
-                                        setState(() {
-                                          toast(
-                                              "Logged in to ${result.value}");
-                                          Navigator.popUntil(
-                                              context,
-                                              ModalRoute.withName(
-                                                  Navigator.defaultRouteName));
-                                        });
+                                        toast("Logged in to ${result.value}");
+                                        Navigator.popUntil(
+                                            context,
+                                            ModalRoute.withName(
+                                                Navigator.defaultRouteName));
                                       } else {
                                         setState(() {
                                           toast("Could not sign in account");
@@ -287,7 +284,7 @@ class _SignInAuthState extends State<SignInAuth> {
                       SizedBox(height: 40),
                       Align(
                         child: Text(
-                          "Or, login with...",
+                          "Or, sign in with...",
                           style: TextStyle(
                               fontFamily: "Nunito Sans",
                               color: _themeProvider.secondaryTextColor,
@@ -335,20 +332,25 @@ class _SignInAuthState extends State<SignInAuth> {
                                           .withOpacity(0.20)),
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 setState(() => loading = true);
 
-                                _authService
-                                    .signInWithGoogle(newUser: true)
-                                    .then((user) {
-                                  if (user != null) {
-                                    Navigator.popUntil(
-                                        context,
-                                        ModalRoute.withName(
-                                            Navigator.defaultRouteName));
-                                  }
-                                  setState(() => loading = false);
-                                });
+                                final ReturnValue result = await _authService
+                                    .signInWithGoogle(newUser: true);
+
+                                setState(() => loading = false);
+                                if (result.success) {
+                                  toast("Logged in to ${result.value}");
+                                  Navigator.popUntil(
+                                      context,
+                                      ModalRoute.withName(
+                                          Navigator.defaultRouteName));
+                                } else {
+                                  setState(() {
+                                    toast("Failed to sign in with Google");
+                                    error = result.value;
+                                  });
+                                }
                               },
                               child: Icon(
                                 FontAwesomeIcons.google,
