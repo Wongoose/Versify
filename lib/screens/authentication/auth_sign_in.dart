@@ -71,7 +71,7 @@ class _SignInAuthState extends State<SignInAuth> {
                                     color: _themeProvider.primaryTextColor,
                                     fontSize: 39,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: "Nunito",
+                                    fontFamily: "Nunito Sans",
                                     height: 1.1),
                               ),
                             ]),
@@ -88,7 +88,7 @@ class _SignInAuthState extends State<SignInAuth> {
                               color: _themeProvider.primaryTextColor,
                               fontSize: 28,
                               fontWeight: FontWeight.w300,
-                              fontFamily: "Nunito",
+                              fontFamily: "Nunito Sans",
                               height: 1.1),
                         ),
                       ),
@@ -102,7 +102,7 @@ class _SignInAuthState extends State<SignInAuth> {
                               color: _themeProvider.primaryTextColor,
                               fontSize: 28,
                               fontWeight: FontWeight.w300,
-                              fontFamily: "Nunito",
+                              fontFamily: "Nunito Sans",
                               height: 1.1),
                         ),
                       ),
@@ -262,7 +262,7 @@ class _SignInAuthState extends State<SignInAuth> {
                                       //       blurRadius: 10,
                                       //       offset: Offset(0.5, 0.5))
                                       // ],
-                                      fontFamily: "Nunito",
+                                      fontFamily: "Nunito Sans",
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
                                       fontSize: 16,
@@ -277,7 +277,7 @@ class _SignInAuthState extends State<SignInAuth> {
                         child: Text(
                           "Or, login with...",
                           style: TextStyle(
-                              fontFamily: "Nunito",
+                              fontFamily: "Nunito Sans",
                               color: _themeProvider.secondaryTextColor,
                               fontWeight: FontWeight.w400,
                               fontSize: 14),
@@ -357,7 +357,7 @@ class _SignInAuthState extends State<SignInAuth> {
                             Text(
                               "Don't have an account?",
                               style: TextStyle(
-                                  fontFamily: "Nunito",
+                                  fontFamily: "Nunito Sans",
                                   color: _themeProvider.secondaryTextColor,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 14),
@@ -368,7 +368,7 @@ class _SignInAuthState extends State<SignInAuth> {
                               child: Text(
                                 "Register",
                                 style: TextStyle(
-                                    fontFamily: "Nunito",
+                                    fontFamily: "Nunito Sans",
                                     color: _themeProvider.primaryTextColor,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14),
