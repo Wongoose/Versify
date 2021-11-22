@@ -250,13 +250,13 @@ class _SignUpAuthState extends State<SignUpAuth> {
                           ),
                           prefixIcon: Icon(
                             Icons.mail_outline_rounded,
-                            color: _themeProvider.primaryTextColor,
+                            color: _themeProvider.secondaryTextColor,
                           ),
                           fillColor: Theme.of(context).backgroundColor,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide: BorderSide(
-                              color: _themeProvider.primaryTextColor,
+                              color: _themeProvider.secondaryTextColor,
                               width: 1,
                             ),
                           ),
@@ -294,13 +294,13 @@ class _SignUpAuthState extends State<SignUpAuth> {
                           ),
                           prefixIcon: Icon(
                             Icons.lock_outline_rounded,
-                            color: _themeProvider.primaryTextColor,
+                            color: _themeProvider.secondaryTextColor,
                           ),
                           fillColor: Theme.of(context).backgroundColor,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide: BorderSide(
-                              color: _themeProvider.primaryTextColor,
+                              color: _themeProvider.secondaryTextColor,
                               width: 1,
                             ),
                           ),

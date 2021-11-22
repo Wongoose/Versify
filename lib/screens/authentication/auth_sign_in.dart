@@ -78,7 +78,7 @@ class _SignInAuthState extends State<SignInAuth> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 13),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -92,7 +92,7 @@ class _SignInAuthState extends State<SignInAuth> {
                               height: 1.1),
                         ),
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 8),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -254,7 +254,7 @@ class _SignInAuthState extends State<SignInAuth> {
                                     }
                                   },
                                   child: Text(
-                                    "Login with email",
+                                    "Sign In",
                                     style: TextStyle(
                                       // shadows: [
                                       //   Shadow(
