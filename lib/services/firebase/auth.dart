@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:versify/services/firebase/dynamic_links.dart';
 import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -216,8 +219,8 @@ class AuthService {
     try {
       print(purplePen("signInWithGoogle | STARTED!"));
       final GoogleSignIn _googleSignIn = GoogleSignIn();
-      // bool _isSignIn = await _googleSignIn.isSignedIn();
-      if (newUser) {
+      final bool signedIn = await _googleSignIn.isSignedIn();
+      if (newUser && signedIn) {
         await _googleSignIn.signOut();
       }
       final GoogleSignInAccount googleSignInAccount =
@@ -251,6 +254,74 @@ class AuthService {
       print(redPen("signInWithGoogle | FAILED with catch error: $err"));
       return ReturnValue(false,
           "Something went wrong while signing in with Google. Please try again.");
+    }
+  }
+
+  Future<ReturnValue> signInWithFacebook({bool newUser}) async {
+    try {
+      print(purplePen("signInWithFacebook | STARTED!"));
+
+      final FacebookLogin fbLogin = FacebookLogin();
+
+      final bool loggedIn = await fbLogin.isLoggedIn;
+      if (newUser && loggedIn) {
+        await fbLogin.logOut();
+      }
+
+      final FacebookLoginResult result = await fbLogin.logIn(["email"]);
+
+      switch (result.status) {
+        case FacebookLoginStatus.loggedIn:
+          final String token = result.accessToken.token;
+          final response = await http.get(Uri.parse(
+              "https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token"));
+
+          final profile = jsonDecode(response.body);
+          final AuthCredential credential =
+              FacebookAuthProvider.credential(token);
+          final UserCredential authResult =
+              await _auth.signInWithCredential(credential);
+
+          final User user = authResult.user;
+
+          // FOR DEBUGGING
+          assert(!user.isAnonymous);
+          assert(await user.getIdToken() != null);
+
+          print(greenPen("signInWithFacebook | SUCCESSFUL!"));
+          print(grayPen(profile.toString()));
+
+          return ReturnValue(true,
+              profile["email"]?.toString() ?? profile["name"]?.toString());
+          break;
+        case FacebookLoginStatus.cancelledByUser:
+          print(purplePen("signInWithFacebook | CANCELLED by user!"));
+          return ReturnValue(false, "");
+
+          break;
+        case FacebookLoginStatus.error:
+          print(redPen(
+              "signInWithFacebook | FAILED when logging in: ${result.errorMessage}"));
+          return ReturnValue(false, result.errorMessage);
+          break;
+
+        default:
+          print(redPen("signInWithFacebook | DEFAULTED when logging in."));
+          return ReturnValue(false,
+              "Something went wrong while signing in with Facebook. Please try again.");
+      }
+    } on FirebaseAuthException catch (err) {
+      print(redPen("signInWithFacebook | FAILED with catch error: $err"));
+      switch (err.code) {
+        case "account-exists-with-different-credential":
+          return ReturnValue(false,
+              "This email address is already linked to an existing account. Try signing in using the Google or Email option");
+          break;
+        default:
+          return ReturnValue(false,
+              "Something went wrong while signing in with Facebook. Please try again.");
+          break;
+      }
     }
   }
 

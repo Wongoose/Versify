@@ -309,7 +309,27 @@ class _SignInAuthState extends State<SignInAuth> {
                                           .withOpacity(0.20)),
                                 ),
                               ),
-                              onPressed: () => {},
+                              onPressed: () async {
+                                setState(() => loading = true);
+
+                                final ReturnValue result = await _authService
+                                    .signInWithFacebook(newUser: true);
+
+                                setState(() => loading = false);
+
+                                if (result.success) {
+                                  toast("Logged in to ${result.value}");
+                                  Navigator.popUntil(
+                                      context,
+                                      ModalRoute.withName(
+                                          Navigator.defaultRouteName));
+                                } else {
+                                  setState(() {
+                                    toast("Failed to sign in with Facebook");
+                                    error = result.value;
+                                  });
+                                }
+                              },
                               child: Icon(
                                 FontAwesomeIcons.facebookF,
                                 color: Colors.blue[400],
