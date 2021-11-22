@@ -116,16 +116,17 @@ class AuthService {
     }
   }
 
-  Future<dynamic> signInWithEmailPassword(String email, password) async {
+  Future<ReturnValue> signInWithEmailPassword(
+      String email, String password) async {
     try {
-      return await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((result) {
-        return result != null ? _userFromFB(result.user) : false;
-      });
-    } on FirebaseAuthException catch (e) {
-      print('Sign In error! ' + e.toString());
-      return false;
+      print(purplePen("signInWithEmailPassword | STARTED!"));
+      final UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      print(greenPen("signInWithEmailPassword | SUCCESSFUL!"));
+      return ReturnValue(true, result.user.email);
+    } on FirebaseAuthException catch (err) {
+      print(redPen("signInWithEmailPassword | FAILED with catch error: $err"));
+      return ReturnValue(false, err.message);
     }
   }
 

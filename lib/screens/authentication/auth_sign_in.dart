@@ -1,5 +1,7 @@
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import "package:versify/services/firebase/auth.dart";
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
 import "package:versify/shared/widgets/widgets_all_loading.dart";
 import "package:versify/shared/helper/helper_constants.dart";
@@ -17,12 +19,12 @@ class SignInAuth extends StatefulWidget {
 
 class _SignInAuthState extends State<SignInAuth> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailTextController = TextEditingController();
+  final TextEditingController passwordTextController = TextEditingController();
   // final AuthService _auth = AuthService();
 
   bool loading = false;
-
-  String email = "";
-  String password = "";
+  bool doneFirstValidation = false;
   String error = "";
 
   @override
@@ -86,7 +88,7 @@ class _SignInAuthState extends State<SignInAuth> {
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: _themeProvider.primaryTextColor,
-                              fontSize: 28,
+                              fontSize: 27,
                               fontWeight: FontWeight.w300,
                               fontFamily: "Nunito Sans",
                               height: 1.1),
@@ -100,20 +102,23 @@ class _SignInAuthState extends State<SignInAuth> {
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: _themeProvider.primaryTextColor,
-                              fontSize: 28,
+                              fontSize: 27,
                               fontWeight: FontWeight.w300,
                               fontFamily: "Nunito Sans",
                               height: 1.1),
                         ),
                       ),
                       SizedBox(height: 30),
-                      SizedBox(height: error != "" ? 10 : 0),
+                      // SizedBox(height: error != "" ? 10 : 0),
                       if (error != "")
-                        Text(
-                          error,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 14,
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(2, 10, 15, 10),
+                          child: Text(
+                            error,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                            ),
                           ),
                         )
                       else
@@ -135,12 +140,13 @@ class _SignInAuthState extends State<SignInAuth> {
                             // ),
                             // SizedBox(height: 5),
                             TextFormField(
+                              controller: emailTextController,
                               scrollPadding: EdgeInsets.fromLTRB(0, 0, 0, 80),
                               style: TextStyle(
                                 color: _themeProvider.primaryTextColor,
                               ),
                               decoration: textInputDecoration.copyWith(
-                                hintText: 'Email',
+                                hintText: "Email",
                                 hintStyle: TextStyle(
                                   color: _themeProvider.secondaryTextColor,
                                 ),
@@ -154,16 +160,18 @@ class _SignInAuthState extends State<SignInAuth> {
                                       BorderRadius.all(Radius.circular(10)),
                                   borderSide: BorderSide(
                                     color: _themeProvider.secondaryTextColor,
-                                    width: 1,
                                   ),
                                 ),
                               ),
                               validator: (val) =>
-                                  val.isEmpty ? "Enter an email" : null,
+                                  val.isEmpty ? "Email cannot be empty." : null,
                               onChanged: (val) {
-                                setState(() => email = val);
+                                if (doneFirstValidation) {
+                                  _formKey.currentState.validate();
+                                }
                               },
                             ),
+
                             SizedBox(height: 25),
                             // Text(
                             //   " Password",
@@ -176,12 +184,13 @@ class _SignInAuthState extends State<SignInAuth> {
                             // ),
                             // SizedBox(height: 5),
                             TextFormField(
+                              controller: passwordTextController,
                               scrollPadding: EdgeInsets.fromLTRB(0, 0, 0, 80),
                               style: TextStyle(
                                 color: _themeProvider.primaryTextColor,
                               ),
                               decoration: textInputDecoration.copyWith(
-                                hintText: 'Password',
+                                hintText: "Password",
                                 hintStyle: TextStyle(
                                   color: _themeProvider.secondaryTextColor,
                                 ),
@@ -195,23 +204,21 @@ class _SignInAuthState extends State<SignInAuth> {
                                       BorderRadius.all(Radius.circular(10)),
                                   borderSide: BorderSide(
                                     color: _themeProvider.secondaryTextColor,
-                                    width: 1,
                                   ),
                                 ),
                               ),
-                              validator: (val) => val.length < 6
-                                  ? "Enter a password 6+ chars long"
-                                  : null, //return null when it is valid
                               obscureText: true,
+                              validator: (val) => val.length < 6
+                                  ? "Password must have 6 or more characters."
+                                  : null, //return null when it is valid
                               onChanged: (val) {
-                                setState(() => password = val);
+                                if (doneFirstValidation) {
+                                  _formKey.currentState.validate();
+                                }
                               },
                             ),
-                            SizedBox(height: 20),
-
-                            SizedBox(height: 20),
-
-                            Container(
+                            SizedBox(height: 30),
+                            SizedBox(
                               height: 65,
                               width: MediaQuery.of(context).size.width,
                               // margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -225,32 +232,37 @@ class _SignInAuthState extends State<SignInAuth> {
                                   ),
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
-                                      setState(() => loading = true);
-                                      await _authService
-                                          .signInWithEmailPassword(
-                                              email.trim(), password.trim())
-                                          .then((res) {
-                                        if (res != false) {
-                                          setState(() {
-                                            loading = false;
-                                            print(
-                                                "Auth Screen result is equal TRUE");
-                                            Navigator.popUntil(
-                                                context,
-                                                ModalRoute.withName(Navigator
-                                                    .defaultRouteName));
-                                          });
-                                          // setState(() {});
-                                        } else if (res == false) {
-                                          print(
-                                              "Auth Screen result is equal false");
-                                          setState(() {
-                                            error =
-                                                "Could not sign in with those credentials";
-                                            loading = false;
-                                          });
-                                        }
+                                      setState(() {
+                                         loading = true;
+                                         doneFirstValidation = true;
                                       });
+                                      final ReturnValue result =
+                                          await _authService
+                                              .signInWithEmailPassword(
+                                                  emailTextController.text
+                                                      .trim(),
+                                                  passwordTextController.text
+                                                      .trim());
+
+                                      loading = false;
+                                      if (result.success) {
+                                        setState(() {
+                                          toast(
+                                              "Logged in to ${result.value}");
+                                          Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  Navigator.defaultRouteName));
+                                        });
+                                      } else {
+                                        setState(() {
+                                          toast("Could not sign in account");
+                                          error = result.value;
+                                        });
+                                      }
+                                    } else {
+                                      setState(
+                                          () => doneFirstValidation = true);
                                     }
                                   },
                                   child: Text(
@@ -388,7 +400,7 @@ class _SignInAuthState extends State<SignInAuth> {
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: _themeProvider.primaryTextColor.withOpacity(0.8),
+              color: Theme.of(context).backgroundColor.withOpacity(0.8),
               alignment: Alignment.center,
               child: Loading(),
             ),
