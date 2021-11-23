@@ -48,7 +48,6 @@ class _SignInAuthState extends State<SignInAuth> {
             color: _themeProvider.primaryTextColor,
           ),
         ),
-        actions: [],
       ),
       body: Stack(
         children: [

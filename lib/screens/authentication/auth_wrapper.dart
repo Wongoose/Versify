@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:versify/screens/authentication/auth_create_account.dart';
 
 import 'auth_sign_in.dart';
 import 'auth_sign_up.dart';
@@ -31,9 +32,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    print('authWrapper: ' + signIn.toString());
     return signIn
         ? SignInAuth(toggleSignIn: toggleSignIn)
-        : SignUpAuth(toggleSignIn: toggleSignIn);
+        : AuthCreateAccount(toggleSignIn: toggleSignIn);
+    // : SignUpAuth(toggleSignIn: toggleSignIn);
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
@@ -335,6 +336,30 @@ class AuthService {
     } on FirebaseAuthException catch (err) {
       print(redPen("resetPasswordWithEmail | FAILED with catch error: $err"));
       return ReturnValue(false, err.message);
+    }
+  }
+
+  Future<ReturnValue> verifyCreateAccountEmail(String email) async {
+    try {
+      print(purplePen("verifyCreateAccountEmail | STARTED!"));
+      final String dynamicLinkUrl =
+          await DynamicLinkService().createNewAccEmailDynamicLink(email);
+
+      final ActionCodeSettings settings = ActionCodeSettings(
+        url: dynamicLinkUrl,
+        androidInstallApp: false,
+        handleCodeInApp: false,
+        androidPackageName: 'com.wongoose.versify',
+        dynamicLinkDomain: 'versify.wongoose.com',
+      );
+      // await _auth.sendSignInLinkToEmail(email: email, actionCodeSettings: settings.)
+      await _auth.currentUser.sendEmailVerification(settings);
+
+      print(greenPen("verifyCreateAccountEmail | SUCCESS!"));
+      return ReturnValue(true, email);
+    } catch (err) {
+      print(redPen("verifyCreateAccountEmail | FAILED with catch error: $err"));
+      return ReturnValue(false, "Could not create account");
     }
   }
 

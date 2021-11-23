@@ -48,7 +48,7 @@ class DynamicLinkService {
     Uri deepLink;
     if (data?.link.toString().contains('email')) {
       print('_handleDynamicLink | data contains "email"');
-      String link =
+      final String link =
           data?.link.toString().split('link=')[1].replaceAll('%3D', '=');
 
       print('_handleDynamicLink | split link as string: $link');
@@ -69,14 +69,16 @@ class DynamicLinkService {
     if (deepLink != null) {
       print('_handleDynamicLink | deepLink is: $deepLink');
 
-      bool isProfile = deepLink.pathSegments.contains('profile');
-      bool isPost = deepLink.pathSegments.contains('post');
-      bool isResetEmail = deepLink.pathSegments.contains('reset-email');
-      bool isVerifyEmail = deepLink.pathSegments.contains('verify-email');
+      final bool isProfile = deepLink.pathSegments.contains('profile');
+      final bool isPost = deepLink.pathSegments.contains('post');
+      final bool isResetEmail = deepLink.pathSegments.contains('reset-email');
+      final bool isVerifyEmail = deepLink.pathSegments.contains('verify-email');
+      final bool isCreateEmail = deepLink.pathSegments.contains('create-email');
       print('isProfile | is: ${isProfile.toString()}');
       print('isPost | is: ${isPost.toString()}');
       print('isResetEmail | is: ${isResetEmail.toString()}');
       print('isVerifyEmail | is: ${isVerifyEmail.toString()}');
+      print('isCreateEmail | is: ${isCreateEmail.toString()}');
 
       if (!authService.isUserAuthenticated) {
         //not signed in
@@ -89,6 +91,7 @@ class DynamicLinkService {
             isPost: isPost,
             isProfile: isProfile,
             isResetEmail: isResetEmail,
+            isCreateEmail: isCreateEmail,
             isVerifyEmail: isVerifyEmail,
             context: context,
             onPopExitApp: onPopExitApp,
@@ -106,7 +109,7 @@ class DynamicLinkService {
             //no firestore documents (set authService.myUser before Wrapper())
             authService.hasFirestoreDocuments = false;
 
-            MyUser _user = MyUser(
+            final MyUser _user = MyUser(
               userUID: authService.authUser.uid,
               username: authService.authUser.uid,
               description: null,
@@ -132,6 +135,7 @@ class DynamicLinkService {
             isPost: isPost,
             isProfile: isProfile,
             isResetEmail: isResetEmail,
+            isCreateEmail: isCreateEmail,
             isVerifyEmail: isVerifyEmail,
             context: context,
             onPopExitApp: onPopExitApp,
@@ -151,11 +155,12 @@ class DynamicLinkService {
     bool isProfile,
     bool isResetEmail,
     bool isVerifyEmail,
+    bool isCreateEmail,
     BuildContext context,
     bool onPopExitApp,
   }) {
     if (isPost) {
-      String postId = deepLink.queryParameters['post-id'];
+      final String postId = deepLink.queryParameters['post-id'];
       if (postId != null) {
         //Navigate to post screen EXAMPLE
         Navigator.of(context).push(MaterialPageRoute(
@@ -167,7 +172,7 @@ class DynamicLinkService {
         print('isPost | Post ID is: $postId');
       }
     } else if (isProfile) {
-      String userId = deepLink.queryParameters['user-id'];
+      final String userId = deepLink.queryParameters['user-id'];
       if (userId != null) {
         //Navigate to user screen EXAMPLE
         Navigator.of(context).push(MaterialPageRoute(
@@ -176,7 +181,7 @@ class DynamicLinkService {
         print('isProfile | Profile ID is: $userId');
       }
     } else if (isResetEmail) {
-      String newEmail = deepLink.queryParameters['new-email'];
+      final String newEmail = deepLink.queryParameters['new-email'];
       print('Dynamic Link handled newEmail: $newEmail');
       toast(
         'Email verified. Please login again with $newEmail.',
@@ -189,9 +194,12 @@ class DynamicLinkService {
             .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       });
     } else if (isVerifyEmail) {
-      String email = deepLink.queryParameters['email'];
+      final String email = deepLink.queryParameters['email'];
       toast('Your email $email has been verified.');
       authService.userReload();
+    } else if (isCreateEmail) {
+      // DO SOMETHIMG
+      toast("Is create email");
     }
   }
 
@@ -257,6 +265,25 @@ class DynamicLinkService {
     // final Uri shortUrl = shortDynamicLink.shortUrl;
 
     print('createEmailDynamicLink | dynamicShortUrl: ${deepLink.toString()}');
+
+    // return deepLink.toString();
+    return deepLink.toString();
+  }
+
+  Future<String> createNewAccEmailDynamicLink(String email) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://versify.wongoose.com/',
+      link: Uri.parse('https://versifyapp.com/create-email?email=$email'),
+      androidParameters: AndroidParameters(packageName: 'com.wongoose.versify'),
+    );
+
+    // final ShortDynamicLink shortDynamicLink = await parameters.buildShortLink();
+    final Uri deepLink = await parameters.buildUrl();
+
+    // final Uri shortUrl = shortDynamicLink.shortUrl;
+
+    print(
+        'createNewAccountVerifyEmailDynamicLink | dynamicShortUrl: ${deepLink.toString()}');
 
     // return deepLink.toString();
     return deepLink.toString();

@@ -106,7 +106,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
               SizedBox(
                 width: 270,
                 child: Text(
-                  'Welcome, let\'s get you signed in!',
+                  'Welcome, let\'s get you started!',
                   maxLines: null,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -139,7 +139,7 @@ class _OnBoardingNewUserState extends State<OnBoardingNewUser> {
                                       ))),
                         },
                     child: Text(
-                      "SIGN UP",
+                      "GET STARTED",
                       style: TextStyle(
                         // shadows: [
                         //   Shadow(
