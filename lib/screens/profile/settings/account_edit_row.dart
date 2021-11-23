@@ -1,6 +1,8 @@
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/providers_home/edit_profile_provider.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
+import 'package:versify/screens/authentication/auth_screen_reset_password.dart';
 import 'package:versify/screens/profile/settings/account_provider.dart';
 import 'package:versify/screens/profile/settings/account_verification.dart';
 import 'package:versify/services/firebase/auth.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:versify/shared/helper/helper_functions.dart';
 
 enum AccountEditType { phone, google, email, password }
 
@@ -107,6 +110,9 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                 backgroundColor: Theme.of(context).backgroundColor,
                 primary: Theme.of(context).backgroundColor),
+            onPressed: () {
+              Navigator.pop(context);
+            },
             child: Text(
               'Back',
               style: TextStyle(
@@ -115,78 +121,75 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
           ),
           actions: [
-            widget.editType == AccountEditType.password ||
-                    widget.editType == AccountEditType.google
-                ? Container()
-                : TextButton(
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      backgroundColor: Theme.of(context).backgroundColor,
-                      primary: Theme.of(context).backgroundColor,
-                    ),
-                    child: Consumer<AccountSettingsProvider>(
-                      builder: (context, state, _) => Text(
-                        'Next',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: state.hasChanges
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).primaryColor.withOpacity(0.4),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      // _authService.myUser.username = _textController.text;
-                      // updateFunc();
-                      if (_accountSettingsProvider.hasChanges) {
-                        bool _needVerification;
+            if (widget.editType == AccountEditType.password ||
+                widget.editType == AccountEditType.google)
+              Container()
+            else
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  primary: Theme.of(context).backgroundColor,
+                ),
+                onPressed: () {
+                  // _authService.myUser.username = _textController.text;
+                  // updateFunc();
+                  if (_accountSettingsProvider.hasChanges) {
+                    bool _needVerification;
 
-                        switch (widget.editType) {
-                          case AccountEditType.phone:
-                            _needVerification = true;
-                            // _editingUser.phoneNumber = _textController.text.trim();
-                            break;
-                          case AccountEditType.email:
-                            _needVerification = true;
-                            // _editingUser.email = _textController.text.trim();
-                            break;
-                          case AccountEditType.password:
-                            // TODO: Handle this case.
-                            break;
-                          case AccountEditType.google:
-                            // TODO: Handle this case.
-                            break;
-                        }
-                        // _accountSettingsProvider.updateProfileData();
-                        if (_needVerification) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AccountVerification(
-                                  accEditType: widget.editType,
-                                  resendingToken: _resendingToken,
-                                  parsedText: _textController.text,
-                                  verificationSuccessFunc: () {
-                                    _accountSettingsProvider
-                                        .updateProfileData();
+                    switch (widget.editType) {
+                      case AccountEditType.phone:
+                        _needVerification = true;
+                        // _editingUser.phoneNumber = _textController.text.trim();
+                        break;
+                      case AccountEditType.email:
+                        _needVerification = true;
+                        // _editingUser.email = _textController.text.trim();
+                        break;
+                      case AccountEditType.password:
+                        // TODO: Handle this case.
+                        break;
+                      case AccountEditType.google:
+                        // TODO: Handle this case.
+                        break;
+                    }
+                    // _accountSettingsProvider.updateProfileData();
+                    if (_needVerification) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AccountVerification(
+                              accEditType: widget.editType,
+                              resendingToken: _resendingToken,
+                              parsedText: _textController.text,
+                              verificationSuccessFunc: () {
+                                _accountSettingsProvider.updateProfileData();
 
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ));
-                        } else {
-                          Navigator.pop(context);
-                        }
-                      }
-                    },
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ));
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                child: Consumer<AccountSettingsProvider>(
+                  builder: (context, state, _) => Text(
+                    'Next',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: state.hasChanges
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).primaryColor.withOpacity(0.4),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
+                ),
+              ),
           ],
         ),
         body: Padding(
@@ -203,196 +206,133 @@ class _AccountEditRowState extends State<AccountEditRow> {
                 ),
               ),
               SizedBox(height: 5),
-              widget.editType == AccountEditType.password ||
-                      widget.editType == AccountEditType.google
-                  ? Container()
-                  : TextFormField(
-                      autofocus: true,
-                      controller: _textController,
-                      maxLength: _maxLength,
-                      maxLines: 1,
-                      keyboardType: widget.editType == AccountEditType.phone
-                          ? TextInputType.phone
-                          : TextInputType.emailAddress,
-                      // inputFormatters: [
-                      //   FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
-                      // ],
-                      cursorColor: Theme.of(context).primaryColor,
-                      validator: (text) {
-                        return text.contains(' ') ? '' : text;
-                      },
+              if (widget.editType == AccountEditType.password ||
+                  widget.editType == AccountEditType.google)
+                Container()
+              else
+                TextFormField(
+                  autofocus: true,
+                  controller: _textController,
+                  maxLength: _maxLength,
+                  maxLines: 1,
+                  keyboardType: widget.editType == AccountEditType.phone
+                      ? TextInputType.phone
+                      : TextInputType.emailAddress,
+                  // inputFormatters: [
+                  //   FilteringTextInputFormatter.deny(RegExp('[\\\n]'))
+                  // ],
+                  cursorColor: Theme.of(context).primaryColor,
+                  validator: (text) {
+                    return text.contains(' ') ? '' : text;
+                  },
 
-                      onChanged: (_) {
-                        //trigger has change text
-                        _accountSettingsProvider.updateProfileData();
-                      },
+                  onChanged: (_) {
+                    //trigger has change text
+                    _accountSettingsProvider.updateProfileData();
+                  },
 
-                      buildCounter: (_, {currentLength, maxLength, isFocused}) {
-                        return Container(
-                          padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '${currentLength.toString()}/${maxLength.toString()}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: currentLength > maxLength
-                                  ? Colors.red
-                                  : _themeProvider.secondaryTextColor,
-                              fontWeight: FontWeight.w500,
+                  buildCounter: (_, {currentLength, maxLength, isFocused}) {
+                    return Container(
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${currentLength.toString()}/${maxLength.toString()}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: currentLength > maxLength
+                              ? Colors.red
+                              : _themeProvider.secondaryTextColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  },
+                  style: TextStyle(
+                    color: _themeProvider.primaryTextColor,
+                  ),
+                  decoration: InputDecoration(
+                    // prefixText:
+                    //     widget.editType == AccountEditType.username ? '@ ' : '',
+                    prefixStyle: TextStyle(
+                        color: _themeProvider.secondaryTextColor, fontSize: 15),
+                    isDense: true,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.26),
+                          width: 0.5),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.26),
+                          width: 0.5),
+                    ),
+                  ),
+                ),
+              SizedBox(height: 5),
+              if (widget.editType == AccountEditType.password ||
+                  widget.editType == AccountEditType.google)
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: SizedBox(
+                    child: Text(
+                      widget.editType == AccountEditType.password
+                          ? 'The password for ${_authService.getCurrentUser.email} is secured.'
+                          : 'Your Versify account is created with ${_authService.getCurrentUser.email} Google account.',
+                      style: TextStyle(
+                        height: 1.7,
+                        fontSize: 12,
+                        color: _themeProvider.secondaryTextColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Container(),
+              SizedBox(height: 15),
+              if (widget.editType == AccountEditType.password)
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      // resetPasswordDialog(context);
+                      if (_authService.getCurrentUser.email?.isEmpty ?? false) {
+                        // NO EMAIL
+                        toast("Could not reset password");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ScreenResetPassword(
+                              initialEmail: _authService.getCurrentUser.email,
+                              editAccess: false,
                             ),
                           ),
                         );
-                      },
-                      style: TextStyle(
-                        color: _themeProvider.primaryTextColor,
-                      ),
-                      decoration: InputDecoration(
-                        // prefixText:
-                        //     widget.editType == AccountEditType.username ? '@ ' : '',
-                        prefixStyle: TextStyle(
-                            color: _themeProvider.secondaryTextColor,
-                            fontSize: 15),
-                        isDense: true,
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: _themeProvider.primaryTextColor
-                                  .withOpacity(0.26),
-                              width: 0.5),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: _themeProvider.primaryTextColor
-                                  .withOpacity(0.26),
-                              width: 0.5),
+                      }
+                    },
+                    child: SizedBox(
+                      child: Text(
+                        'Reset password?',
+                        style: TextStyle(
+                          height: 1.7,
+                          fontSize: 12,
+                          color: Colors.blue[400],
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-              SizedBox(height: 5),
-              widget.editType == AccountEditType.password ||
-                      widget.editType == AccountEditType.google
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      child: SizedBox(
-                        child: Text(
-                          widget.editType == AccountEditType.password
-                              ? 'The password for ${_authService.getCurrentUser.email} is secured.'
-                              : 'Your Versify account is created with ${_authService.getCurrentUser.email} Google account.',
-                          style: TextStyle(
-                            height: 1.7,
-                            fontSize: 12,
-                            color: _themeProvider.secondaryTextColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(),
-              SizedBox(height: 15),
-              widget.editType == AccountEditType.password
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          resetPasswordDialog();
-                        },
-                        child: SizedBox(
-                          child: Text(
-                            'Reset password?',
-                            style: TextStyle(
-                              height: 1.7,
-                              fontSize: 12,
-                              color: Colors.blue[400],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(),
+                  ),
+                )
+              else
+                Container(),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void resetPasswordDialog() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Reset Password',
-                style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.w600,
-                  color: _themeProvider.primaryTextColor,
-                ),
-              ),
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(30, 15, 30, 10),
-                alignment: Alignment.center,
-                width: 40,
-                child: Text(
-                  'Are you sure you want to reset your password?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                ),
-              ),
-              // Divider(thickness: 0.5, height: 0),
-              Container(
-                margin: EdgeInsets.all(0),
-                height: 60,
-                child: FlatButton(
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AccountVerification(
-                            accEditType: AccountEditType.password,
-                            parsedText: '',
-                            verificationSuccessFunc: null,
-                          ),
-                        ));
-                  },
-                  child: Text(
-                    'Yes, reset password.',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              Divider(thickness: 0.5, height: 0),
-              Container(
-                margin: EdgeInsets.all(0),
-                height: 60,
-                child: FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: _themeProvider.secondaryTextColor,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        });
   }
 }

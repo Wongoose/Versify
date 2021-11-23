@@ -1,7 +1,9 @@
 import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
+import 'package:versify/screens/authentication/auth_screen_reset_password.dart';
 import "package:versify/services/firebase/auth.dart";
 import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_functions.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
 import "package:versify/shared/widgets/widgets_all_loading.dart";
 import "package:versify/shared/helper/helper_constants.dart";
@@ -25,6 +27,7 @@ class _SignInAuthState extends State<SignInAuth> {
 
   bool loading = false;
   bool doneFirstValidation = false;
+  bool visiblePassword = false;
   String error = "";
 
   @override
@@ -111,13 +114,16 @@ class _SignInAuthState extends State<SignInAuth> {
                       SizedBox(height: 30),
                       // SizedBox(height: error != "" ? 10 : 0),
                       if (error != "")
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(2, 10, 15, 10),
-                          child: Text(
-                            error,
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 14,
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 15, 5),
+                            child: Text(
+                              error,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         )
@@ -198,6 +204,21 @@ class _SignInAuthState extends State<SignInAuth> {
                                   Icons.lock_outline_rounded,
                                   color: _themeProvider.secondaryTextColor,
                                 ),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() =>
+                                        visiblePassword = !visiblePassword);
+                                  },
+                                  child: Icon(
+                                    visiblePassword
+                                        ? FontAwesomeIcons.eye
+                                        : FontAwesomeIcons.eyeSlash,
+                                    size: 18,
+                                    color: visiblePassword
+                                        ? _themeProvider.primaryTextColor
+                                        : _themeProvider.secondaryTextColor,
+                                  ),
+                                ),
                                 fillColor: Theme.of(context).backgroundColor,
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius:
@@ -207,7 +228,7 @@ class _SignInAuthState extends State<SignInAuth> {
                                   ),
                                 ),
                               ),
-                              obscureText: true,
+                              obscureText: !visiblePassword,
                               validator: (val) => val.length < 6
                                   ? "Password must have 6 or more characters."
                                   : null, //return null when it is valid
@@ -216,6 +237,40 @@ class _SignInAuthState extends State<SignInAuth> {
                                   _formKey.currentState.validate();
                                 }
                               },
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(0, 7, 5, 0),
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    // resetPasswordDialog(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ScreenResetPassword(
+                                            initialEmail:
+                                                emailTextController.text,
+                                            editAccess: true,
+                                          ),
+                                        ));
+                                  },
+                                  child: SizedBox(
+                                    child: Text(
+                                      "Forgot password?",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        decoration: TextDecoration.underline,
+                                        color: _themeProvider.primaryTextColor
+                                            .withOpacity(0.8),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             SizedBox(height: 30),
                             SizedBox(
@@ -402,10 +457,12 @@ class _SignInAuthState extends State<SignInAuth> {
                               child: Text(
                                 "Register",
                                 style: TextStyle(
-                                    fontFamily: "Nunito Sans",
-                                    color: _themeProvider.primaryTextColor,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14),
+                                  fontFamily: "Nunito Sans",
+                                  decoration: TextDecoration.underline,
+                                  color: _themeProvider.primaryTextColor,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ],

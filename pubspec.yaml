@@ -59,6 +59,7 @@ dependencies:
   ansicolor: ^2.0.1
   lint: ^1.5.3
   flutter_facebook_login: ^3.0.0
+  open_mail_app: ^0.4.1
   # esys_flutter_share: ^1.0.2
   # scroll_bottom_navigation_bar: 
   # skeleton_loader: 

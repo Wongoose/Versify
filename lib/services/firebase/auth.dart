@@ -325,9 +325,17 @@ class AuthService {
     }
   }
 
-  Future<void> resetPasswordWithEmail(String email) async {
-    print('resetPasswordWithEmail | RAN: $email');
-    _auth.sendPasswordResetEmail(email: email);
+  Future<ReturnValue> resetPasswordWithEmail(String email) async {
+    try {
+      print(purplePen("resetPasswordWithEmail | STARTED with email: $email"));
+      await _auth.sendPasswordResetEmail(email: email);
+
+      print(greenPen("resetPasswordWithEmail | SUCCESSFUL!"));
+      return ReturnValue(true, email);
+    } on FirebaseAuthException catch (err) {
+      print(redPen("resetPasswordWithEmail | FAILED with catch error: $err"));
+      return ReturnValue(false, err.message);
+    }
   }
 
   Future<bool> verifyEmailAddress() async {

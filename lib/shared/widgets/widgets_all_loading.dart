@@ -59,7 +59,7 @@ class Loading extends StatelessWidget {
 class CircleLoading extends StatelessWidget {
   final double size;
 
-  CircleLoading({this.size});
+  const CircleLoading({this.size});
 
   @override
   Widget build(BuildContext context) {
