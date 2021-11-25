@@ -6,6 +6,10 @@ import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import 'package:versify/shared/helper/helper_functions.dart';
 
 class ScreenOpenInbox extends StatelessWidget {
+  final String description;
+
+  const ScreenOpenInbox({Key key, this.description}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider = Provider.of<ThemeProvider>(context);
@@ -42,7 +46,7 @@ class ScreenOpenInbox extends StatelessWidget {
             SizedBox(
               width: 320,
               child: Text(
-                "We have sent an email to your inbox. Please follow the steps in the email to reset your password.",
+                description,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: _themeProvider.primaryTextColor,
@@ -82,7 +86,7 @@ class ScreenOpenInbox extends StatelessWidget {
                   }
                 },
                 child: Text(
-                  "Open inbox",
+                  "Open email app",
                   style: TextStyle(
                     // shadows: [
                     //   Shadow(

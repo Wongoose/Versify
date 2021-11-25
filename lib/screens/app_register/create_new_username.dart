@@ -67,11 +67,12 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
     await FirebaseAuth.instance.currentUser.delete();
   }
 
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _profileDataProvider.phoneNumberNewAcc =
-          PhoneNumber(phoneNumber: _authService.getCurrentUser.phoneNumber ?? '');
+      _profileDataProvider.phoneNumberNewAcc = PhoneNumber(
+          phoneNumber: _authService.getCurrentUser.phoneNumber ?? '');
     });
   }
 
@@ -87,8 +88,8 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
     return WillPopScope(
       onWillPop: () async {
         if (!Navigator.of(context).userGestureInProgress) {
-          await onWillPop();
-          // _authService.logout();
+          // await onWillPop();
+          _authService.logout();
         }
         return null;
       },
@@ -122,7 +123,8 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
             ),
             onPressed: () async {
               // _profileDataProvider.updateListeners();
-              await onWillPop();
+              // await onWillPop();
+              _authService.logout();
 
               // Navigator.pop(context);
             },

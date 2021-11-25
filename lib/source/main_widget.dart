@@ -146,9 +146,6 @@ class MainSuccessStreamWrapper extends StatelessWidget {
                 primaryColor: Color(0xFFcc99ff),
                 accentColor: Color(0xFF33cccc),
                 splashColor: Color(0xFFefdaff),
-                textTheme: TextTheme(
-                    bodyText1: TextStyle(color: Colors.white),
-                    bodyText2: TextStyle(color: Colors.white)),
                 fontFamily: GoogleFonts.getFont('Nunito Sans').fontFamily,
                 canvasColor: Color(0xFF202020),
                 // canvasColor: Color(0xFF0d090d),

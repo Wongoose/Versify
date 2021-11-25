@@ -11,6 +11,14 @@ const textInputDecoration = InputDecoration(
       width: 1,
     ),
   ),
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(
+      color: Colors.transparent,
+      width: 0,
+    ),
+  ),
+  
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10)),
     borderSide: BorderSide(

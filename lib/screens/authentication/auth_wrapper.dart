@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:versify/screens/authentication/auth_create_account.dart';
-
+import 'auth_create_password.dart';
 import 'auth_sign_in.dart';
-import 'auth_sign_up.dart';
-
-enum InitialOption {
-  SignIn,
-  SignOut,
-}
 
 class AuthWrapper extends StatefulWidget {
   final bool initialOption;
 
-  AuthWrapper({this.initialOption});
+  const AuthWrapper({this.initialOption});
+
   @override
   _AuthWrapperState createState() => _AuthWrapperState();
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
   bool signIn;
+
+  @override
+  void initState() {
+    super.initState();
+    signIn = widget.initialOption ?? true;
+  }
+
   void toggleSignIn() {
     setState(() {
       signIn = !signIn;
     });
-  }
-
-  void initState() {
-    super.initState();
-    signIn = widget.initialOption != null ? widget.initialOption : true;
   }
 
   @override
@@ -35,6 +32,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
     return signIn
         ? SignInAuth(toggleSignIn: toggleSignIn)
         : AuthCreateAccount(toggleSignIn: toggleSignIn);
+        // :AuthCreatePassword(email: "ppp@gmail.com");
     // : SignUpAuth(toggleSignIn: toggleSignIn);
   }
 }

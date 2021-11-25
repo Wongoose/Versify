@@ -184,36 +184,20 @@ class AuthService {
   //   }
   // }
 
-  Future<Map<String, String>> createUserEmailPassword(
+  Future<ReturnValue> createAccountWithEmailAndPassword(
       String email, String password) async {
-    Map<String, String> returnVal;
+    try {
+      print(purplePen("createAccountWithEmailAndPassword | STARTED!"));
+      final UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
-    await _auth
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((userCredential) async {
-//send verification to email when sign up
-      await verifyEmailAddress();
-      toast('A verification email was sent to your inbox');
-    }).catchError((err) {
-      String errorCode = "";
-      String errorMessage = '';
-
-      print(
-          "ERROR _auth.createUserWithEmailAndPassword | err message: ${err.message}\n err code is: ${err.code}");
-
-      switch (err.code.toString()) {
-        case "email-already-in-use":
-          errorCode = "email-already-in-use";
-          errorMessage =
-              "This email has already been used, please use another email and try again.";
-      }
-      returnVal = {
-        'errorCode': errorCode,
-        'errorMessage': errorMessage,
-      };
-    });
-
-    return returnVal;
+      print(greenPen("createAccountWithEmailAndPassword | SUCCESSFUL!"));
+      return ReturnValue(true, result.user.email);
+    } on FirebaseAuthException catch (err) {
+      print(redPen(
+          "createAccountWithEmailAndPassword | FAILED with FirebaseAuth catch error: $err"));
+      return ReturnValue(false, err.message);
+    }
   }
 
   Future<ReturnValue> signInWithGoogle({bool newUser}) async {
@@ -352,11 +336,18 @@ class AuthService {
         androidPackageName: 'com.wongoose.versify',
         dynamicLinkDomain: 'versify.wongoose.com',
       );
+
+      // TO-ADD: Firebase Admin SDK - Generate email verification link
+
       // await _auth.sendSignInLinkToEmail(email: email, actionCodeSettings: settings.)
-      await _auth.currentUser.sendEmailVerification(settings);
+      // await _auth.currentUser.sendEmailVerification(settings);
 
       print(greenPen("verifyCreateAccountEmail | SUCCESS!"));
       return ReturnValue(true, email);
+    } on FirebaseAuthException catch (err) {
+      print(redPen(
+          "verifyCreateAccountEmail | FAILED with FiebaseAuth catch error: $err"));
+      return ReturnValue(false, err.message);
     } catch (err) {
       print(redPen("verifyCreateAccountEmail | FAILED with catch error: $err"));
       return ReturnValue(false, "Could not create account");

@@ -113,7 +113,7 @@ class _ScreenResetPasswordState extends State<ScreenResetPassword> {
                   TextFormField(
                     controller: emailTextController,
                     scrollPadding: EdgeInsets.fromLTRB(0, 0, 0, 80),
-                    enabled: widget.editAccess,
+                    readOnly: !widget.editAccess,
                     style: TextStyle(
                       color: _themeProvider.primaryTextColor,
                     ),
@@ -166,7 +166,10 @@ class _ScreenResetPasswordState extends State<ScreenResetPassword> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ScreenOpenInbox()));
+                                      builder: (context) => ScreenOpenInbox(
+                                            description:
+                                                "We have sent an email to your inbox. Please follow the steps in the email to reset your password.",
+                                          )));
                             } else {
                               toast("Could not reset password");
                               setState(() => error = result.value);

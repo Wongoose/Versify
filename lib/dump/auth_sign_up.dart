@@ -306,7 +306,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                           ),
                         ),
                         validator: (val) => val.length < 6
-                            ? 'Password must have at least 7 characters.'
+                            ? 'Password must have at least 6 characters.'
                             : null, //return null when it is valid
                         obscureText: true,
                         onChanged: (val) {
@@ -337,7 +337,7 @@ class _SignUpAuthState extends State<SignUpAuth> {
                         if (_formKey.currentState.validate()) {
                           setState(() => loading = true);
                           _authService
-                              .createUserEmailPassword(
+                              .createAccountWithEmailAndPassword(
                                   email.trim(), password.trim())
                               .then((errorMap) {
                             setState(() => loading = false);

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import 'package:versify/services/firebase/auth.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/helper/helper_constants.dart';
+
+import 'auth_screen_open_inbox.dart';
 
 class AuthCreateAccount extends StatefulWidget {
   final Function toggleSignIn;
@@ -19,6 +23,7 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String error = "";
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +141,30 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
                                   ),
                                   onPressed: () async {
                                     if (emailTextController.text.isNotEmpty) {
-                                      await _authService
-                                          .verifyCreateAccountEmail(
-                                              emailTextController.text.trim());
+                                      setState(() => loading = true);
+                                      final ReturnValue result =
+                                          await _authService
+                                              .verifyCreateAccountEmail(
+                                                  emailTextController.text
+                                                      .trim());
+
+                                      setState(() => loading = false);
+                                      if (result.success) {
+                                        toast(
+                                            "An email was sent to your inbox!");
+                                        // Navigate to inbox open
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ScreenOpenInbox(
+                                                      description:
+                                                          "We have sent an email to your inbox. Please follow the steps in the email to finish creating your account.",
+                                                    )));
+                                      } else {
+                                        toast("Could not create account");
+                                        setState(() => error = result.value);
+                                      }
                                     } else {
                                       // EMPTY EMAIL
                                       setState(() =>
