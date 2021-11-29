@@ -383,7 +383,7 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: Theme.of(context).backgroundColor.withOpacity(0.8),
+              color: Theme.of(context).canvasColor.withOpacity(0.8),
               alignment: Alignment.center,
               child: Loading(),
             ),
