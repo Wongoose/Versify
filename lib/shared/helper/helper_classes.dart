@@ -133,7 +133,8 @@ class _CustomAppRouteState extends State<CustomAppRoute> {
 class ReturnValue {
   final bool success;
   final String value;
+  final String errorCode;
 
   // ignore: avoid_positional_boolean_parameters
-  const ReturnValue(this.success, this.value);
+  const ReturnValue(this.success, this.value, [this.errorCode]);
 }

@@ -205,9 +205,11 @@ class AuthService {
       print(purplePen("signInWithGoogle | STARTED!"));
       final GoogleSignIn _googleSignIn = GoogleSignIn();
       final bool signedIn = await _googleSignIn.isSignedIn();
+
       if (newUser && signedIn) {
         await _googleSignIn.signOut();
       }
+
       final GoogleSignInAccount googleSignInAccount =
           await _googleSignIn.signIn();
 
@@ -220,6 +222,7 @@ class AuthService {
       );
 
       // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
+      // return errorCode = "EMAIL-ALREADY-IN-USE"
 
       final UserCredential authResult =
           await _auth.signInWithCredential(credential);
@@ -257,13 +260,19 @@ class AuthService {
 
       switch (result.status) {
         case FacebookLoginStatus.loggedIn:
+
+          // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
+          // return errorCode = "EMAIL-ALREADY-IN-USE"
+
           final String token = result.accessToken.token;
           final response = await http.get(Uri.parse(
               "https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token"));
 
           final profile = jsonDecode(response.body);
+
           final AuthCredential credential =
               FacebookAuthProvider.credential(token);
+
           final UserCredential authResult =
               await _auth.signInWithCredential(credential);
 
