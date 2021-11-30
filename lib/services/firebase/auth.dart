@@ -351,7 +351,7 @@ class AuthService {
       );
 
       // TO-ADD: Firebase Admin SDK - Check for existing Firebase User Email
-      // Return errorCode = "EMAIL-ALREADY-IN-USE"
+      // return value = "This email already has an account. Please try another email.", errorCode = "EMAIL-ALREADY-IN-USE"
 
       // TO-ADD: Firebase Admin SDK - Generate email verification link
 

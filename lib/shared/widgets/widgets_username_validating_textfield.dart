@@ -12,7 +12,7 @@ class UsernameValidatingTextField extends StatefulWidget {
   final TextEditingController usernameController;
   final Function updateValidUsername;
 
-  UsernameValidatingTextField({
+  const UsernameValidatingTextField({
     @required this.usernameController,
     @required this.updateValidUsername,
   });
@@ -88,10 +88,9 @@ class _UsernameValidatingTextFieldState
           widget.usernameController.value = TextEditingValue(
               text: _text,
               selection: TextSelection(
-                  baseOffset: 20,
-                  extentOffset: 20,
-                  affinity: TextAffinity.downstream,
-                  isDirectional: false),
+                baseOffset: 20,
+                extentOffset: 20,
+              ),
               composing: TextRange(start: 0, end: 20));
 
           widget.usernameController.text = _text;

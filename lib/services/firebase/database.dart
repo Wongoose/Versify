@@ -5,6 +5,8 @@ import 'package:versify/models/user_model.dart';
 import 'package:versify/providers/providers_feeds/feed_list_provider.dart';
 import 'package:versify/services/json_storage/users_following_json_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_methods.dart';
 
 enum CreateAcc { hasAccount, newAccount, error }
 enum ReportFeed {
@@ -57,7 +59,7 @@ class DatabaseService {
   // EDIT with new refresh algorithm
   Future firestoreInit() async {
     print('firestore iNIT RAN!');
-    return  getSeenDocs().then((value) async {
+    return getSeenDocs().then((value) async {
       await getLastUpdated();
       return value;
     });
@@ -839,13 +841,23 @@ class DatabaseService {
   //   } catch (e) {}
   // }
 
-  Future<bool> checkIfValidUsername(String username) async {
-    return await usersPrivateCollection
-        .where('username', isEqualTo: username)
-        .get()
-        .then((snap) {
-      return snap.docs.isEmpty;
-    });
+  Future<ReturnValue> checkIfValidUsername(String username) async {
+    try {
+      print(purplePen("checkIfValidUsername | STARTED!"));
+      final QuerySnapshot snapshot = await usersPrivateCollection
+          .where('username', isEqualTo: username)
+          .get();
+      if (snapshot.docs.isEmpty) {
+        print(greenPen("checkIfValidUsername | SUCCESS!"));
+        return ReturnValue(true, "$username created successfully!");
+      } else {
+        print(greenPen("checkIfValidUsername | SUCCESS!"));
+        return ReturnValue(false, "$username is already in use. Please try another username.");
+      }
+    } catch (err) {
+      print(redPen("checkIfValidUsername | FAILED with catch error: $err"));
+      return ReturnValue(false, "Could not validate username");
+    }
   }
 
   Future<void> giftFeed({String postID, int giftLove, int giftBird}) async {
