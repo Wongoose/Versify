@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/firebase/database.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/widgets/widgets_username_validating_textfield.dart';
 
 enum EditType { username, bio, phone, email, socialLinks }
@@ -177,16 +178,16 @@ class _EditRowPageState extends State<EditRowPage> {
                 switch (widget.editType) {
                   case EditType.username:
                     _editingUser.username = _textController.text.trim();
-                    print('Username changed to: ' + _editingUser.username);
+                    print("Username changed to: ${_editingUser.username}");
                     if (_editingUser.username == _authService.myUser.username) {
                       _validToSave = true;
                     } else if (_validUsername &&
                         _editingUser.username.isNotEmpty) {
-                      await DatabaseService()
-                          .checkIfValidUsername(_editingUser.username)
-                          .then((isValid) {
-                        _validToSave = isValid;
-                      });
+                      final ReturnValue result = await DatabaseService()
+                          .checkIfValidUsername(_editingUser.username);
+
+                      _validToSave = result.success;
+                      
                     } else {
                       print('Saved | validUsername: ' +
                           _validUsername.toString());

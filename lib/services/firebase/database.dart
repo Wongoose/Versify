@@ -848,10 +848,10 @@ class DatabaseService {
           .where('username', isEqualTo: username)
           .get();
       if (snapshot.docs.isEmpty) {
-        print(greenPen("checkIfValidUsername | SUCCESS!"));
+        print(greenPen("checkIfValidUsername | VALID!"));
         return ReturnValue(true, "$username created successfully!");
       } else {
-        print(greenPen("checkIfValidUsername | SUCCESS!"));
+        print(redPen("checkIfValidUsername | INVALID!"));
         return ReturnValue(false, "$username is already in use. Please try another username.");
       }
     } catch (err) {
