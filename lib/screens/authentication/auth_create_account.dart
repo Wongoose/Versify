@@ -172,6 +172,13 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
                                             toast("Could not create account");
                                             setState(
                                                 () => error = result.value);
+
+                                            if (result.errorCode ==
+                                                "EMAIL-ALREADY-IN-USE") {
+                                              // DO SOMETHING
+                                              existingLoginDialog(
+                                                  context, widget.toggleSignIn);
+                                            }
                                           }
                                         } else {
                                           // EMPTY EMAIL
@@ -235,7 +242,9 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
                                             final ReturnValue result =
                                                 await _authService
                                                     .signInWithFacebook(
-                                                        newUser: true);
+                                              newUser: true,
+                                              createAcc: true,
+                                            );
 
                                             setState(() => loading = false);
 
@@ -253,6 +262,8 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
                                               if (result.errorCode ==
                                                   "EMAIL-ALREADY-IN-USE") {
                                                 // DO SOMETHING
+                                                existingLoginDialog(context,
+                                                    widget.toggleSignIn);
                                               }
                                             }
                                           },
@@ -287,7 +298,9 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
                                             final ReturnValue result =
                                                 await _authService
                                                     .signInWithGoogle(
-                                                        newUser: true);
+                                              newUser: true,
+                                              createAcc: true,
+                                            );
 
                                             setState(() => loading = false);
 
@@ -305,6 +318,8 @@ class _AuthCreateAccountState extends State<AuthCreateAccount> {
                                               if (result.errorCode ==
                                                   "EMAIL-ALREADY-IN-USE") {
                                                 // DO SOMETHING
+                                                existingLoginDialog(context,
+                                                    widget.toggleSignIn);
                                               }
                                             }
                                           },

@@ -200,7 +200,7 @@ class AuthService {
     }
   }
 
-  Future<ReturnValue> signInWithGoogle({bool newUser}) async {
+  Future<ReturnValue> signInWithGoogle({bool newUser, bool createAcc}) async {
     try {
       print(purplePen("signInWithGoogle | STARTED!"));
       final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -221,8 +221,11 @@ class AuthService {
         idToken: googleSignInAuthentication.idToken,
       );
 
-      // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
-      // return errorCode = "EMAIL-ALREADY-IN-USE"
+      if (createAcc ?? false) {
+        // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
+        // return errorCode = "EMAIL-ALREADY-IN-USE"
+        return ReturnValue(false, "Existing account", "EMAIL-ALREADY-IN-USE");
+      }
 
       final UserCredential authResult =
           await _auth.signInWithCredential(credential);
@@ -245,7 +248,7 @@ class AuthService {
     }
   }
 
-  Future<ReturnValue> signInWithFacebook({bool newUser}) async {
+  Future<ReturnValue> signInWithFacebook({bool newUser, bool createAcc}) async {
     try {
       print(purplePen("signInWithFacebook | STARTED!"));
 
@@ -260,9 +263,10 @@ class AuthService {
 
       switch (result.status) {
         case FacebookLoginStatus.loggedIn:
-
-          // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
-          // return errorCode = "EMAIL-ALREADY-IN-USE"
+          if (createAcc ?? false) {
+            // CHECK FOR EXISTING EMAIL IN FIREBASE - via Cloud Functions (If true only proceed)
+            // return errorCode = "EMAIL-ALREADY-IN-USE"
+          }
 
           final String token = result.accessToken.token;
           final response = await http.get(Uri.parse(
@@ -345,6 +349,9 @@ class AuthService {
         androidPackageName: 'com.wongoose.versify',
         dynamicLinkDomain: 'versify.wongoose.com',
       );
+
+      // TO-ADD: Firebase Admin SDK - Check for existing Firebase User Email
+      // Return errorCode = "EMAIL-ALREADY-IN-USE"
 
       // TO-ADD: Firebase Admin SDK - Generate email verification link
 
