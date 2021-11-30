@@ -138,7 +138,7 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
                   if (_validUsername && _usernameController.text != "") {
                     setState(() => _nextLoading = true);
 
-                    //check database second time - shift to Cloud Functions
+                    // check database second time - shift to Cloud Functions
                     final ReturnValue result = await _databaseService
                         .checkIfValidUsername(_usernameController.text);
 
