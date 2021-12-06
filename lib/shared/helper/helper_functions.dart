@@ -40,6 +40,6 @@ ReturnValue usernameFilterProfanity(String string) {
     print(greenPen(
         "usernameFilterProfanity | ${allProfanity.length} profanity found."));
     return ReturnValue(false,
-        "These phrases are not allowed: ${allProfanity.toString().replaceAll("[", "").replaceAll("]", "")}.");
+        "These phrases are not allowed: ${allProfanity.toString().replaceAll("[", '"').replaceAll("]", '"')}.");
   }
 }

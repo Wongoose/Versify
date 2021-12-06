@@ -355,9 +355,6 @@ class AuthService {
 
       // TO-ADD: Firebase Admin SDK - Generate email verification link
 
-      // await _auth.sendSignInLinkToEmail(email: email, actionCodeSettings: settings.)
-      // await _auth.currentUser.sendEmailVerification(settings);
-
       print(greenPen("verifyCreateAccountEmail | SUCCESS!"));
       return ReturnValue(true, email);
     } on FirebaseAuthException catch (err) {

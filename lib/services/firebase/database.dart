@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:versify/models/feed_model.dart';
-import 'package:versify/models/user_model.dart';
-import 'package:versify/providers/providers_feeds/feed_list_provider.dart';
-import 'package:versify/services/json_storage/users_following_json_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:versify/shared/helper/helper_classes.dart';
-import 'package:versify/shared/helper/helper_methods.dart';
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:flutter/material.dart";
+import "package:versify/models/feed_model.dart";
+import "package:versify/models/user_model.dart";
+import "package:versify/providers/providers_feeds/feed_list_provider.dart";
+import "package:versify/services/json_storage/users_following_json_storage.dart";
+import "package:shared_preferences/shared_preferences.dart";
+import "package:versify/shared/helper/helper_classes.dart";
+import "package:versify/shared/helper/helper_methods.dart";
 
 enum CreateAcc { hasAccount, newAccount, error }
 enum ReportFeed {
@@ -34,31 +34,31 @@ class DatabaseService {
   //collection reference--------------------------------------------------------
 
   final CollectionReference feedsAllCollection =
-      FirebaseFirestore.instance.collection('feedNew');
+      FirebaseFirestore.instance.collection("feedNew");
 
   final CollectionReference allPostsCollection =
-      FirebaseFirestore.instance.collection('allPosts');
+      FirebaseFirestore.instance.collection("allPosts");
 
   final CollectionReference usersPrivateCollection =
-      FirebaseFirestore.instance.collection('usersPrivate');
+      FirebaseFirestore.instance.collection("usersPrivate");
 
   final CollectionReference usersPublicCollection =
-      FirebaseFirestore.instance.collection('usersPublicFollow');
+      FirebaseFirestore.instance.collection("usersPublicFollow");
 
   CollectionReference privateAllFollowingCollection;
 
   final CollectionReference likedPostsCollection =
-      FirebaseFirestore.instance.collection('likedPosts');
+      FirebaseFirestore.instance.collection("likedPosts");
 
   final CollectionReference reportedPostsCollection =
-      FirebaseFirestore.instance.collection('reportedPosts');
+      FirebaseFirestore.instance.collection("reportedPosts");
 
   final CollectionReference reportAProblemCollection =
-      FirebaseFirestore.instance.collection('reportProblem');
+      FirebaseFirestore.instance.collection("reportProblem");
 
   // EDIT with new refresh algorithm
   Future firestoreInit() async {
-    print('firestore iNIT RAN!');
+    print("firestore iNIT RAN!");
     return getSeenDocs().then((value) async {
       await getLastUpdated();
       return value;
@@ -67,21 +67,21 @@ class DatabaseService {
 
   Future getSeenDocs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    this.seenDocsList = prefs.getStringList('seenDocs') ?? [];
-    print('got seenDocs INIT:' + seenDocsList.toString());
+    this.seenDocsList = prefs.getStringList("seenDocs") ?? [];
+    print("got seenDocs INIT:" + seenDocsList.toString());
     return seenDocsList;
   }
 
   Future getLastUpdated() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String result = prefs.getString('lastUpdated');
+    String result = prefs.getString("lastUpdated");
     if (result == null) {
       _hasLastUpdated = false;
     } else {
       _hasLastUpdated = true;
       _lastUpdated = DateTime.parse(result);
     }
-    print('got Last Update from local INIT: ' + _lastUpdated.toString());
+    print("got Last Update from local INIT: " + _lastUpdated.toString());
     // _hasLastUpdated = result == null ? false : true;
     // _lastUpdated = DateTime.parse(result);
   }
@@ -98,28 +98,28 @@ class DatabaseService {
   //   await usersPrivateCollection.get().then((snaps) {
   //     snaps.docs.forEach((doc) async {
   //       String _currentID = doc.id;
-  //       print('UserID is: ' + doc.id);
+  //       print("UserID is: " + doc.id);
   //       final String _allFollowingCollectionPath =
-  //           '${usersPrivateCollection.path}/${doc.id}/allFollowing';
+  //           "${usersPrivateCollection.path}/${doc.id}/allFollowing";
 
   //       final CollectionReference privateAllFollowingCollection =
   //           FirebaseFirestore.instance.collection(_allFollowingCollectionPath);
 
-  //       print('Collection Path is: ' + privateAllFollowingCollection.path);
+  //       print("Collection Path is: " + privateAllFollowingCollection.path);
 
   //       await usersPublicCollection
-  //           .where('followers', arrayContains: _currentID)
+  //           .where("followers", arrayContains: _currentID)
   //           .get()
   //           .then((followingSnaps) async {
-  //         print(doc['username']);
+  //         print(doc["username"]);
   //         print(followingSnaps.size);
   //         followingSnaps.docs.forEach((followingDoc) async {
-  //           print(followingDoc.data()['userID']);
+  //           print(followingDoc.data()["userID"]);
 
   //           // await privateAllFollowingCollection.doc(addedDoc.path).update({
-  //           //   'numFollowing': FieldValue.increment(1),
-  //           //   'usersFollowing':
-  //           //       FieldValue.arrayUnion(followingDoc.data()['userID']),
+  //           //   "numFollowing": FieldValue.increment(1),
+  //           //   "usersFollowing":
+  //           //       FieldValue.arrayUnion(followingDoc.data()["userID"]),
   //           // });
   //         });
   //       });
@@ -135,13 +135,13 @@ class DatabaseService {
     List<String> _tempListUID = [];
 
     String _allFollowingCollectionPath =
-        '${usersPrivateCollection.path}/${this.uid}/allFollowing';
+        "${usersPrivateCollection.path}/${this.uid}/allFollowing";
     privateAllFollowingCollection =
         FirebaseFirestore.instance.collection(_allFollowingCollectionPath);
 
     return await privateAllFollowingCollection.get().then((snaps) {
       snaps.docs.forEach((doc) {
-        (doc['usersFollowing'] as List).forEach((_userID) {
+        (doc["usersFollowing"] as List).forEach((_userID) {
           _tempListUID.add(_userID.toString());
         });
       });
@@ -154,16 +154,16 @@ class DatabaseService {
   }
 
   Future<List<String>> getSortedFollowing() async {
-    print('GetSortedFollowing RAN!');
+    print("GetSortedFollowing RAN!");
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> _tempList = prefs.getStringList('sortedFollowingList') ?? [];
+    List<String> _tempList = prefs.getStringList("sortedFollowingList") ?? [];
     if (_tempList.isNotEmpty) {
-      print('PREFS Sorted list has value!');
+      print("PREFS Sorted list has value!");
       return _tempList;
     } else {
-      print('PREFS Sorted list NO value!');
+      print("PREFS Sorted list NO value!");
       return await getFollowingList().then((followingList) {
-        prefs.setStringList('sortedFollowingList', followingList);
+        prefs.setStringList("sortedFollowingList", followingList);
         return followingList;
       });
     }
@@ -198,17 +198,17 @@ class DatabaseService {
           bool _hasOlderPost;
 
           if (_postDetails != null) {
-            _latestPost = _postDetails['latestPost'];
-            _oldestPost = _postDetails['oldestPost'];
-            _hasOlderPost = _postDetails['hasOlderPost'];
+            _latestPost = _postDetails["latestPost"];
+            _oldestPost = _postDetails["oldestPost"];
+            _hasOlderPost = _postDetails["hasOlderPost"];
 
-            print('HasOlderPost? ' + _hasOlderPost.toString());
+            print("HasOlderPost? " + _hasOlderPost.toString());
 
             if (isRefresh) {
               await allPostsCollection
-                  .where('userID', isEqualTo: uid)
-                  .where('postedTimeStamp', isGreaterThan: _latestPost)
-                  .orderBy('postedTimeStamp', descending: true)
+                  .where("userID", isEqualTo: uid)
+                  .where("postedTimeStamp", isGreaterThan: _latestPost)
+                  .orderBy("postedTimeStamp", descending: true)
                   .limit(1)
                   .get()
                   .then((snaps) async {
@@ -217,40 +217,40 @@ class DatabaseService {
 
                   Feed _feed = Feed(
                     documentID: doc.id,
-                    userID: doc['userID'],
-                    username: doc['username'],
-                    profileImageUrl: doc['profileImageUrl'] ?? null,
+                    userID: doc["userID"],
+                    username: doc["username"],
+                    profileImageUrl: doc["profileImageUrl"],
                     hasViewed: false,
 
-                    // content: doc['content'] ?? 'No Content',
-                    contentLength: doc['contentLength'] ?? 0,
+                    // content: doc["content"] ?? "No Content",
+                    contentLength: doc["contentLength"] ?? 0,
 
-                    featuredTopic: doc['featuredTopic'] ?? null,
-                    featuredValue: doc['featuredValue'] ?? ". . .",
+                    featuredTopic: doc["featuredTopic"],
+                    featuredValue: doc["featuredValue"] ?? ". . .",
 
-                    giftLove: doc['giftLove'] ?? 0,
-                    giftBird: doc['giftBird'] ?? 0,
+                    giftLove: doc["giftLove"] ?? 0,
+                    giftBird: doc["giftBird"] ?? 0,
 
-                    title: doc['title'] ?? 'Just Me',
-                    tags: doc['tags'] ?? [],
-                    initLike: doc['isLiked'] != null
-                        ? doc['isLiked'].contains(this.uid)
+                    title: doc["title"] ?? "Just Me",
+                    tags: doc["tags"] ?? [],
+                    initLike: doc["isLiked"] != null
+                        ? doc["isLiked"].contains(this.uid)
                         : false,
-                    numberOfLikes: doc['likes'],
-                    numberOfViews: doc['views'],
-                    listMapContent: doc['listMapContent'] ?? [],
-                    postedTimestamp: doc['postedTimeStamp'].toDate(),
+                    numberOfLikes: doc["likes"],
+                    numberOfViews: doc["views"],
+                    listMapContent: doc["listMapContent"] ?? [],
+                    postedTimestamp: doc["postedTimeStamp"].toDate(),
                   );
 
                   _tempFeedList.add(_feed);
                   _forLoopFeedList.add(_feed);
                 } else if (_hasOlderPost) {
                   //no new post (latestPost is not > localStorage)
-                  print('hasPost get olderpost');
+                  print("hasPost get olderpost");
                   await allPostsCollection
-                      .where('userID', isEqualTo: uid)
-                      .where('postedTimeStamp', isLessThan: _oldestPost)
-                      .orderBy('postedTimeStamp', descending: true)
+                      .where("userID", isEqualTo: uid)
+                      .where("postedTimeStamp", isLessThan: _oldestPost)
+                      .orderBy("postedTimeStamp", descending: true)
                       .limit(1)
                       .get()
                       .then((snaps) {
@@ -259,50 +259,50 @@ class DatabaseService {
 
                       Feed _feed = Feed(
                         documentID: doc.id,
-                        userID: doc['userID'],
-                        username: doc['username'],
-                        profileImageUrl: doc['profileImageUrl'] ?? null,
+                        userID: doc["userID"],
+                        username: doc["username"],
+                        profileImageUrl: doc["profileImageUrl"],
                         hasViewed: false,
 
-                        // content: doc['content'] ?? 'No Content',
-                        contentLength: doc['contentLength'] ?? 0,
+                        // content: doc["content"] ?? "No Content",
+                        contentLength: doc["contentLength"] ?? 0,
 
-                        featuredTopic: doc['featuredTopic'] ?? null,
-                        featuredValue: doc['featuredValue'] ?? ". . .",
+                        featuredTopic: doc["featuredTopic"],
+                        featuredValue: doc["featuredValue"] ?? ". . .",
 
-                        giftLove: doc['giftLove'] ?? 0,
-                        giftBird: doc['giftBird'] ?? 0,
+                        giftLove: doc["giftLove"] ?? 0,
+                        giftBird: doc["giftBird"] ?? 0,
 
-                        title: doc['title'] ?? 'Just Me',
-                        tags: doc['tags'] ?? [],
-                        initLike: doc['isLiked'] != null
-                            ? doc['isLiked'].contains(this.uid)
+                        title: doc["title"] ?? "Just Me",
+                        tags: doc["tags"] ?? [],
+                        initLike: doc["isLiked"] != null
+                            ? doc["isLiked"].contains(this.uid)
                             : false,
-                        numberOfLikes: doc['likes'],
-                        numberOfViews: doc['views'],
-                        listMapContent: doc['listMapContent'] ?? [],
-                        postedTimestamp: doc['postedTimeStamp'].toDate(),
+                        numberOfLikes: doc["likes"],
+                        numberOfViews: doc["views"],
+                        listMapContent: doc["listMapContent"] ?? [],
+                        postedTimestamp: doc["postedTimeStamp"].toDate(),
                       );
 
                       _tempFeedList.add(_feed);
                       _forLoopFeedList.add(_feed);
                     } else {
                       //no new post, no older post
-                      print('JSON Updated no older post');
+                      print("JSON Updated no older post");
                       jsonFollowingStorage.updateNoOlderPosts(uid);
                     }
                   });
                 } else {
-                  print('No older post called');
+                  print("No older post called");
                 }
               });
             } else if (_hasOlderPost) {
               //no new post (latestPost is not > localStorage)
-              print('hasPost get olderpost');
+              print("hasPost get olderpost");
               await allPostsCollection
-                  .where('userID', isEqualTo: uid)
-                  .where('postedTimeStamp', isLessThan: _oldestPost)
-                  .orderBy('postedTimeStamp', descending: true)
+                  .where("userID", isEqualTo: uid)
+                  .where("postedTimeStamp", isLessThan: _oldestPost)
+                  .orderBy("postedTimeStamp", descending: true)
                   .limit(1)
                   .get()
                   .then((snaps) {
@@ -311,49 +311,49 @@ class DatabaseService {
 
                   Feed _feed = Feed(
                     documentID: doc.id,
-                    userID: doc['userID'],
-                    username: doc['username'],
-                    profileImageUrl: doc['profileImageUrl'] ?? null,
+                    userID: doc["userID"],
+                    username: doc["username"],
+                    profileImageUrl: doc["profileImageUrl"],
                     hasViewed: false,
 
-                    // content: doc['content'] ?? 'No Content',
-                    contentLength: doc['contentLength'] ?? 0,
+                    // content: doc["content"] ?? "No Content",
+                    contentLength: doc["contentLength"] ?? 0,
 
-                    featuredTopic: doc['featuredTopic'] ?? null,
-                    featuredValue: doc['featuredValue'] ?? ". . .",
+                    featuredTopic: doc["featuredTopic"],
+                    featuredValue: doc["featuredValue"] ?? ". . .",
 
-                    giftLove: doc['giftLove'] ?? 0,
-                    giftBird: doc['giftBird'] ?? 0,
+                    giftLove: doc["giftLove"] ?? 0,
+                    giftBird: doc["giftBird"] ?? 0,
 
-                    title: doc['title'] ?? 'Just Me',
-                    tags: doc['tags'] ?? [],
-                    initLike: doc['isLiked'] != null
-                        ? doc['isLiked'].contains(this.uid)
+                    title: doc["title"] ?? "Just Me",
+                    tags: doc["tags"] ?? [],
+                    initLike: doc["isLiked"] != null
+                        ? doc["isLiked"].contains(this.uid)
                         : false,
-                    numberOfLikes: doc['likes'],
-                    numberOfViews: doc['views'],
-                    listMapContent: doc['listMapContent'] ?? [],
-                    postedTimestamp: doc['postedTimeStamp'].toDate(),
+                    numberOfLikes: doc["likes"],
+                    numberOfViews: doc["views"],
+                    listMapContent: doc["listMapContent"] ?? [],
+                    postedTimestamp: doc["postedTimeStamp"].toDate(),
                   );
 
                   _tempFeedList.add(_feed);
                   _forLoopFeedList.add(_feed);
                 } else {
                   //no new post, no older post
-                  print('JSON Updated no older post');
+                  print("JSON Updated no older post");
                   jsonFollowingStorage.updateNoOlderPosts(uid);
                 }
               });
             } else {
-              print('No older/latest post called');
+              print("No older/latest post called");
               //no more older post
             }
           } else {
             //no json data of userDetails
             await allPostsCollection
-                .where('userID', isEqualTo: uid)
-                .where('postedTimeStamp', isLessThan: DateTime.now())
-                .orderBy('postedTimeStamp', descending: true)
+                .where("userID", isEqualTo: uid)
+                .where("postedTimeStamp", isLessThan: DateTime.now())
+                .orderBy("postedTimeStamp", descending: true)
                 .limit(1)
                 .get()
                 .then((snaps) {
@@ -361,29 +361,29 @@ class DatabaseService {
 
               Feed _feed = Feed(
                 documentID: doc.id,
-                userID: doc['userID'],
-                username: doc['username'],
-                profileImageUrl: doc['profileImageUrl'] ?? null,
+                userID: doc["userID"],
+                username: doc["username"],
+                profileImageUrl: doc["profileImageUrl"],
                 hasViewed: false,
 
-                // content: doc['content'] ?? 'No Content',
-                contentLength: doc['contentLength'] ?? 0,
+                // content: doc["content"] ?? "No Content",
+                contentLength: doc["contentLength"] ?? 0,
 
-                featuredTopic: doc['featuredTopic'] ?? null,
-                featuredValue: doc['featuredValue'] ?? ". . .",
+                featuredTopic: doc["featuredTopic"],
+                featuredValue: doc["featuredValue"] ?? ". . .",
 
-                giftLove: doc['giftLove'] ?? 0,
-                giftBird: doc['giftBird'] ?? 0,
+                giftLove: doc["giftLove"] ?? 0,
+                giftBird: doc["giftBird"] ?? 0,
 
-                title: doc['title'] ?? 'Just Me',
-                tags: doc['tags'] ?? [],
-                initLike: doc['isLiked'] != null
-                    ? doc['isLiked'].contains(this.uid)
+                title: doc["title"] ?? "Just Me",
+                tags: doc["tags"] ?? [],
+                initLike: doc["isLiked"] != null
+                    ? doc["isLiked"].contains(this.uid)
                     : false,
-                numberOfLikes: doc['likes'],
-                numberOfViews: doc['views'],
-                listMapContent: doc['listMapContent'] ?? [],
-                postedTimestamp: doc['postedTimeStamp'].toDate(),
+                numberOfLikes: doc["likes"],
+                numberOfViews: doc["views"],
+                listMapContent: doc["listMapContent"] ?? [],
+                postedTimestamp: doc["postedTimeStamp"].toDate(),
               );
 
               _tempFeedList.add(_feed);
@@ -396,7 +396,7 @@ class DatabaseService {
             break;
             //break for loop
           }
-          //  print('getFollowingFeeds: ' + _tempFeedList.toString());
+          //  print("getFollowingFeeds: " + _tempFeedList.toString());
 
         }
 
@@ -442,9 +442,9 @@ class DatabaseService {
   }
 
   Future<void> get getNewFeeds async {
-    //onRefresh don't clear existing list (if no new data)
+    //onRefresh don"t clear existing list (if no new data)
     //when latest and oldest all done, repeat by choronological order
-    print('getNewFeeds has been CALLED is DATABASE');
+    print("getNewFeeds has been CALLED is DATABASE");
     List<Feed> tempList = [];
 
     print(_lastUpdated);
@@ -452,41 +452,41 @@ class DatabaseService {
     readCount < 100
         ? _hasLastUpdated
             ? await allPostsCollection
-                .orderBy('postedTimeStamp', descending: true)
-                .where('postedTimeStamp', isLessThan: _lastUpdated)
+                .orderBy("postedTimeStamp", descending: true)
+                .where("postedTimeStamp", isLessThan: _lastUpdated)
                 .limit(5)
                 .get()
                 .then((QuerySnapshot snap) async {
                 snap.docs.forEach((doc) async {
-                  print('got doc: ' + doc.id);
+                  print("got doc: " + doc.id);
 
                   if (!seenDocsList.contains(doc.id)) {
                     tempList.add(Feed(
                       documentID: doc.id,
-                      userID: doc['userID'],
+                      userID: doc["userID"],
 
-                      username: doc['username'],
-                      profileImageUrl: doc['profileImageUrl'] ?? null,
+                      username: doc["username"],
+                      profileImageUrl: doc["profileImageUrl"],
                       hasViewed: false,
 
-                      // content: doc['content'] ?? 'No Content',
-                      contentLength: doc['contentLength'] ?? 0,
+                      // content: doc["content"] ?? "No Content",
+                      contentLength: doc["contentLength"] ?? 0,
 
-                      featuredTopic: doc['featuredTopic'] ?? null,
-                      featuredValue: doc['featuredValue'] ?? ". . .",
+                      featuredTopic: doc["featuredTopic"],
+                      featuredValue: doc["featuredValue"] ?? ". . .",
 
-                      giftLove: doc['giftLove'] ?? 0,
-                      giftBird: doc['giftBird'] ?? 0,
+                      giftLove: doc["giftLove"] ?? 0,
+                      giftBird: doc["giftBird"] ?? 0,
 
-                      title: doc['title'] ?? 'Just Me',
-                      tags: doc['tags'] ?? [],
-                      initLike: doc['isLiked'] != null
-                          ? doc['isLiked'].contains(this.uid)
+                      title: doc["title"] ?? "Just Me",
+                      tags: doc["tags"] ?? [],
+                      initLike: doc["isLiked"] != null
+                          ? doc["isLiked"].contains(this.uid)
                           : false,
-                      numberOfLikes: doc['likes'],
-                      numberOfViews: doc['views'],
-                      listMapContent: doc['listMapContent'] ?? [],
-                      postedTimestamp: doc['postedTimeStamp'].toDate(),
+                      numberOfLikes: doc["likes"],
+                      numberOfViews: doc["views"],
+                      listMapContent: doc["listMapContent"] ?? [],
+                      postedTimestamp: doc["postedTimeStamp"].toDate(),
                     ));
                     //add to seen
                     seenDocsList.add(doc.id);
@@ -494,40 +494,40 @@ class DatabaseService {
                   readCount += 1;
                 });
                 await storeLastUpdatedLocal(snap.docs.last);
-              }).catchError((e) => print('Failed getNewFeeds: $e'))
+              }).catchError((e) => print("Failed getNewFeeds: $e"))
             : await allPostsCollection
-                .orderBy('postedTimeStamp', descending: true)
+                .orderBy("postedTimeStamp", descending: true)
                 .limit(5)
                 .get()
                 .then((QuerySnapshot snap) async {
                 snap.docs.forEach((doc) async {
-                  print('got doc: ' + doc.id);
+                  print("got doc: " + doc.id);
                   if (!seenDocsList.contains(doc.id)) {
                     tempList.add(Feed(
                       documentID: doc.id,
-                      username: doc['username'],
-                      profileImageUrl: doc['profileImageUrl'] ?? null,
+                      username: doc["username"],
+                      profileImageUrl: doc["profileImageUrl"],
                       hasViewed: false,
 
-                      userID: doc['userID'],
-                      // content: doc['content'] ?? 'No Content',
-                      contentLength: doc['contentLength'] ?? 0,
+                      userID: doc["userID"],
+                      // content: doc["content"] ?? "No Content",
+                      contentLength: doc["contentLength"] ?? 0,
 
-                      featuredTopic: doc['featuredTopic'] ?? null,
-                      featuredValue: doc['featuredValue'] ?? ". . .",
+                      featuredTopic: doc["featuredTopic"],
+                      featuredValue: doc["featuredValue"] ?? ". . .",
 
-                      giftLove: doc['giftLove'] ?? 0,
-                      giftBird: doc['giftBird'] ?? 0,
+                      giftLove: doc["giftLove"] ?? 0,
+                      giftBird: doc["giftBird"] ?? 0,
 
-                      title: doc['title'] ?? 'Just Me',
-                      tags: doc['tags'] ?? [],
-                      initLike: doc['isLiked'] != null
-                          ? doc['isLiked'].contains(this.uid)
+                      title: doc["title"] ?? "Just Me",
+                      tags: doc["tags"] ?? [],
+                      initLike: doc["isLiked"] != null
+                          ? doc["isLiked"].contains(this.uid)
                           : false,
-                      numberOfLikes: doc['likes'],
-                      numberOfViews: doc['views'],
-                      listMapContent: doc['listMapContent'] ?? [],
-                      postedTimestamp: doc['postedTimeStamp'].toDate(),
+                      numberOfLikes: doc["likes"],
+                      numberOfViews: doc["views"],
+                      listMapContent: doc["listMapContent"] ?? [],
+                      postedTimestamp: doc["postedTimeStamp"].toDate(),
                     ));
                     //add to seen
                     seenDocsList.add(doc.id);
@@ -535,10 +535,10 @@ class DatabaseService {
                   readCount += 1;
                 });
                 await storeLastUpdatedLocal(snap.docs.last);
-              }).catchError((e) => print('Failed getNewFeeds: $e'))
-        : print('can\'t read no more: ' + readCount.toString());
+              }).catchError((e) => print("Failed getNewFeeds: $e"))
+        : print("can\"t read no more: " + readCount.toString());
 
-    print('getNewFeeds: ' + tempList.toString());
+    print("getNewFeeds: " + tempList.toString());
 
     // getSortedFollowing().then((sortedFollowingList) {
     //   //get from shared preferences or Firebase if null
@@ -557,32 +557,32 @@ class DatabaseService {
   Future<void> storeLastUpdatedLocal(DocumentSnapshot doc) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _hasLastUpdated = true;
-    _lastUpdated = doc['postedTimeStamp'].toDate();
-    prefs.setString('lastUpdated', _lastUpdated.toString());
-    print('lastUpdated stored: ' + _lastUpdated.toString());
-    // prefs.setStringList('seenDocs', seenDocsList);
+    _lastUpdated = doc["postedTimeStamp"].toDate();
+    prefs.setString("lastUpdated", _lastUpdated.toString());
+    print("lastUpdated stored: " + _lastUpdated.toString());
+    // prefs.setStringList("seenDocs", seenDocsList);
     // this.latestEntry.add(doc);
   }
 
   // Future<void> createNewPost(String title, String content,
   //     {List<String> tags}) async {
   //   List<String> tempTags = getTags(tags);
-  //   print('createNewPost with tags: ' + tempTags.toString());
+  //   print("createNewPost with tags: " + tempTags.toString());
   //   await allPostsCollection.add({
-  //     'title': title,
-  //     'content': content,
-  //     'name': 'zheng_xiang_wong',
-  //     'tags': tempTags,
-  //     'verse': 'Psalm 4:8',
-  //     'verseTag': 'versePeace',
-  //     'user': 'Dummy user ID',
-  //     'peaceRating': 50.00,
-  //     'loveRating': 45.00,
-  //     'usersSeen': ['xiang'],
-  //     'isLiked': [],
-  //     'lastUpdated': FieldValue.serverTimestamp(),
+  //     "title": title,
+  //     "content": content,
+  //     "name": "zheng_xiang_wong",
+  //     "tags": tempTags,
+  //     "verse": "Psalm 4:8",
+  //     "verseTag": "versePeace",
+  //     "user": "Dummy user ID",
+  //     "peaceRating": 50.00,
+  //     "loveRating": 45.00,
+  //     "usersSeen": ["xiang"],
+  //     "isLiked": [],
+  //     "lastUpdated": FieldValue.serverTimestamp(),
   //   }).catchError((e) {
-  //     print('Failed to add data: $e');
+  //     print("Failed to add data: $e");
   //   });
   // }
 
@@ -602,31 +602,31 @@ class DatabaseService {
     });
 
     await allPostsCollection.add({
-      'userID': this.uid ?? 'no user id',
-      'username': myUser.username ?? 'no username uploaded',
-      'profileImageUrl': myUser.profileImageUrl ?? null,
-      'likes': 0,
-      'isLiked': [],
-      'title': title,
-      // 'content': content,
-      'giftLove': 0,
-      'giftBird': 0,
-      'featuredTopic': featuredTopic,
-      'featuredValue': featuredValue,
-      'contentLength': content.length,
-      'listMapContent': listMapContent,
-      'tags': _reformatTags,
-      'tagsValue': _reformatTagMap,
-      'views': 9,
-      'postedTimeStamp': FieldValue.serverTimestamp(),
+      "userID": this.uid ?? "no user id",
+      "username": myUser.username ?? "no username uploaded",
+      "profileImageUrl": myUser.profileImageUrl,
+      "likes": 0,
+      "isLiked": [],
+      "title": title,
+      // "content": content,
+      "giftLove": 0,
+      "giftBird": 0,
+      "featuredTopic": featuredTopic,
+      "featuredValue": featuredValue,
+      "contentLength": content.length,
+      "listMapContent": listMapContent,
+      "tags": _reformatTags,
+      "tagsValue": _reformatTagMap,
+      "views": 9,
+      "postedTimeStamp": FieldValue.serverTimestamp(),
     }).catchError((e) {
-      print('Failed to add data: $e');
+      print("Failed to add data: $e");
     });
   }
 
   Future<void> updateFeedAfterSwipe(
       {Feed feed, MyUser user, bool hasUpdateLike}) async {
-    print('updateFeedAfterSwipe RAN!');
+    print("updateFeedAfterSwipe RAN!");
 
     feed.swipeUpdatedToFB();
 
@@ -639,51 +639,51 @@ class DatabaseService {
 
     try {
       if (hasUpdateLike) {
-        print('hasLikeUpdate is true');
+        print("hasLikeUpdate is true");
         if (feed.isLiked) {
           await allPostsCollection.doc(feed.documentID).update({
-            'isLiked': FieldValue.arrayUnion([this.uid]),
-            'likes': FieldValue.increment(1),
-            'views': FieldValue.increment(feed.hasViewed ? 0 : 1),
-            'profileImageUrl': user.profileImageUrl,
+            "isLiked": FieldValue.arrayUnion([this.uid]),
+            "likes": FieldValue.increment(1),
+            "views": FieldValue.increment(feed.hasViewed ? 0 : 1),
+            "profileImageUrl": user.profileImageUrl,
           });
         } else {
           await allPostsCollection.doc(feed.documentID).update({
-            'isLiked': FieldValue.arrayRemove([this.uid]),
-            'likes': FieldValue.increment(-1),
-            'views': FieldValue.increment(feed.hasViewed ? 0 : 1),
-            'profileImageUrl': user.profileImageUrl,
+            "isLiked": FieldValue.arrayRemove([this.uid]),
+            "likes": FieldValue.increment(-1),
+            "views": FieldValue.increment(feed.hasViewed ? 0 : 1),
+            "profileImageUrl": user.profileImageUrl,
           });
         }
       } else if (!feed.hasViewed) {
         await allPostsCollection.doc(feed.documentID).update({
-          'views': FieldValue.increment(1),
-          'profileImageUrl': user.profileImageUrl,
+          "views": FieldValue.increment(1),
+          "profileImageUrl": user.profileImageUrl,
         });
-        print('Updated Views of Feed');
+        print("Updated Views of Feed");
       } else {
-        print('No update to DB feed');
+        print("No update to DB feed");
       }
 
       feed.hasViewed = true;
       //has viewed feed after swipe
     } catch (e) {
-      print('Failed to updateFeedAfterSwipe $e');
+      print("Failed to updateFeedAfterSwipe $e");
     }
   }
 
   Future<void> updateFeedDynamicPost({Feed feed}) async {
     if (feed.isLiked) {
       await allPostsCollection.doc(feed.documentID).update({
-        'isLiked': FieldValue.arrayUnion([this.uid]),
-        'likes': FieldValue.increment(1),
-        'views': FieldValue.increment(feed.hasViewed ? 0 : 1),
+        "isLiked": FieldValue.arrayUnion([this.uid]),
+        "likes": FieldValue.increment(1),
+        "views": FieldValue.increment(feed.hasViewed ? 0 : 1),
       });
     } else {
       await allPostsCollection.doc(feed.documentID).update({
-        'isLiked': FieldValue.arrayRemove([this.uid]),
-        'likes': FieldValue.increment(-1),
-        'views': FieldValue.increment(feed.hasViewed ? 0 : 1),
+        "isLiked": FieldValue.arrayRemove([this.uid]),
+        "likes": FieldValue.increment(-1),
+        "views": FieldValue.increment(feed.hasViewed ? 0 : 1),
       });
     }
   }
@@ -693,7 +693,7 @@ class DatabaseService {
     tags.forEach((val) => {
           if (val != null)
             {
-              val = val + '30',
+              val = val + "30",
               tempList.add(val.toLowerCase()),
             }
         });
@@ -706,89 +706,87 @@ class DatabaseService {
     @required bool completeLogin,
   }) async {
     try {
-      print('firestoreCreateAnonAccount | START');
+      print("firestoreCreateAnonAccount | START");
       return usersPrivateCollection.doc(userUID).set({
-        'username': username ?? null,
-        'description': null,
-        'profileImageUrl': null,
-        'phone': null,
-        'email': null,
-        'totalFollowers': 0,
-        'totalFollowing': 0,
-        'tagRatings': ['love10', 'peace30'],
-        'tagTimestamps': {
-          'love': FieldValue.serverTimestamp(),
-          'peace': FieldValue.serverTimestamp(),
+        "username": username,
+        "description": null,
+        "profileImageUrl": null,
+        "phone": null,
+        "email": null,
+        "totalFollowers": 0,
+        "totalFollowing": 0,
+        "tagRatings": ["love10", "peace30"],
+        "tagTimestamps": {
+          "love": FieldValue.serverTimestamp(),
+          "peace": FieldValue.serverTimestamp(),
         },
-        'socialLinks': null,
-        'completeLogin': completeLogin ?? false,
-        'isPrivateAccount': false,
-        'isDisableSharing': false,
-        'isHideInteraction': false,
+        "socialLinks": null,
+        "completeLogin": completeLogin ?? false,
+        "isPrivateAccount": false,
+        "isDisableSharing": false,
+        "isHideInteraction": false,
       });
     } catch (err) {
-      print('firestoreCreateAccount | Failed');
+      print("firestoreCreateAccount | Failed");
     }
   }
 
-  Future<CreateAcc> firestoreCreateAccount(
+  Future<ReturnValue> createFirestoreAccount(
       {@required String userUID,
       @required String email,
       @required String username,
       @required String phone,
       @required bool completeLogin}) async {
     try {
-      print('firestoreCreateAccount | with uid: $userUID');
-      return usersPublicCollection.add({
-        'userID': userUID,
-        'username': username ?? null,
-        'phone': phone ?? null,
-        'email': email ?? null,
-        'totalFollowers': 0,
-        'followers': [],
-        'latestPost': FieldValue.serverTimestamp(),
-        'isPrivateAccount': false,
-        'isDisableSharing': false,
-        'isHideInteraction': false,
-      }).then((publicDoc) async {
-        await usersPrivateCollection.doc(userUID).set({
-          'username': username ?? null,
-          'description': null,
-          'profileImageUrl': null,
-          'phone': phone ?? null,
-          'email': email ?? null,
-          'myPublicDocIds': FieldValue.arrayUnion([publicDoc.id]),
-          'totalFollowers': 0,
-          'totalFollowing': 0,
-          'tagRatings': ['love10', 'peace30'],
-          'tagTimestamps': {
-            'love': FieldValue.serverTimestamp(),
-            'peace': FieldValue.serverTimestamp(),
-          },
-          'socialLinks': null,
-          'completeLogin': completeLogin ?? false,
-          'isPrivateAccount': false,
-          'isDisableSharing': false,
-          'isHideInteraction': false,
-        });
+      print(purplePen("createFirestoreAccount | STARTED"));
 
-        final String _allFollowingCollectionPath =
-            '${usersPrivateCollection.path}/$userUID/allFollowing';
-
-        final CollectionReference privateAllFollowingCollection =
-            FirebaseFirestore.instance.collection(_allFollowingCollectionPath);
-
-        privateAllFollowingCollection.add({
-          'numFollowing': 0,
-          'usersFollowing': [],
-        });
-
-        print('firestoreCreateAccount | FINISH');
-        return CreateAcc.newAccount;
+      final DocumentReference publicDoc = await usersPublicCollection.add({
+        "username": username,
+        "description": null,
+        "profileImageUrl": null,
+        "phone": phone,
+        "email": email,
+        "totalFollowers": 0,
+        "totalFollowing": 0,
+        "socialLinks": null,
+        "isPrivateAccount": false,
+        "isDisableSharing": false,
+        "isHideInteraction": false,
+        "userID": userUID,
+        "followers": [],
+        "latestPost": FieldValue.serverTimestamp(),
       });
-    } catch (e) {
-      print('Error creating account: ' + e.toString());
-      return CreateAcc.error;
+
+      await usersPrivateCollection.doc(userUID).set({
+        "username": username,
+        "description": null,
+        "profileImageUrl": null,
+        "phone": phone,
+        "email": email,
+        "myPublicDocIds": FieldValue.arrayUnion([publicDoc.id]),
+        "totalFollowers": 0,
+        "totalFollowing": 0,
+        "socialLinks": null,
+        "isPrivateAccount": false,
+        "isDisableSharing": false,
+        "isHideInteraction": false,
+        "completeLogin": completeLogin ?? false,
+      });
+
+      final CollectionReference privateAllFollowingCollection =
+          FirebaseFirestore.instance.collection(
+              "${usersPrivateCollection.path}/$userUID/allFollowing");
+
+      await privateAllFollowingCollection.add({
+        "numFollowing": 0,
+        "usersFollowing": [],
+      });
+
+      print(greenPen("createFirestoreAccount | SUCCESS!"));
+      return ReturnValue(true, username);
+    } catch (err) {
+      print(redPen("createFirestoreAccount | FAILED with catch error: $err"));
+      return ReturnValue(false, "Could not create account.");
     }
   }
 
@@ -798,10 +796,10 @@ class DatabaseService {
   //     await usersPrivateCollection.doc(uid).get().then((doc) async {
   //       if (doc.exists) {
   //         await usersPrivateCollection.doc(uid).update({
-  //           'username': username,
-  //           'phone': phone,
-  //           'completeLogin': true, //shouldn't be true
-  //           'profileImageUrl': null,
+  //           "username": username,
+  //           "phone": phone,
+  //           "completeLogin": true, //shouldn"t be true
+  //           "profileImageUrl": null,
   //         });
   //       } else {
   //         // firestoreCreateAccount
@@ -813,27 +811,27 @@ class DatabaseService {
   //             completeLogin: true);
   //       }
   //       await usersPublicCollection
-  //           .where('userID', isEqualTo: uid)
+  //           .where("userID", isEqualTo: uid)
   //           .get()
   //           .then((snap) async {
   //         if (snap.docs.isNotEmpty) {
   //           snap.docs.forEach((doc) async {
   //             await usersPublicCollection.doc(doc.id).update({
-  //               'username': username,
-  //               'phone': phone,
-  //               'profileImageUrl': null,
+  //               "username": username,
+  //               "phone": phone,
+  //               "profileImageUrl": null,
   //             });
   //           });
   //         } else {
   //           await usersPublicCollection.add({
-  //             'userID': uid,
-  //             'username': username,
-  //             'phone': phone,
-  //             'profileImageUrl': null,
-  //             'email': '',
-  //             'totalFollowers': 0,
-  //             'followers': [],
-  //             'latestPost': FieldValue.serverTimestamp(),
+  //             "userID": uid,
+  //             "username": username,
+  //             "phone": phone,
+  //             "profileImageUrl": null,
+  //             "email": "",
+  //             "totalFollowers": 0,
+  //             "followers": [],
+  //             "latestPost": FieldValue.serverTimestamp(),
   //           });
   //         }
   //       });
@@ -845,14 +843,15 @@ class DatabaseService {
     try {
       print(purplePen("checkIfValidUsername | STARTED!"));
       final QuerySnapshot snapshot = await usersPrivateCollection
-          .where('username', isEqualTo: username)
+          .where("username", isEqualTo: username)
           .get();
       if (snapshot.docs.isEmpty) {
         print(greenPen("checkIfValidUsername | VALID!"));
         return ReturnValue(true, "$username created successfully!");
       } else {
         print(redPen("checkIfValidUsername | INVALID!"));
-        return ReturnValue(false, "$username is already in use. Please try another username.");
+        return ReturnValue(
+            false, "$username is already in use. Please try another username.");
       }
     } catch (err) {
       print(redPen("checkIfValidUsername | FAILED with catch error: $err"));
@@ -862,15 +861,15 @@ class DatabaseService {
 
   Future<void> giftFeed({String postID, int giftLove, int giftBird}) async {
     await allPostsCollection.doc(postID).update({
-      'giftLove': FieldValue.increment(giftLove),
-      'giftBird': FieldValue.increment(giftBird),
+      "giftLove": FieldValue.increment(giftLove),
+      "giftBird": FieldValue.increment(giftBird),
     });
   }
 
   Future<void> addLike() async {
     await allPostsCollection.get().then((querySnaps) {
       querySnaps.docs.forEach((doc) {
-        allPostsCollection.doc(doc.id).update({'isLiked': []});
+        allPostsCollection.doc(doc.id).update({"isLiked": []});
       });
     });
   }
@@ -878,42 +877,42 @@ class DatabaseService {
   Future<void> transferToLikeCollection() async {
     try {
       await allPostsCollection.get().then((QuerySnapshot querySnapshot) {
-        print('Success get from allposts');
+        print("Success get from allposts");
         querySnapshot.docs.forEach((doc) async {
           String _postID = doc.id;
-          print('iterate Post ID: ' + _postID);
+          print("iterate Post ID: " + _postID);
 
-          List _listLiked = doc['isLiked'] ?? [];
+          List _listLiked = doc["isLiked"] ?? [];
 
           await likedPostsCollection
-              .where('postID', isEqualTo: _postID)
-              .orderBy('timeCreated', descending: false)
+              .where("postID", isEqualTo: _postID)
+              .orderBy("timeCreated", descending: false)
               .limit(5)
               .get()
               .then((snaps) async {
-            print('SNAPS ARE: ' + snaps.toString());
+            print("SNAPS ARE: " + snaps.toString());
             if (snaps.size > 0) {
-              print('Existing like document with ID: ' + snaps.docs.last.id);
+              print("Existing like document with ID: " + snaps.docs.last.id);
               String _docID = snaps.docs.last.id;
               await likedPostsCollection.doc(_docID).update({
-                'postID': _postID,
-                'likedBy': FieldValue.arrayUnion(_listLiked),
-                // 'timeCreated': FieldValue.serverTimestamp(),
+                "postID": _postID,
+                "likedBy": FieldValue.arrayUnion(_listLiked),
+                // "timeCreated": FieldValue.serverTimestamp(),
               });
             } else {
-              print('Create New document with Post ID: ' + _postID);
+              print("Create New document with Post ID: " + _postID);
               await likedPostsCollection.add({
-                'postID': _postID,
-                'likedBy': FieldValue.arrayUnion(_listLiked),
-                'numberOfLikes': _listLiked.length,
-                'timeCreated': FieldValue.serverTimestamp(),
+                "postID": _postID,
+                "likedBy": FieldValue.arrayUnion(_listLiked),
+                "numberOfLikes": _listLiked.length,
+                "timeCreated": FieldValue.serverTimestamp(),
               });
             }
           });
         });
       });
     } catch (e) {
-      print('ERROR: transfer to like collection failed');
+      print("ERROR: transfer to like collection failed");
     }
   }
 
@@ -923,49 +922,49 @@ class DatabaseService {
     String description,
   }) async {
     await reportedPostsCollection
-        .where('postID', isEqualTo: feed.documentID)
+        .where("postID", isEqualTo: feed.documentID)
         .get()
         .then((snap) async {
       if (snap.docs.isNotEmpty) {
         DocumentSnapshot doc = snap.docs.last;
         await reportedPostsCollection.doc(doc.id).update({
-          'totalReports': FieldValue.increment(1),
-          'users': FieldValue.arrayUnion([this.uid]),
-          'reasonList': FieldValue.arrayUnion([description]),
-          'latestReport': FieldValue.serverTimestamp(),
-          'violence': reportEnumList.contains(ReportFeed.violence)
+          "totalReports": FieldValue.increment(1),
+          "users": FieldValue.arrayUnion([this.uid]),
+          "reasonList": FieldValue.arrayUnion([description]),
+          "latestReport": FieldValue.serverTimestamp(),
+          "violence": reportEnumList.contains(ReportFeed.violence)
               ? FieldValue.increment(1)
               : FieldValue.increment(0),
-          'sensitive': reportEnumList.contains(ReportFeed.sensitive)
+          "sensitive": reportEnumList.contains(ReportFeed.sensitive)
               ? FieldValue.increment(1)
               : FieldValue.increment(0),
-          'political': reportEnumList.contains(ReportFeed.political)
+          "political": reportEnumList.contains(ReportFeed.political)
               ? FieldValue.increment(1)
               : FieldValue.increment(0),
-          'adultContent': reportEnumList.contains(ReportFeed.adultContent)
+          "adultContent": reportEnumList.contains(ReportFeed.adultContent)
               ? FieldValue.increment(1)
               : FieldValue.increment(0),
-          'language': reportEnumList.contains(ReportFeed.language)
+          "language": reportEnumList.contains(ReportFeed.language)
               ? FieldValue.increment(1)
               : FieldValue.increment(0),
-          'others': reportEnumList.contains(ReportFeed.others)
+          "others": reportEnumList.contains(ReportFeed.others)
               ? FieldValue.increment(1)
               : FieldValue.increment(0),
         });
       } else {
         await reportedPostsCollection.add({
-          'postID': feed.documentID,
-          'totalReports': 1,
-          'users': FieldValue.arrayUnion([this.uid]),
-          'reasonList': [description],
-          'latestReport': FieldValue.serverTimestamp(),
-          'violence': reportEnumList.contains(ReportFeed.violence) ? 1 : 0,
-          'sensitive': reportEnumList.contains(ReportFeed.sensitive) ? 1 : 0,
-          'political': reportEnumList.contains(ReportFeed.political) ? 1 : 0,
-          'adultContent':
+          "postID": feed.documentID,
+          "totalReports": 1,
+          "users": FieldValue.arrayUnion([this.uid]),
+          "reasonList": [description],
+          "latestReport": FieldValue.serverTimestamp(),
+          "violence": reportEnumList.contains(ReportFeed.violence) ? 1 : 0,
+          "sensitive": reportEnumList.contains(ReportFeed.sensitive) ? 1 : 0,
+          "political": reportEnumList.contains(ReportFeed.political) ? 1 : 0,
+          "adultContent":
               reportEnumList.contains(ReportFeed.adultContent) ? 1 : 0,
-          'language': reportEnumList.contains(ReportFeed.language) ? 1 : 0,
-          'others': reportEnumList.contains(ReportFeed.others) ? 1 : 0,
+          "language": reportEnumList.contains(ReportFeed.language) ? 1 : 0,
+          "others": reportEnumList.contains(ReportFeed.others) ? 1 : 0,
         });
       }
     });
@@ -975,7 +974,7 @@ class DatabaseService {
   Future<bool> completeSelectionTopics(List<String> topicInterests) async {
     try {
       await usersPrivateCollection.doc(uid).update({
-        'topicInterests': topicInterests,
+        "topicInterests": topicInterests,
       });
       return true;
     } catch (err) {
@@ -986,10 +985,10 @@ class DatabaseService {
   Future<void> reportAProblem(
       {String reportDescription, String username, String userID}) async {
     reportAProblemCollection.add({
-      'description': reportDescription,
-      'timestamp': FieldValue.serverTimestamp(),
-      'userID': userID,
-      'username': username,
+      "description": reportDescription,
+      "timestamp": FieldValue.serverTimestamp(),
+      "userID": userID,
+      "username": username,
     });
   }
 
@@ -1010,9 +1009,9 @@ class DatabaseService {
   //   await usersPrivateCollection.get().then((snap) async {
   //     snap.docs.forEach((doc) async {
   //       await usersPrivateCollection.doc(doc.id).update({
-  //         'isPrivateAccount': false,
-  //         'isDisableSharing': false,
-  //         'isHideInteraction': false,
+  //         "isPrivateAccount": false,
+  //         "isDisableSharing": false,
+  //         "isHideInteraction": false,
   //       });
   //     });
   //   });
@@ -1020,15 +1019,15 @@ class DatabaseService {
 
   // Future<void> updateAllPostWithFields() async {
   //   await allPostsCollection
-  //       .where('featuredTopic', isEqualTo: null)
+  //       .where("featuredTopic", isEqualTo: null)
   //       .get()
   //       .then((snap) {
   //     snap.docs.forEach((doc) async {
   //       await allPostsCollection.doc(doc.id).update({
-  //         'giftBird': 0,
-  //         'giftLove': 0,
-  //         'featuredTopic': null,
-  //         'featuredValue': null,
+  //         "giftBird": 0,
+  //         "giftLove": 0,
+  //         "featuredTopic": null,
+  //         "featuredValue": null,
   //       });
   //     });
   //   });
@@ -1038,7 +1037,7 @@ class DatabaseService {
   //   await usersPrivateCollection.get().then((snaps) {
   //     snaps.docs.forEach((doc) async {
   //       await usersPrivateCollection.doc(doc.id).update({
-  //         'completeLogin': true,
+  //         "completeLogin": true,
   //       });
   //     });
   //   });
@@ -1048,9 +1047,9 @@ class DatabaseService {
   //   await allPostsCollection.get().then((snaps) {
   //     snaps.docs.forEach((doc) async {
   //       allPostsCollection.doc(doc.id).update({
-  //         'content': FieldValue.delete(),
-  //         // 'contentLength':
-  //         //     doc['content'] != null ? doc['content'].length : 0,
+  //         "content": FieldValue.delete(),
+  //         // "contentLength":
+  //         //     doc["content"] != null ? doc["content"].length : 0,
   //       });
   //     });
   //   });
@@ -1061,14 +1060,14 @@ class DatabaseService {
   //   await usersPrivateCollection.get().then((snaps) {
   //     snaps.docs.forEach((doc) async {
   //       String _currentID = doc.id;
-  //       print('UserID is: ' + doc.id);
+  //       print("UserID is: " + doc.id);
   //       final String _allFollowingCollectionPath =
-  //           '${usersPrivateCollection.path}/${doc.id}/allFollowing';
+  //           "${usersPrivateCollection.path}/${doc.id}/allFollowing";
 
   //       final CollectionReference privateAllFollowingCollection =
   //           FirebaseFirestore.instance.collection(_allFollowingCollectionPath);
 
-  //       print('Collection Path is: ' + privateAllFollowingCollection.path);
+  //       print("Collection Path is: " + privateAllFollowingCollection.path);
 
   //       await privateAllFollowingCollection.get().then((snaps) async {
   //         snaps.docs.forEach((doc) async {
@@ -1079,23 +1078,23 @@ class DatabaseService {
   //         });
   //       }).then((_) async {
   //         await privateAllFollowingCollection.add({
-  //           'numFollowing': 0,
-  //           'usersFollowing': [],
+  //           "numFollowing": 0,
+  //           "usersFollowing": [],
   //         }).then((addedDoc) async {
-  //           print('Doc added at: ' + _currentID);
+  //           print("Doc added at: " + _currentID);
 
   //           await usersPublicCollection
-  //               .where('followers', arrayContains: _currentID)
+  //               .where("followers", arrayContains: _currentID)
   //               .get()
   //               .then((followingSnaps) async {
-  //             print(doc['username']);
+  //             print(doc["username"]);
   //             print(followingSnaps.size);
   //             followingSnaps.docs.forEach((followingDoc) async {
-  //               print(followingDoc.data()['userID']);
+  //               print(followingDoc.data()["userID"]);
   //               await privateAllFollowingCollection.doc(addedDoc.id).update({
-  //                 'numFollowing': FieldValue.increment(1),
-  //                 'usersFollowing':
-  //                     FieldValue.arrayUnion([followingDoc.data()['userID']]),
+  //                 "numFollowing": FieldValue.increment(1),
+  //                 "usersFollowing":
+  //                     FieldValue.arrayUnion([followingDoc.data()["userID"]]),
   //               });
   //             });
   //           });

@@ -144,7 +144,10 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
 
                     if (result.success) {
                       // username is 100% valid
-                      _databaseService.firestoreCreateAccount(
+                      toast(result.value);
+
+                      final ReturnValue createAccResult =
+                          await _databaseService.createFirestoreAccount(
                         completeLogin: true,
                         email: _authService.getCurrentUser.email,
                         phone: _authService.getCurrentUser.phoneNumber,
@@ -152,15 +155,18 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
                         userUID: _authService.getCurrentUser.uid,
                       );
 
-                      toast(result.value);
-
-                      Navigator.pushReplacement(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => CreateNewPhone(
-                              usernameController: _usernameController,
-                            ),
-                          ));
+                      if (createAccResult.success) {
+                        toast("Created username ${createAccResult.value}!");
+                        Navigator.pushReplacement(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => CreateNewPhone(
+                                usernameController: _usernameController,
+                              ),
+                            ));
+                      } else {
+                        toast(createAccResult.value);
+                      }
                     } else {
                       // second check is not valid
                       toast(result.value);
