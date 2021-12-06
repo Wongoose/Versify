@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/services/firebase/auth.dart';
 import 'package:versify/services/firebase/database.dart';
 import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_functions.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
 import 'package:vibration/vibration.dart';
 
@@ -26,7 +28,6 @@ class UsernameValidatingTextField extends StatefulWidget {
 
 class _UsernameValidatingTextFieldState
     extends State<UsernameValidatingTextField> {
-      
   Timer _debounce;
   String _text;
   bool _validUsername = true;
@@ -48,8 +49,37 @@ class _UsernameValidatingTextFieldState
     if (_debounce?.isActive ?? false) _debounce.cancel();
 
     _debounce = Timer(const Duration(seconds: 1), () {
+      if (username.isEmpty) {
+        setState(() {
+          _validUsername = false;
+          _validLoading = true;
+          widget.updateValidUsername(
+            validUsername: _validUsername,
+            isSetState: true,
+          );
+        });
+        return;
+      }
       if (validateUsernameFormat(username)) {
         print(greenPen("_onUsernameChanged | VALID username format!"));
+
+        final ReturnValue result = usernameFilterProfanity(username);
+
+        if (!result.success) {
+          // HAS PROFANITY
+          toast("Username not allowed!");
+          setState(() {
+            validateError = result.value;
+            _validUsername = false;
+            _validLoading = false;
+            widget.updateValidUsername(
+              validUsername: _validUsername,
+              isSetState: true,
+            );
+          });
+          return;
+        }
+
         if (username != "" &&
             username != (_authService.myUser?.username ?? "")) {
           _validateUsernameFirebase(username);
@@ -137,7 +167,9 @@ class _UsernameValidatingTextFieldState
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
+
     _authService = Provider.of<AuthService>(context);
+
     return TextFormField(
       autofocus: true,
       controller: widget.usernameController,
