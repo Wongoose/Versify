@@ -172,6 +172,16 @@ class MainSuccessStreamWrapper extends StatelessWidget {
                 canvasColor: Colors.white,
                 backgroundColor: Colors.white,
                 dialogBackgroundColor: Colors.white,
+                dialogTheme: DialogTheme(
+                  titleTextStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                  contentTextStyle: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14,
+                  ),
+                ),
               ),
               builder: (context, child) {
                 return MediaQuery(
