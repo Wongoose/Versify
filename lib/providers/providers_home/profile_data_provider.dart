@@ -1,6 +1,5 @@
 import 'package:versify/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'visit_profile_provider.dart';
 
 class ProfileDataProvider extends ChangeNotifier {
@@ -12,8 +11,6 @@ class ProfileDataProvider extends ChangeNotifier {
 
   MyUser _currentViewPostUser;
 
-  PhoneNumber phoneNumberNewAcc;
-
   ProfileDataProvider({this.authUserUID});
   String get currentUserUID => _currentViewPostUser.userUID;
   MyUser get currentViewPostUser => _currentViewPostUser;
@@ -21,7 +18,7 @@ class ProfileDataProvider extends ChangeNotifier {
 
   void newViewPostUser(MyUser user) {
     _currentViewPostUser = user;
-    print('NewUser ProfilePostsView with username: ' + user.username);
+    print("NewUser ProfilePostsView with username: ${user.username}");
     notifyListeners();
   }
 

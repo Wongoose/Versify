@@ -1,14 +1,10 @@
-import "dart:async";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:overlay_support/overlay_support.dart";
 import "package:versify/providers/providers_home/theme_data_provider.dart";
 import "package:versify/screens/app_register/create_new_phone.dart";
-import "package:versify/providers/providers_home/profile_data_provider.dart";
 import "package:versify/services/firebase/auth.dart";
 import "package:versify/services/firebase/database.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:provider/provider.dart";
 import 'package:versify/shared/helper/helper_classes.dart';
 import "package:versify/shared/widgets/widgets_all_loading.dart";
@@ -24,7 +20,6 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
 
   DatabaseService _databaseService;
   AuthService _authService;
-  ProfileDataProvider _profileDataProvider;
 
   bool _validUsername = false;
   // Timer _debounce;
@@ -39,22 +34,11 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _profileDataProvider.phoneNumberNewAcc = PhoneNumber(
-          phoneNumber: _authService.getCurrentUser.phoneNumber ?? "");
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final ThemeProvider _themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     _authService = Provider.of<AuthService>(context);
     _databaseService = Provider.of<DatabaseService>(context);
-    _profileDataProvider =
-        Provider.of<ProfileDataProvider>(context, listen: false);
 
     return WillPopScope(
       onWillPop: () async {

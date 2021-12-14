@@ -3,6 +3,7 @@ import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
+import 'package:versify/shared/widgets/widgets_dialog_cancel_verification.dart';
 import 'package:versify/shared/widgets/widgets_dialog_existing_login.dart';
 import 'package:versify/shared/widgets/widgets_dialog_reset_password.dart';
 import 'package:versify/source/wrapper.dart';
@@ -26,6 +27,11 @@ void existingLoginDialog(BuildContext context, Function toggleSignIn) {
   showDialog(
       context: context,
       builder: (context) => DialogExistingLogin(toggleSignIn: toggleSignIn));
+}
+
+void cancelVerificationDialog(BuildContext context) {
+  showDialog(
+      context: context, builder: (context) => DialogCancelVerification());
 }
 
 ReturnValue usernameFilterProfanity(String string) {

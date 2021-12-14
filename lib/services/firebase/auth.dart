@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:versify/services/firebase/dynamic_links.dart';
 import 'package:versify/shared/helper/helper_classes.dart';
+import 'package:versify/shared/helper/helper_functions.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
@@ -364,6 +365,96 @@ class AuthService {
     } catch (err) {
       print(redPen("verifyCreateAccountEmail | FAILED with catch error: $err"));
       return ReturnValue(false, "Could not create account");
+    }
+  }
+
+  Future<void> verifyPhoneNumber(
+      BuildContext context, String phoneNumber, Function onCodeSent,
+      [int forceResendingToken]) async {
+    try {
+      print(purplePen("auth.dart: verifyPhoneNumber | STARTED"));
+      if (forceResendingToken != null) {
+        _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          verificationCompleted: (credential) {
+            print(greenPen("auth.dart verifyPhoneNumber | COMPLETED"));
+            updateUserPhoneNumber(context, credential);
+          },
+          verificationFailed: (firebaseAuthException) {
+            print(redPen(
+                "auth.dart verifyPhoneNumber | FAILED with error: ${firebaseAuthException.message}"));
+            toast(
+                "Failed to send verification code to $phoneNumber. Please try again.");
+          },
+          codeSent: (verificationID, resendingToken) {
+            print(greenPen("auth.dart verifyPhoneNumber | CODE WAS SENT!"));
+            toast("Verification code was sent to $phoneNumber");
+            onCodeSent(verificationID, resendingToken);
+          },
+          codeAutoRetrievalTimeout: (_) {
+            print(redPen(
+                "auth.dart verifyPhoneNumber | codeAutoRetrievalTimeout!"));
+          },
+          timeout: Duration(minutes: 2),
+        );
+      } else {
+        // REPEAT SAME
+        _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          forceResendingToken: forceResendingToken,
+          verificationCompleted: (credential) {
+            print(greenPen("auth.dart verifyPhoneNumber | COMPLETED"));
+            updateUserPhoneNumber(context, credential);
+          },
+          verificationFailed: (firebaseAuthException) {
+            print(redPen(
+                "auth.dart verifyPhoneNumber | FAILED with error: ${firebaseAuthException.message}"));
+            toast(
+                "Failed to send verification code to $phoneNumber. Please try again.");
+          },
+          codeSent: (verificationID, resendingToken) {
+            print(greenPen("auth.dart verifyPhoneNumber | CODE WAS SENT!"));
+            toast("Verification code was sent to $phoneNumber");
+            onCodeSent(verificationID, resendingToken);
+          },
+          codeAutoRetrievalTimeout: (_) {
+            print(redPen(
+                "auth.dart verifyPhoneNumber | codeAutoRetrievalTimeout!"));
+          },
+          timeout: Duration(minutes: 2),
+        );
+      }
+    } catch (err) {
+      print(redPen(
+          "auth.dart: verifyPhoneNumber | FAILED with catch error: $err"));
+      toast(
+          "Failed to send verification code to $phoneNumber. Please try again.");
+    }
+  }
+
+  Future<void> updateUserPhoneNumber(
+      BuildContext context, PhoneAuthCredential phoneCredential) async {
+    try {
+      print(purplePen("auth.dart: updateUserPhoneNumber | STARTED"));
+      await _auth.currentUser.updatePhoneNumber(phoneCredential);
+      print(greenPen("auth.dart: updateUserPhoneNumber | SUCCESS"));
+      refreshToWrapper(context);
+      toast("Updated phone number to ${_auth.currentUser.phoneNumber}");
+    } on FirebaseAuthException catch (err) {
+      print(redPen(
+          "auth.dart: updateUserPhoneNumber | FAILED with FBAuth error: $err"));
+      if (err.code == "invalid-verification-code") {
+        toast("Invalid verification code. Please try again.",
+            duration: Toast.LENGTH_LONG);
+      } else if (err.code == "invalid-verification-id") {
+        toast(
+            "This code may have expired. Please click (Resend code) and try again.",
+            duration: Toast.LENGTH_LONG);
+      }
+    } catch (err) {
+      print(redPen(
+          "auth.dart: updateUserPhoneNumber | FAILED with catch error: $err"));
+      toast("Could not update phone number");
     }
   }
 

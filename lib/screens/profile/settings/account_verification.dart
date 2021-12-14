@@ -44,6 +44,7 @@ class _AccountVerificationState extends State<AccountVerification> {
   bool updateEmailHasError = false;
   String errMessage;
 
+  @override
   void initState() {
     super.initState();
 
@@ -154,6 +155,7 @@ class _AccountVerificationState extends State<AccountVerification> {
           print('Too late');
           setState(() => canResendToken = true);
         },
+      
       )
           .catchError((err) {
         //error when sending
@@ -191,7 +193,7 @@ class _AccountVerificationState extends State<AccountVerification> {
     }
   }
 
-  Future<void> phoneVerificationComplete(AuthCredential credential) async {
+  Future<void> phoneVerificationComplete(PhoneAuthCredential credential) async {
     try {
       // await _auth.currentUser.updatePhoneNumber(credential);
       await _auth.currentUser.updatePhoneNumber(credential).then((_) {
@@ -425,43 +427,43 @@ class _AccountVerificationState extends State<AccountVerification> {
               ),
               SizedBox(
                   height: widget.accEditType == AccountEditType.phone ? 15 : 0),
-              widget.accEditType == AccountEditType.phone
-                  ? TextFormField(
-                      autofocus: true,
-                      controller: _textController,
-                      maxLines: 1,
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      cursorColor: Theme.of(context).primaryColor,
-                      // validator: (text) {
-                      //   return text.contains(' ') ? '' : text;
-                      // },
-                      style: TextStyle(
-                        color: _themeProvider.primaryTextColor,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        prefixStyle: TextStyle(
-                            color: _themeProvider.secondaryTextColor,
-                            fontSize: 15),
-                        isDense: false,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: _themeProvider.primaryTextColor
-                                  .withOpacity(0.26),
-                              width: 0.5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: _themeProvider.primaryTextColor
-                                  .withOpacity(0.26),
-                              width: 0.5),
-                        ),
-                      ),
-                    )
-                  : Container(),
+              if (widget.accEditType == AccountEditType.phone)
+                TextFormField(
+                  autofocus: true,
+                  controller: _textController,
+                  maxLines: 1,
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  cursorColor: Theme.of(context).primaryColor,
+                  // validator: (text) {
+                  //   return text.contains(' ') ? '' : text;
+                  // },
+                  style: TextStyle(
+                    color: _themeProvider.primaryTextColor,
+                  ),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
+                    prefixStyle: TextStyle(
+                        color: _themeProvider.secondaryTextColor, fontSize: 15),
+                    isDense: false,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.26),
+                          width: 0.5),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              _themeProvider.primaryTextColor.withOpacity(0.26),
+                          width: 0.5),
+                    ),
+                  ),
+                )
+              else
+                Container(),
               SizedBox(height: 15),
               Padding(
                 padding: EdgeInsets.fromLTRB(2, 0, 20, 0),

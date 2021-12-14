@@ -1,11 +1,10 @@
 import 'package:overlay_support/overlay_support.dart';
 import "package:versify/providers/providers_home/theme_data_provider.dart";
-import "package:versify/screens/profile/settings/account_edit_row.dart";
-import "package:versify/screens/profile/settings/account_verification.dart";
+import 'package:versify/screens/verification/verification_phone.dart';
 import "package:versify/services/firebase/auth.dart";
 import "package:flutter/material.dart";
-import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:provider/provider.dart";
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/helper/helper_functions.dart';
 import "package:versify/shared/helper/helper_methods.dart";
@@ -23,10 +22,9 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
   AuthService _authService;
 
   String validateError = "";
-  bool _validLoading = false;
+  bool validLoading = false;
 
-  int resendingToken;
-  PhoneNumber phoneNumber;
+  PhoneNumber phoneNumber = PhoneNumber(phoneNumber: "");
 
   @override
   void initState() {
@@ -36,44 +34,6 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
       phoneNumber = PhoneNumber(
           phoneNumber: _authService.getCurrentUser?.phoneNumber ?? "");
     });
-  }
-
-  Future<void> _phoneVerificationSuccess() async {
-    print("Phone Verification Success | updatePhoneVerification");
-
-    // Navigator.pushAndRemoveUntil(context,
-    //     MaterialPageRoute(builder: (context) => Wrapper()), (route) => false);
-
-    // print("Phone number: " + _authService.getCurrentUser.phoneNumber);
-
-    // DatabaseService().firestoreCreateAccount(
-    //   completeLogin: true,
-    //   email: _authService.getCurrentUser.email,
-    //   phone: _authService.getCurrentUser.phoneNumber,
-    //   username: widget.usernameController.text,
-    //   userUID: _authService.getCurrentUser.uid,
-    // );
-
-    // Navigator.popUntil(
-    //     context, ModalRoute.withName(Navigator.defaultRouteName));
-
-    //then wrapper listens to auth and redirect to homeWrapper
-
-    // DatabaseService()
-    //     .updateNewAccUser(
-    //   uid: _authService.authUser.uid,
-    //   username: widget.usernameController.text,
-    //   phone: phoneNumber,
-    //   email: _authService.authUser.email,
-    // )
-    //     .then((_) async {
-    //   _profileDataProvider.updateListeners();
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => Wrapper(),
-    //       ));
-    // });
   }
 
   @override
@@ -142,22 +102,19 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
               ),
               onPressed: () async {
                 if (phoneNumber.phoneNumber.isNotEmpty) {
-                  setState(() => _validLoading = true);
+                  setState(() => validLoading = true);
 
                   final ReturnValue result =
                       await validatePhoneNumber(phoneNumber);
 
-                  setState(() => _validLoading = false);
+                  setState(() => validLoading = false);
                   if (result.success) {
                     // PHONE IS VALID
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AccountVerification(
-                            accEditType: AccountEditType.phone,
-                            parsedText: result.value,
-                            resendingToken: resendingToken,
-                            verificationSuccessFunc: _phoneVerificationSuccess,
+                          builder: (context) => VerificationPhone(
+                            parsedPhoneNumber: phoneNumber.phoneNumber,
                           ),
                         ));
                   } else {
@@ -175,9 +132,7 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                 "Done",
                 style: TextStyle(
                   fontSize: 14,
-                  color: phoneNumber.phoneNumber.isNotEmpty
-                      ? Theme.of(context).primaryColor
-                      : _themeProvider.primaryTextColor.withOpacity(0.26),
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -222,14 +177,23 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                               print(grayPen(
                                   "Phone number is: ${phoneNumber.phoneNumber}"));
                             },
-                            selectorConfig: SelectorConfig(
-                              selectorType: PhoneInputSelectorType.DIALOG,
-                            ),
                             textStyle: TextStyle(
                               color: _themeProvider.primaryTextColor,
                             ),
+                            selectorConfig: SelectorConfig(
+                              selectorType: PhoneInputSelectorType.DIALOG,
+                            ),
                             selectorTextStyle: TextStyle(
                                 color: _themeProvider.primaryTextColor),
+                            searchBoxDecoration: InputDecoration(
+                              hintText: "Search by country name or dial code",
+                              hintStyle: TextStyle(
+                                color: _themeProvider.secondaryTextColor,
+                              ),
+                              labelStyle: TextStyle(
+                                color: _themeProvider.primaryTextColor,
+                              ),
+                            ),
                             initialValue: phoneNumber,
 
                             formatInput: false,
@@ -239,7 +203,7 @@ class _CreateNewPhoneState extends State<CreateNewPhone> {
                             spaceBetweenSelectorAndTextField: 2,
                             inputDecoration: InputDecoration(
                               suffix: Visibility(
-                                visible: _validLoading,
+                                visible: validLoading,
                                 child: CircleLoading(),
                               ),
                               prefixStyle: TextStyle(

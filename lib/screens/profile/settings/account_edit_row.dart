@@ -5,6 +5,7 @@ import 'package:versify/providers/providers_home/theme_data_provider.dart';
 import 'package:versify/screens/authentication/auth_screen_reset_password.dart';
 import 'package:versify/screens/profile/settings/account_provider.dart';
 import 'package:versify/screens/profile/settings/account_verification.dart';
+import 'package:versify/screens/verification/verification_phone.dart';
 import 'package:versify/services/firebase/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -157,21 +158,31 @@ class _AccountEditRowState extends State<AccountEditRow> {
                     }
                     // _accountSettingsProvider.updateProfileData();
                     if (_needVerification) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AccountVerification(
-                              accEditType: widget.editType,
-                              resendingToken: _resendingToken,
-                              parsedText: _textController.text,
-                              verificationSuccessFunc: () {
-                                _accountSettingsProvider.updateProfileData();
+                      if (widget.editType == AccountEditType.phone) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VerificationPhone(
+                                parsedPhoneNumber: _textController.text.trim(),
+                              ),
+                            ));
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AccountVerification(
+                                accEditType: widget.editType,
+                                resendingToken: _resendingToken,
+                                parsedText: _textController.text,
+                                verificationSuccessFunc: () {
+                                  _accountSettingsProvider.updateProfileData();
 
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ));
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ));
+                      }
                     } else {
                       Navigator.pop(context);
                     }

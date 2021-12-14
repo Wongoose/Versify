@@ -152,6 +152,16 @@ class MainSuccessStreamWrapper extends StatelessWidget {
                 backgroundColor: Color(0xFF272727),
                 // backgroundColor: Color(0xFF0d0a0c),
                 dialogBackgroundColor: Colors.grey[900],
+                dialogTheme: DialogTheme(
+                  titleTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                  contentTextStyle: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
               ),
               theme: ThemeData(
                 // colorScheme: ColorScheme.fromSwatch(),
