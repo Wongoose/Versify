@@ -13,7 +13,6 @@ import "package:provider/provider.dart";
 import 'package:versify/shared/helper/helper_classes.dart';
 import "package:versify/shared/widgets/widgets_all_loading.dart";
 import "package:versify/shared/widgets/widgets_username_validating_textfield.dart";
-import "package:vibration/vibration.dart";
 
 class CreateNewUsername extends StatefulWidget {
   @override
@@ -37,34 +36,6 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
     if (isSetState) {
       setState(() {});
     }
-  }
-
-  // Future<void> _checkForValidUsername(String username) async {
-  //   _databaseService.checkIfValidUsername(username).then((isValid) {
-  //     setState(() {
-  //       _validUsername = isValid;
-  //       _validLoading = false;
-  //     });
-  //   });
-  // }
-
-  // _onUsernameChanged(String username) {
-  //   setState(() {
-  //     _validUsername = false;
-  //     _validLoading = true;
-  //   });
-
-  //   if (_debounce?.isActive ?? false) _debounce.cancel();
-  //   _debounce = Timer(const Duration(seconds: 1), () {
-  //     if (username != "") {
-  //       _checkForValidUsername(username);
-  //     }
-  //   });
-  // }
-
-  Future<void> onWillPop() async {
-    // NOT USED
-    await FirebaseAuth.instance.currentUser.delete();
   }
 
   @override
@@ -151,7 +122,7 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
                         completeLogin: true,
                         email: _authService.getCurrentUser.email,
                         phone: _authService.getCurrentUser.phoneNumber,
-                        username: _usernameController.text,
+                        username: _usernameController.text.trim(),
                         userUID: _authService.getCurrentUser.uid,
                       );
 
@@ -160,9 +131,7 @@ class _CreateNewUsernameState extends State<CreateNewUsername> {
                         Navigator.pushReplacement(
                             context,
                             CupertinoPageRoute(
-                              builder: (context) => CreateNewPhone(
-                                usernameController: _usernameController,
-                              ),
+                              builder: (context) => CreateNewPhone(),
                             ));
                       } else {
                         toast(createAccResult.value);

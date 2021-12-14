@@ -1,4 +1,7 @@
+import 'dart:convert';
+import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
 import 'package:versify/shared/widgets/widgets_dialog_existing_login.dart';
 import 'package:versify/shared/widgets/widgets_dialog_reset_password.dart';
@@ -28,7 +31,8 @@ void existingLoginDialog(BuildContext context, Function toggleSignIn) {
 ReturnValue usernameFilterProfanity(String string) {
   print(purplePen("usernameFilterProfanity | STARTED"));
   final ProfanityFilter filter = ProfanityFilter();
-  final String stringToFilter = string.replaceAll(".", " ").replaceAll("_", " ");
+  final String stringToFilter =
+      string.replaceAll(".", " ").replaceAll("_", " ");
 
   final List<String> allProfanity = filter.getAllProfanity(stringToFilter);
 
@@ -41,5 +45,32 @@ ReturnValue usernameFilterProfanity(String string) {
         "usernameFilterProfanity | ${allProfanity.length} profanity found."));
     return ReturnValue(false,
         "These phrases are not allowed: ${allProfanity.toString().replaceAll("[", '"').replaceAll("]", '"')}.");
+  }
+}
+
+Future<ReturnValue> validatePhoneNumber(PhoneNumber number) async {
+  try {
+    print(purplePen("validatePhoneNumber | STARTED"));
+    final Uri url = Uri.parse(
+        "http://apilayer.net/api/validate?access_key=45149a78db0ccc272062dd240ce4d350&number=$number&country_code=&format=1");
+    final http.Response response = await http.get(url);
+
+    print(greenPen("validatePhoneNumber | RAN with response:"));
+    print(grayPen("Status: ${response.statusCode}"));
+    print(grayPen("Body: ${response.body}"));
+
+    if (json.decode(response.body)["valid"] == true) {
+      print(greenPen("validatePhoneNumber | phone number is VALID!"));
+      // SHOULD RETURN PHONE NUMBER FROM RESPONSE BODY
+      return ReturnValue(true, number.phoneNumber);
+    } else {
+      print(redPen("validatePhoneNumber | phone number is INVALID!"));
+      // SHOULD RETURN PHONE NUMBER FROM RESPONSE BODY
+      return ReturnValue(false, number.phoneNumber, "INVALID-PHONE-NUMBER");
+    }
+  } catch (err) {
+    print(redPen("validatePhoneNumber | FAILED with catch error: $err"));
+    return ReturnValue(
+        false, "Could not update phone number. Please try again later.");
   }
 }
