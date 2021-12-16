@@ -1,22 +1,23 @@
-import 'package:url_launcher/url_launcher.dart';
-import 'package:versify/providers/providers_home/theme_data_provider.dart';
-import 'package:versify/screens/profile/settings/account_edit_row.dart';
-import 'package:versify/screens/profile/settings/account_privacy.dart';
-import 'package:versify/screens/profile/settings/account_provider.dart';
-import 'package:versify/screens/profile/settings/account_report_problem.dart';
-import 'package:versify/screens/profile/settings/account_verify_new_email.dart';
-import 'package:versify/screens/profile/settings/widgets/webviewer.dart';
-import 'package:versify/services/firebase/auth.dart';
-import 'package:versify/shared/widgets/widgets_all_loading.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import "package:url_launcher/url_launcher.dart";
+import "package:versify/providers/providers_home/theme_data_provider.dart";
+import "package:versify/screens/profile/settings/account_edit_row.dart";
+import "package:versify/screens/profile/settings/account_privacy.dart";
+import "package:versify/screens/profile/settings/account_provider.dart";
+import "package:versify/screens/profile/settings/account_report_problem.dart";
+import "package:versify/screens/profile/settings/account_verify_new_email.dart";
+import "package:versify/screens/profile/settings/widgets/webviewer.dart";
+import "package:versify/services/firebase/auth.dart";
+import "package:versify/shared/widgets/widgets_all_loading.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:provider/provider.dart";
+import "package:shared_preferences/shared_preferences.dart";
+import "package:versify/screens/profile/settings/account_change_phone.dart";
 
 class AccountSettings extends StatefulWidget {
-  static const routeName = '/accountSettings';
+  static const routeName = "/accountSettings";
 
   @override
   _AccountSettingsState createState() => _AccountSettingsState();
@@ -57,7 +58,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                 centerTitle: true,
                 elevation: 0.5,
                 title: Text(
-                  'Settings and privacy',
+                  "Settings and privacy",
                   style: TextStyle(
                     fontSize: 17.5,
                     fontWeight: FontWeight.w600,
@@ -83,7 +84,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'ACCOUNT',
+                      "ACCOUNT",
                       style: TextStyle(
                         fontSize: 14,
                         color: _themeProvider.secondaryTextColor,
@@ -96,13 +97,16 @@ class _AccountSettingsState extends State<AccountSettings> {
                       onTap: () => Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) =>
-                                AccountEditRow(editType: AccountEditType.phone),
+                            builder: (context) => AccountChangePhone(
+                                _authService.getCurrentUser?.phoneNumber
+                                            ?.isNotEmpty !=
+                                        null
+                                    ? _authService.getCurrentUser.phoneNumber
+                                    : ""),
                           )),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.phone,
@@ -113,7 +117,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Phone number',
+                              "Phone number",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -123,11 +127,10 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             Expanded(child: Container()),
                             Text(
-                              _authService.getCurrentUser.phoneNumber != null
-                                  ? _authService
-                                          .getCurrentUser.phoneNumber.isNotEmpty
-                                      ? _authService.getCurrentUser.phoneNumber
-                                      : "none"
+                              _authService.getCurrentUser?.phoneNumber
+                                          ?.isNotEmpty !=
+                                      null
+                                  ? _authService.getCurrentUser.phoneNumber
                                   : "none",
                               style: TextStyle(
                                 fontSize: 14,
@@ -149,7 +152,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
                         if (_authService.currentSignInProvider ==
-                            'google.com') {
+                            "google.com") {
                           Navigator.push(
                               context,
                               CupertinoPageRoute(
@@ -158,7 +161,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                 ),
                               ));
                         } else if (_authService.currentSignInProvider ==
-                            'password') {
+                            "password") {
                           if (_authService.isEmailVerified) {
                             Navigator.push(
                                 context,
@@ -183,11 +186,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              _authService.currentSignInProvider == 'google.com'
+                              _authService.currentSignInProvider == "google.com"
                                   ? FontAwesomeIcons.google
                                   : Icons.email_rounded,
                               size: _authService.currentSignInProvider ==
-                                      'google.com'
+                                      "google.com"
                                   ? 15
                                   : 16.5,
                               color: Theme.of(context)
@@ -196,9 +199,9 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              _authService.currentSignInProvider == 'google.com'
-                                  ? 'Google'
-                                  : 'Email',
+                              _authService.currentSignInProvider == "google.com"
+                                  ? "Google"
+                                  : "Email",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -207,7 +210,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                               ),
                             ),
                             Expanded(child: Container()),
-                            _authService.currentSignInProvider == 'password' &&
+                            _authService.currentSignInProvider == "password" &&
                                     _authService.isEmailVerified == false
                                 ? Icon(
                                     Icons.warning_rounded,
@@ -234,7 +237,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                         ),
                       ),
                     ),
-                    _authService.currentSignInProvider == 'google.com'
+                    _authService.currentSignInProvider == "google.com"
                         ? Container()
                         : GestureDetector(
                             behavior: HitTestBehavior.translucent,
@@ -259,7 +262,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                   SizedBox(width: 10),
                                   //hide this widget if using Google/Facebook
                                   Text(
-                                    'Password',
+                                    "Password",
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: _themeProvider.primaryTextColor
@@ -269,7 +272,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                   ),
                                   Expanded(child: Container()),
                                   Text(
-                                    'Secured',
+                                    "Secured",
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: _themeProvider.secondaryTextColor,
@@ -309,7 +312,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Privacy',
+                              "Privacy",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -321,7 +324,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             SizedBox(
                               width: 180,
                               child: Text(
-                                'More',
+                                "More",
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -347,7 +350,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                     Divider(thickness: 0.5),
                     SizedBox(height: 10),
                     Text(
-                      'SUPPPORT',
+                      "SUPPPORT",
                       style: TextStyle(
                         fontSize: 14,
                         color: _themeProvider.secondaryTextColor,
@@ -378,7 +381,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Report a problem',
+                              "Report a problem",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -400,7 +403,7 @@ class _AccountSettingsState extends State<AccountSettings> {
 
                         await canLaunch(_url)
                             ? await launch(_url)
-                            : throw 'Could not launch $_url';
+                            : throw "Could not launch $_url";
                       },
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -416,7 +419,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Help',
+                              "Help",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -435,7 +438,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                     Divider(thickness: 0.5),
                     SizedBox(height: 10),
                     Text(
-                      'ABOUT',
+                      "ABOUT",
                       style: TextStyle(
                         fontSize: 14,
                         color: _themeProvider.secondaryTextColor,
@@ -456,7 +459,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                           ),
                           SizedBox(width: 10),
                           Text(
-                            'Community Guidelines',
+                            "Community Guidelines",
                             style: TextStyle(
                               fontSize: 15,
                               color: _themeProvider.primaryTextColor
@@ -477,7 +480,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             MaterialPageRoute(
                                 builder: (context) => SettingsWebViewer(
                                       webViewUrl:
-                                          'https://versify.flycricket.io/terms.html',
+                                          "https://versify.flycricket.io/terms.html",
                                       webViewerType:
                                           WebViewerType.termsAndConditions,
                                     )));
@@ -496,7 +499,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Terms & Conditions',
+                              "Terms & Conditions",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -518,7 +521,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             MaterialPageRoute(
                                 builder: (context) => SettingsWebViewer(
                                       webViewUrl:
-                                          'https://versify.flycricket.io/privacy.html',
+                                          "https://versify.flycricket.io/privacy.html",
                                       webViewerType:
                                           WebViewerType.privacypolicy,
                                     )));
@@ -537,7 +540,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Privacy Policy',
+                              "Privacy Policy",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -554,7 +557,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                     Divider(thickness: 0.5),
                     SizedBox(height: 10),
                     Text(
-                      'LOGIN',
+                      "LOGIN",
                       style: TextStyle(
                         fontSize: 14,
                         color: _themeProvider.secondaryTextColor,
@@ -571,7 +574,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                           //     ModalRoute.withName(Navigator.defaultRouteName));
                           await DefaultCacheManager().emptyCache();
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/', (Route<dynamic> route) => false);
+                              "/", (Route<dynamic> route) => false);
                         });
                       },
                       child: Padding(
@@ -588,7 +591,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Log out',
+                              "Log out",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: _themeProvider.primaryTextColor
@@ -610,8 +613,8 @@ class _AccountSettingsState extends State<AccountSettings> {
 
   Future<void> deletePrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.remove('seenDocs');
-    // prefs.remove('sortedFollowingList');
-    prefs.remove('lastUpdated');
+    // prefs.remove("seenDocs");
+    // prefs.remove("sortedFollowingList");
+    prefs.remove("lastUpdated");
   }
 }

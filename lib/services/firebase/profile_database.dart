@@ -369,6 +369,7 @@ class ProfileDBService {
         'phone': phone,
         'email': email,
       });
+      // SYCN PUBLICFOLLOW COLLECTION USE FIREBASE TRIGGERS
     } catch (err) {
       print('updateValidatedPhoneAndEmail | Failed');
     }
