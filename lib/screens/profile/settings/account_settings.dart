@@ -5,6 +5,7 @@ import "package:versify/screens/profile/settings/account_privacy.dart";
 import "package:versify/screens/profile/settings/account_provider.dart";
 import "package:versify/screens/profile/settings/account_report_problem.dart";
 import "package:versify/screens/profile/settings/account_verify_new_email.dart";
+import 'package:versify/screens/profile/settings/sub-settings/account_change_email.dart';
 import "package:versify/screens/profile/settings/widgets/webviewer.dart";
 import "package:versify/services/firebase/auth.dart";
 import "package:versify/shared/widgets/widgets_all_loading.dart";
@@ -14,7 +15,7 @@ import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "package:versify/screens/profile/settings/account_change_phone.dart";
+import 'package:versify/screens/profile/settings/sub-settings/account_change_phone.dart';
 
 class AccountSettings extends StatefulWidget {
   static const routeName = "/accountSettings";
@@ -166,9 +167,9 @@ class _AccountSettingsState extends State<AccountSettings> {
                             Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                  builder: (context) => AccountEditRow(
-                                    editType: AccountEditType.email,
-                                  ),
+                                  builder: (context) => AccountChangeEmail(
+                                      parsedEmail:
+                                          _authService.getCurrentUser.email),
                                 ));
                           } else {
                             //verify email address
@@ -210,14 +211,16 @@ class _AccountSettingsState extends State<AccountSettings> {
                               ),
                             ),
                             Expanded(child: Container()),
-                            _authService.currentSignInProvider == "password" &&
-                                    _authService.isEmailVerified == false
-                                ? Icon(
-                                    Icons.warning_rounded,
-                                    color: Colors.redAccent,
-                                    size: 15,
-                                  )
-                                : Container(),
+                            if (_authService.currentSignInProvider ==
+                                    "password" &&
+                                _authService.isEmailVerified == false)
+                              Icon(
+                                Icons.warning_rounded,
+                                color: Colors.redAccent,
+                                size: 15,
+                              )
+                            else
+                              Container(),
                             SizedBox(width: 10),
                             Text(
                               _authService.getCurrentUser.email ?? "none",
@@ -237,58 +240,58 @@ class _AccountSettingsState extends State<AccountSettings> {
                         ),
                       ),
                     ),
-                    _authService.currentSignInProvider == "google.com"
-                        ? Container()
-                        : GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () => Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => AccountEditRow(
-                                      editType: AccountEditType.password),
-                                )),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.key,
-                                    size: 15,
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.6),
-                                  ),
-                                  SizedBox(width: 10),
-                                  //hide this widget if using Google/Facebook
-                                  Text(
-                                    "Password",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: _themeProvider.primaryTextColor
-                                          .withOpacity(0.87),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Expanded(child: Container()),
-                                  Text(
-                                    "Secured",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: _themeProvider.secondaryTextColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: _themeProvider.secondaryTextColor,
-                                    size: 15,
-                                  ),
-                                ],
+                    if (_authService.currentSignInProvider == "google.com")
+                      Container()
+                    else
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () => Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => AccountEditRow(
+                                  editType: AccountEditType.password),
+                            )),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.key,
+                                size: 15,
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.6),
                               ),
-                            ),
+                              SizedBox(width: 10),
+                              //hide this widget if using Google/Facebook
+                              Text(
+                                "Password",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: _themeProvider.primaryTextColor
+                                      .withOpacity(0.87),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                "Secured",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: _themeProvider.secondaryTextColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: _themeProvider.secondaryTextColor,
+                                size: 15,
+                              ),
+                            ],
                           ),
+                        ),
+                      ),
                     // SizedBox(height: 30),
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,

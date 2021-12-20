@@ -290,7 +290,7 @@ class _AccountEditRowState extends State<AccountEditRow> {
                     child: Text(
                       widget.editType == AccountEditType.password
                           ? 'The password for ${_authService.getCurrentUser.email} is secured.'
-                          : 'Your Versify account is created with ${_authService.getCurrentUser.email} Google account.',
+                          : 'This Versify account is currently linked to your ${_authService.getCurrentUser.email} Google account.',
                       style: TextStyle(
                         height: 1.7,
                         fontSize: 12,

@@ -2,23 +2,25 @@ import "package:firebase_dynamic_links/firebase_dynamic_links.dart";
 import "package:flutter/material.dart";
 import "package:overlay_support/overlay_support.dart";
 import "package:versify/dynamic_links/dynamic_link_profile.dart";
-import "package:versify/models/user_model.dart";
 import "package:versify/providers/providers_home/dynamic_link_provider.dart";
 import 'package:versify/screens/authentication/auth_create_password.dart';
 import "package:versify/services/firebase/auth.dart";
-import "package:versify/services/firebase/profile_database.dart";
 import "package:versify/dynamic_links/dynamic_link_post.dart";
-import "package:versify/shared/helper/helper_classes.dart";
+import 'package:versify/shared/helper/helper_functions.dart';
 import 'package:versify/shared/helper/helper_methods.dart';
 
 class DynamicLinkService {
+  // VARIABLES
   final AuthService authService;
   final DynamicLinkProvider dynamicLinkProvider;
-  DynamicLinkService({this.dynamicLinkProvider, this.authService});
-  // void addContext(BuildContext context) {
-  //   context = context;
-  // }
 
+  DynamicLinkService({this.dynamicLinkProvider, this.authService});
+
+  // GLOBAL
+  final String androidPackageName = "com.wongoose.versify";
+  final String domain = "versify.wongoose.com";
+
+  // FUNCTIONS
   Future<bool> handleDynamicLink(BuildContext context) async {
 //Get initial dynamic link if app started with link
 //BACK button is pop app
@@ -228,8 +230,7 @@ class DynamicLinkService {
       //add navigate to DynamicLink Quick Sign In
       authService.logout().then((_) {
         dynamicLinkProvider.updatedEmailSignin(newEmail);
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
+        refreshToWrapper(context);
       });
     } else if (isVerifyEmail) {
       final String email = deepLink.queryParameters["email"];

@@ -14,6 +14,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // VARIABLES
   MyUser myUser;
   User authUser;
   String userUID;
@@ -21,6 +22,7 @@ class AuthService {
 
   bool hasFirestoreDocuments;
 
+  // GETTERS
   bool get isUserAuthenticated => authUser != null;
 
   bool get isUserAnonymous {
@@ -35,6 +37,7 @@ class AuthService {
 
   User get getCurrentUser => _auth.currentUser;
 
+  // FUNCTIONS
   Future<String> getCurrentSignInProvider() async {
     final IdTokenResult idTokenResult =
         await _auth.currentUser.getIdTokenResult();

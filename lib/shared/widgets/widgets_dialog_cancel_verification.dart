@@ -27,7 +27,10 @@ class DialogCancelVerification extends StatelessWidget {
           child: Text(
             "Verification is still in progress. Do you want to cancel the verification process?",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 14,
+                color: _themeProvider.primaryTextColor,
+                fontWeight: FontWeight.w500),
           ),
         ),
         // Divider(thickness: 0.5, height: 0),

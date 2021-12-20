@@ -5,50 +5,91 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
+import 'package:versify/screens/authentication/auth_screen_open_inbox.dart';
 import 'package:versify/services/firebase/auth.dart';
+import 'package:versify/services/firebase/dynamic_links.dart';
 import "package:versify/shared/helper/helper_functions.dart";
+import 'package:versify/shared/helper/helper_methods.dart';
 
-class VerificationPhone extends StatefulWidget {
-  final String parsedPhoneNumber;
+class VerificationEmail extends StatefulWidget {
+  final String parsedEmail;
 
-  const VerificationPhone({Key key, this.parsedPhoneNumber}) : super(key: key);
+  const VerificationEmail({Key key, this.parsedEmail}) : super(key: key);
 
   @override
-  _VerificationPhoneState createState() => _VerificationPhoneState();
+  _VerificationEmailState createState() => _VerificationEmailState();
 }
 
-class _VerificationPhoneState extends State<VerificationPhone> {
+class _VerificationEmailState extends State<VerificationEmail> {
   final TextEditingController textController = TextEditingController();
+  final DynamicLinkService dynamicLinkService = DynamicLinkService();
 
+  // VARIABLES
   bool canResendVerification = false;
-  String verificationID;
-  int resendingToken;
-
+  bool successSendVerification = false;
+  String errorMessageVerification;
   AuthService _authService;
 
-  //FUNCTIONS
+  // FUNCTIONS
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _authService.verifyPhoneNumber(
-        context,
-        widget.parsedPhoneNumber,
-        onCodeSent,
-      );
+      await sendNewEmailVerification();
       startTimer();
     });
   }
 
-  void onCodeSent(String verificationID, int resendingToken) {
-    setState(() {
-      this.resendingToken = resendingToken;
-      this.verificationID = verificationID;
-    });
+  Future<void> sendNewEmailVerification() async {
+    try {
+      print(purplePen("sendNewEmailVerification | STARTED"));
+      final String dynamicLinkUrl = await dynamicLinkService
+          .createResetEmailDynamicLink(widget.parsedEmail);
+
+      await _authService.getCurrentUser.verifyBeforeUpdateEmail(
+          widget.parsedEmail,
+          ActionCodeSettings(
+            url: dynamicLinkUrl,
+            androidInstallApp: false,
+            handleCodeInApp: false,
+            androidPackageName: dynamicLinkService.androidPackageName,
+            dynamicLinkDomain: dynamicLinkService.domain,
+          ));
+      print(greenPen("sendNewEmailVerification | SUCCESS"));
+      setState(() => successSendVerification = true);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ScreenOpenInbox(
+              description:
+                  "Follow the the instructions in the verification email that we have sent to ${widget.parsedEmail}. Your email will be updated after you complete this step.",
+            ),
+          ));
+    } on FirebaseAuthException catch (err) {
+      print(redPen(
+          "sendNewEmailVerification | FAILED with FBAUTH catch error $err"));
+      setState(() => successSendVerification = false);
+      toast("Could not update email");
+      setState(() => errorMessageVerification =
+          "Could not update email. ${err.message}");
+    } catch (err) {
+      print(redPen("sendNewEmailVerification | FAILED with catch error $err"));
+      setState(() => successSendVerification = false);
+      if (err.message == "INVALID_NEW_EMAIL") {
+        toast("Could not update email. This email is invalid.");
+        setState(() => errorMessageVerification =
+            "Could not update email. The new email address provided is invalid, please try again.");
+      } else {
+        toast("Could not update email");
+        setState(() => errorMessageVerification =
+            "Could not update email, please try again. Contact customer service if the problem persists.");
+      }
+    }
   }
 
+  // VARIABLES
   Timer timer;
-  int resendCountDown;
+  int resendCountDown = 0;
 
   void startTimer() {
     resendCountDown = 120;
@@ -119,36 +160,6 @@ class _VerificationPhoneState extends State<VerificationPhone> {
               ),
             ),
           ),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                backgroundColor: Theme.of(context).backgroundColor,
-                primary: Theme.of(context).backgroundColor,
-              ),
-              onPressed: () async {
-                if (verificationID != null) {
-                  final PhoneAuthCredential newCredential =
-                      PhoneAuthProvider.credential(
-                          verificationId: verificationID,
-                          smsCode: textController.text.trim());
-
-                  await _authService.updateUserPhoneNumber(
-                      context, newCredential);
-                }
-              },
-              child: Text(
-                "Confirm",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: verificationID != null
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).primaryColor.withOpacity(0.4),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -158,7 +169,7 @@ class _VerificationPhoneState extends State<VerificationPhone> {
               Padding(
                 padding: EdgeInsets.fromLTRB(2, 0, 20, 0),
                 child: Text(
-                  "Enter 6-digit OTP",
+                  "Email verification",
                   style: TextStyle(
                     fontSize: 14,
                     color: _themeProvider.secondaryTextColor,
@@ -167,47 +178,13 @@ class _VerificationPhoneState extends State<VerificationPhone> {
                 ),
               ),
               SizedBox(height: 15),
-              TextFormField(
-                autofocus: true,
-                controller: textController,
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                cursorColor: Theme.of(context).primaryColor,
-                // validator: (text) {
-                //   return text.contains(" ") ? "" : text;
-                // },
-                style: TextStyle(
-                  color: _themeProvider.primaryTextColor,
-                ),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(8),
-                  prefixStyle: TextStyle(
-                      color: _themeProvider.secondaryTextColor, fontSize: 15),
-                  isDense: false,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            _themeProvider.primaryTextColor.withOpacity(0.26),
-                        width: 0.5),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            _themeProvider.primaryTextColor.withOpacity(0.26),
-                        width: 0.5),
-                  ),
-                ),
-              ),
-              SizedBox(height: 15),
               Padding(
                 padding: EdgeInsets.fromLTRB(2, 0, 20, 0),
                 child: SizedBox(
                   child: Text(
-                    verificationID != null
-                        ? "Enter the verification code that we have sent to ${widget.parsedPhoneNumber}. If you have not received the code within 2 minutes, click resend."
-                        : "Sending...",
+                    successSendVerification
+                        ? "Follow the the instructions in the verification email that we have sent to ${widget.parsedEmail}. Your email will be updated after you complete this step."
+                        : errorMessageVerification ?? "Sending...",
                     style: TextStyle(
                       height: 1.7,
                       fontSize: 12,
@@ -224,23 +201,18 @@ class _VerificationPhoneState extends State<VerificationPhone> {
                   behavior: HitTestBehavior.translucent,
                   onTap: () async {
                     if (canResendVerification) {
-                      await _authService.verifyPhoneNumber(
-                        context,
-                        widget.parsedPhoneNumber,
-                        onCodeSent,
-                        resendingToken,
-                      );
+                      await sendNewEmailVerification();
                       startTimer();
                     } else {
                       toast(
-                          "Please wait for 2 minutes before requesting another code.");
+                          "Please wait for 2 minutes before requesting another email.");
                     }
                   },
                   child: SizedBox(
                     child: Text(
                       resendCountDown == 0
-                          ? "Resend code"
-                          : "Resend code ($resendCountDown)",
+                          ? "Resend email"
+                          : "Resend email ($resendCountDown)",
                       style: TextStyle(
                         height: 1.7,
                         fontSize: 12,

@@ -1,3 +1,4 @@
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:versify/providers/providers_home/dynamic_link_provider.dart';
 import 'package:versify/providers/providers_home/theme_data_provider.dart';
@@ -6,7 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:versify/services/firebase/auth.dart';
+import 'package:versify/shared/helper/helper_classes.dart';
 import 'package:versify/shared/helper/helper_constants.dart';
+import 'package:versify/shared/helper/helper_functions.dart';
 
 class OnBoardingNewUser extends StatefulWidget {
   final bool boardingUserDetails;
@@ -411,25 +414,19 @@ class _UpdatedEmailSignInState extends State<UpdatedEmailSignIn> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   setState(() => loading = true);
-                  await _authService
-                      .signInWithEmailPassword(email.trim(), password.trim())
-                      .then((res) {
-                    if (res != false) {
-                      setState(() {
-                        loading = false;
-                        print('Auth Screen result is equal TRUE');
-                        Navigator.popUntil(context,
-                            ModalRoute.withName(Navigator.defaultRouteName));
-                      });
-                      // setState(() {});
-                    } else if (res == false) {
-                      print('Auth Screen result is equal false');
-                      setState(() {
-                        error = 'Could not sign in with those credentials';
-                        loading = false;
-                      });
-                    }
-                  });
+                  final ReturnValue result = await _authService
+                      .signInWithEmailPassword(email.trim(), password.trim());
+
+                  setState(() => loading = false);
+                  if (result.success) {
+                    toast("Logged in to ${result.value}");
+                    refreshToWrapper(context);
+                  } else {
+                    setState(() {
+                      toast("Could not sign in account");
+                      error = result.value;
+                    });
+                  }
                 }
               },
               child: loading
