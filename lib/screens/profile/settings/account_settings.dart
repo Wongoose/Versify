@@ -6,6 +6,9 @@ import "package:versify/screens/profile/settings/account_provider.dart";
 import "package:versify/screens/profile/settings/account_report_problem.dart";
 import "package:versify/screens/profile/settings/account_verify_new_email.dart";
 import 'package:versify/screens/profile/settings/sub-settings/account_change_email.dart';
+import 'package:versify/screens/profile/settings/sub-settings/account_change_password.dart';
+import 'package:versify/screens/profile/settings/widgets/acc_widget_password.dart';
+import 'package:versify/screens/profile/settings/widgets/acc_widget_signin_provider.dart';
 import "package:versify/screens/profile/settings/widgets/webviewer.dart";
 import "package:versify/services/firebase/auth.dart";
 import "package:versify/shared/widgets/widgets_all_loading.dart";
@@ -149,150 +152,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        if (_authService.currentSignInProvider ==
-                            "google.com") {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => AccountEditRow(
-                                  editType: AccountEditType.google,
-                                ),
-                              ));
-                        } else if (_authService.currentSignInProvider ==
-                            "password") {
-                          if (_authService.isEmailVerified) {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => AccountChangeEmail(
-                                      parsedEmail:
-                                          _authService.getCurrentUser.email),
-                                ));
-                          } else {
-                            //verify email address
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => AccountVerifyNewEmail(),
-                                ));
-                          }
-                        }
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              _authService.currentSignInProvider == "google.com"
-                                  ? FontAwesomeIcons.google
-                                  : Icons.email_rounded,
-                              size: _authService.currentSignInProvider ==
-                                      "google.com"
-                                  ? 15
-                                  : 16.5,
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.6),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              _authService.currentSignInProvider == "google.com"
-                                  ? "Google"
-                                  : "Email",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: _themeProvider.primaryTextColor
-                                    .withOpacity(0.87),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Expanded(child: Container()),
-                            if (_authService.currentSignInProvider ==
-                                    "password" &&
-                                _authService.isEmailVerified == false)
-                              Icon(
-                                Icons.warning_rounded,
-                                color: Colors.redAccent,
-                                size: 15,
-                              )
-                            else
-                              Container(),
-                            SizedBox(width: 10),
-                            Text(
-                              _authService.getCurrentUser.email ?? "none",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: _themeProvider.secondaryTextColor,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: _themeProvider.secondaryTextColor,
-                              size: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (_authService.currentSignInProvider == "google.com")
-                      Container()
-                    else
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () => Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => AccountEditRow(
-                                  editType: AccountEditType.password),
-                            )),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                          child: Row(
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.key,
-                                size: 15,
-                                color: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.6),
-                              ),
-                              SizedBox(width: 10),
-                              //hide this widget if using Google/Facebook
-                              Text(
-                                "Password",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: _themeProvider.primaryTextColor
-                                      .withOpacity(0.87),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                "Secured",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: _themeProvider.secondaryTextColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: _themeProvider.secondaryTextColor,
-                                size: 15,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    // SizedBox(height: 30),
+                    AccWidgetSignInProvider(),
+                    AccWidgetPassword(_authService.currentSignInProvider),
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () => Navigator.push(
