@@ -63,6 +63,8 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   open_mail_app: ^0.4.1
   profanity_filter: ^2.0.0
+  change_app_package_name: ^1.0.0
+
   # esys_flutter_share: ^1.0.2
   # scroll_bottom_navigation_bar: 
   # skeleton_loader: 
