@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -34,8 +32,6 @@ import 'models/user_model.dart';
 import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
 
-import 'z-dynamic_link/post_dynamic_link.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -56,7 +52,7 @@ class VersifyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
       SystemUiOverlay.top,
       SystemUiOverlay.bottom,
     ]);
@@ -138,8 +134,6 @@ class VersifyApp extends StatelessWidget {
 
             final ThemeProvider _themeProvider = ThemeProvider();
 
-            final Wrapper wrapperScreen = Wrapper();
-
             JsonAllBadgesStorage _jsonAllBadgesStorage;
 
             EditProfileProvider _editProfileProvider;
@@ -160,7 +154,7 @@ class VersifyApp extends StatelessWidget {
                 DynamicLinkService(authService: _authService);
 
             return StreamProvider<MyUser>.value(
-              initialData: null,
+              initialData: MyUser(),
               value: _authService.user,
               child: Consumer<MyUser>(builder: (context, user, _) {
                 print('Stream was triggered in MAIN.dart with user hashcode');
@@ -168,33 +162,26 @@ class VersifyApp extends StatelessWidget {
                 //Rebuilds everytime user auth changes
 
                 // if user is different than before. Reset all feed and data required
-                if (user != null) {
-                  _firestoreDBService = DatabaseService(
-                    jsonFollowingStorage: _jsonFollowingStorage,
-                    feedListProvider: _feedListProvider,
-                    uid: user.userUID,
-                  );
+                _firestoreDBService = DatabaseService(
+                  jsonFollowingStorage: _jsonFollowingStorage,
+                  feedListProvider: _feedListProvider,
+                  uid: user.userUID,
+                );
 
-                  _profileDBService = ProfileDBService(
-                      // profileBlogsProvider: _profileBlogsProvider,
-                      uid: user.userUID);
+                _profileDBService = ProfileDBService(
+                    // profileBlogsProvider: _profileBlogsProvider,
+                    uid: user.userUID);
 
-                  _editProfileProvider =
-                      EditProfileProvider(profileDB: _profileDBService);
+                _editProfileProvider =
+                    EditProfileProvider(profileDB: _profileDBService);
 
-                  _accountSettingsProvider = AccountSettingsProvider();
+                _accountSettingsProvider = AccountSettingsProvider();
 
-                  _profileDataProvider =
-                      ProfileDataProvider(authUserUID: user.userUID);
+                _profileDataProvider =
+                    ProfileDataProvider(authUserUID: user.userUID);
 
-                  _jsonAllBadgesStorage =
-                      JsonAllBadgesStorage(uid: _authService.userUID);
-                } else {
-                  //not authenticated
-                  // initialize services for dynamicLink and tutorial
-                  _firestoreDBService = DatabaseService();
-                  _profileDBService = ProfileDBService();
-                }
+                _jsonAllBadgesStorage =
+                    JsonAllBadgesStorage(uid: _authService.userUID);
                 return MultiProvider(
                   providers: [
                     Provider<AuthService>.value(value: _authService),
@@ -248,44 +235,39 @@ class VersifyApp extends StatelessWidget {
                           themeMode: state.currentTheme(),
                           darkTheme: ThemeData(
                             primaryColor: Color(0xFFcc99ff),
-                            accentColor: Color(0xFF33cccc),
                             splashColor: Color(0xFFefdaff),
                             textTheme: TextTheme(
-                                bodyText1: TextStyle(color: Colors.white),
-                                bodyText2: TextStyle(color: Colors.white)),
+                                bodyLarge: TextStyle(color: Colors.white),
+                                bodyMedium: TextStyle(color: Colors.white)),
                             fontFamily:
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
                             canvasColor: Color(0xFF202020),
-                            // canvasColor: Color(0xFF0d090d),
-                            backgroundColor: Color(0xFF272727),
                             // backgroundColor: Color(0xFF0d0a0c),
                             dialogBackgroundColor: Colors.grey[900],
+                            colorScheme: ColorScheme.fromSwatch()
+                                .copyWith(secondary: Color(0xFF33cccc)),
                           ),
                           theme: ThemeData(
                             // colorScheme: ColorScheme.fromSwatch(),
                             primaryColor: Color(0xFFcc99ff),
-                            accentColor: Color(0xFF33cccc),
                             splashColor: Color(0xFFefdaff),
                             fontFamily:
                                 GoogleFonts.getFont('Nunito Sans').fontFamily,
                             canvasColor: Colors.white,
-                            backgroundColor: Colors.white,
                             dialogBackgroundColor: Colors.white,
+                            colorScheme: ColorScheme.fromSwatch()
+                                .copyWith(secondary: Color(0xFF33cccc)),
                           ),
                           builder: (context, child) {
                             return MediaQuery(
-                              child: child,
+                              child: child!,
                               data: MediaQuery.of(context)
-                                  .copyWith(textScaleFactor: 1.0),
+                                  .copyWith(textScaler: TextScaler.linear(1.0)),
                             );
                           },
                           home: VersifyHome(
                               authService: _authService,
                               dynamicLinkService: _dynamicLinkService),
-                          routes: {
-                            '/accountSettings': (context) => AccountSettings(),
-                            '/wrapper': (context) => wrapperScreen,
-                          },
                         );
                         // return MaterialApp(
                         //   debugShowCheckedModeBanner: false,
@@ -348,23 +330,19 @@ class VersifyApp extends StatelessWidget {
 class VersifyHome extends StatefulWidget {
   final AuthService authService;
   final DynamicLinkService dynamicLinkService;
-  VersifyHome({this.authService, this.dynamicLinkService});
+  VersifyHome({required this.authService, required this.dynamicLinkService});
 
   @override
   _VersifyHomeState createState() => _VersifyHomeState();
 }
 
 class _VersifyHomeState extends State<VersifyHome> {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   //providers
-  TutorialProvider _tutorialProvider;
+  late TutorialProvider _tutorialProvider;
 
-  bool _completedBoarding;
-  bool _completedTutorial;
-
-  Future<void> _saveDeviceToken() async {}
+  late bool _completedBoarding;
 
   @override
   void initState() {
@@ -382,12 +360,12 @@ class _VersifyHomeState extends State<VersifyHome> {
 
       if (message.notification != null) {
         print('message also has a notification!');
-        print('Notification Title: ${message.notification.title}');
+        print('Notification Title: ${message.notification?.title}');
 
         final SnackBar snackBar = SnackBar(
           content: Padding(
               padding: EdgeInsets.all(8),
-              child: Text(message.notification.title)),
+              child: Text(message.notification?.title ?? "No message")),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
@@ -425,11 +403,10 @@ class _VersifyHomeState extends State<VersifyHome> {
     print("MAIN rebuilt!");
     //tutorialProvider
     _tutorialProvider = Provider.of<TutorialProvider>(context, listen: false);
-    final ThemeProvider _themeProvider =
-        Provider.of<ThemeProvider>(context, listen: false);
+    Provider.of<ThemeProvider>(context, listen: false);
 
-    SystemChrome.setEnabledSystemUIOverlays(
-        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -441,15 +418,11 @@ class _VersifyHomeState extends State<VersifyHome> {
       ),
     );
 
-    if (_completedBoarding != null) {
-      if (_completedBoarding == true) {
-        return Wrapper(completePickTutorials: completePickTutorials);
-      } else {
-        return OnBoarding(completeBoarding: completeBoarding);
-        //return boarding
-      }
+    if (_completedBoarding == true) {
+      return Wrapper(completePickTutorials: completePickTutorials);
     } else {
-      return SplashLoading();
+      return OnBoarding(completeBoarding: completeBoarding);
+      //return boarding
     }
   }
 

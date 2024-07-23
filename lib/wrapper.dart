@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:versify/home_wrapper.dart';
 import 'package:versify/providers/home/theme_data_provider.dart';
@@ -7,28 +5,25 @@ import 'package:versify/providers/home/tutorial_provider.dart';
 import 'package:versify/screens/onboarding_screen/new_user_options.dart';
 import 'package:versify/screens/onboarding_screen/pick_topics.dart';
 import 'package:versify/screens/onboarding_screen/create_new_username.dart';
-import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
 import 'package:versify/services/all_badges_json_storage.dart';
 import 'package:versify/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versify/services/profile_database.dart';
 import 'package:versify/services/users_following_json_storage.dart';
-import 'package:versify/shared/loading.dart';
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:versify/shared/splash_loading.dart';
-import 'package:versify/z-dynamic_link/post_dynamic_link.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {
-  final Function completePickTutorials;
+  Function completePickTutorials;
 
-  Wrapper({this.completePickTutorials});
+  Wrapper({required this.completePickTutorials});
 
   @override
   Widget build(BuildContext context) {
-    final MyUser user = Provider.of<MyUser>(context, listen: true);
+    final MyUser? user = Provider.of<MyUser>(context, listen: true);
 
     final AuthService _authService =
         Provider.of<AuthService>(context, listen: false);
@@ -45,14 +40,13 @@ class Wrapper extends StatelessWidget {
     final ProfileDBService _profileDBService =
         Provider.of<ProfileDBService>(context, listen: false);
 
-    final ThemeProvider _themeProvider =
-        Provider.of<ThemeProvider>(context, listen: false);
+    Provider.of<ThemeProvider>(context, listen: false);
 
     AccountSettingsProvider _accountSettingsProvider =
         Provider.of<AccountSettingsProvider>(context, listen: false);
 
-    SystemChrome.setEnabledSystemUIOverlays(
-        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -87,7 +81,7 @@ class Wrapper extends StatelessWidget {
                       future: validateUserPhoneAndEmail(
                         authService: _authService,
                         authServiceMyUser: _authService.myUser,
-                        whetherHasAccUser: myUserSnap.data,
+                        whetherHasAccUser: myUserSnap.data!,
                         profileDBService: _profileDBService,
                       ),
                       builder: (context, res) {
@@ -95,26 +89,26 @@ class Wrapper extends StatelessWidget {
                           _accountSettingsProvider
                               .initSettingsUser(_authService.myUser);
                           if (_authService.isUserAnonymous) {
-                            print(myUserSnap.data.userUID +
+                            print(myUserSnap.data!.userUID +
                                 "| is signInAnonymous");
                             // _authService.myUser = myUserSnap.data;
 
                             initSharedPrefs(
-                                logInUserID: myUserSnap.data.userUID);
+                                logInUserID: myUserSnap.data!.userUID);
                             _profileDBService.profileDBInit();
                             _jsonFollowingStorage.jsonInit(); //diff accounts
                             _jsonAllBadgesStorage.jsonInit();
 
                             return new HomeWrapper();
                           } else {
-                            if (myUserSnap.data.completeLogin == true) {
+                            if (myUserSnap.data!.completeLogin == true) {
                               //oldUser compelte login
-                              print(myUserSnap.data.userUID +
+                              print(myUserSnap.data!.userUID +
                                   "| is completeLogin = true");
                               // _authService.myUser = myUserSnap.data;
 
                               initSharedPrefs(
-                                  logInUserID: myUserSnap.data.userUID);
+                                  logInUserID: myUserSnap.data!.userUID);
                               _profileDBService.profileDBInit();
                               _jsonFollowingStorage.jsonInit(); //diff accounts
                               _jsonAllBadgesStorage.jsonInit();
@@ -165,9 +159,9 @@ class Wrapper extends StatelessWidget {
     }
   }
 
-  Future<void> initSharedPrefs({String logInUserID}) async {
+  Future<void> initSharedPrefs({required String logInUserID}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String _currentUserID = prefs.getString('currentUserID');
+    String? _currentUserID = prefs.getString('currentUserID');
 
     if (_currentUserID != logInUserID) {
       prefs.setString('currentUserID', logInUserID);
@@ -180,10 +174,10 @@ class Wrapper extends StatelessWidget {
   }
 
   Future<void> validateUserPhoneAndEmail({
-    @required AuthService authService,
-    @required MyUser authServiceMyUser,
-    @required MyUser whetherHasAccUser,
-    @required ProfileDBService profileDBService,
+    required AuthService authService,
+    required MyUser authServiceMyUser,
+    required MyUser whetherHasAccUser,
+    required ProfileDBService profileDBService,
   }) async {
     bool requiresUpdate = false;
 
