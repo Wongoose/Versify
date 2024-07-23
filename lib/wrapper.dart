@@ -17,7 +17,7 @@ import 'package:versify/shared/splash_loading.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {
-  Function completePickTutorials;
+  final Function completePickTutorials;
 
   Wrapper({required this.completePickTutorials});
 

@@ -14,7 +14,6 @@ import 'package:versify/providers/feeds/post_swipe_up_provider.dart';
 import 'package:versify/screens/onboarding_screen/onboarding.dart';
 import 'package:versify/providers/home/profile_data_provider.dart';
 import 'package:versify/screens/profile_screen/settings/account_provider.dart';
-import 'package:versify/screens/profile_screen/settings/account_settings.dart';
 import 'package:versify/services/all_badges_json_storage.dart';
 import 'package:versify/services/auth.dart';
 import 'package:versify/services/database.dart';
